@@ -8,7 +8,7 @@ class NamedExtensionManager(EnabledExtensionManager):
     configuration file, for example.
     """
 
-    def __init__(self, namespace, names=[],
+    def __init__(self, namespace, names,
                  invoke_on_load=False, invoke_args=(), invoke_kwds={}):
         def check(ep):
             return ep.name in names
