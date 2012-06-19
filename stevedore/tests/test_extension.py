@@ -88,29 +88,3 @@ def test_map_errors_when_no_plugins():
         em.map(mapped, 1, 2, a='A', b='B')
     except RuntimeError as err:
         assert 'No stevedore.test.extension.none extensions found' == str(err)
-
-
-def test_enabled():
-    def check_enabled(ep):
-        return ep.name == 't2'
-    em = extension.EnabledExtensionManager(
-        'stevedore.test.extension',
-        check_enabled,
-        invoke_on_load=True,
-        invoke_args=('a',),
-        invoke_kwds={'b': 'B'},
-        )
-    assert len(em.extensions) == 1
-    assert em.names() == ['t2']
-
-
-def test_named():
-    em = extension.NamedExtensionManager(
-        'stevedore.test.extension',
-        ['t1'],
-        invoke_on_load=True,
-        invoke_args=('a',),
-        invoke_kwds={'b': 'B'},
-        )
-    assert len(em.extensions) == 1
-    assert em.names() == ['t1']
