@@ -17,6 +17,12 @@ def test_detect_plugins():
     assert names == ['t1', 't2']
 
 
+def test_iterable():
+    em = extension.ExtensionManager('stevedore.test.extension')
+    names = sorted(e.name for e in em)
+    assert names == ['t1', 't2']
+
+
 def test_invoke_on_load():
     em = extension.ExtensionManager('stevedore.test.extension',
                                     invoke_on_load=True,

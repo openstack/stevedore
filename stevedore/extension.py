@@ -52,3 +52,6 @@ class ExtensionManager(object):
             except Exception as err:
                 LOG.error('error calling %s: %s', e.name, err)
         return response
+
+    def __iter__(self):
+        return iter(self.extensions)
