@@ -41,3 +41,12 @@ class ExtensionManager(object):
 
     def names(self):
         return [e.name for e in self.extensions]
+
+    def map(self, func, *args, **kwds):
+        response = []
+        for e in self.extensions:
+            try:
+                response.append(func(e, *args, **kwds))
+            except Exception as err:
+                LOG.error('error calling %s: %s', e.name, err)
+        return response
