@@ -57,7 +57,12 @@ setup(
     #                                only_in_packages=False,
     #                                ),
 
-    entry_points={},
+    entry_points={
+        'stevedore.test.extension': [
+            't1 = stevedore.tests.test_extension:FauxExtension',
+            't2 = stevedore.tests.test_extension:FauxExtension',
+            ],
+        },
 
     zip_safe=False,
     )
