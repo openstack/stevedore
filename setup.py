@@ -12,7 +12,7 @@ except IOError:
     long_description = ''
 
 install_requires = ['distribute',
-                   ]
+                    ]
 
 setup(
     name='stevedore',
@@ -57,8 +57,7 @@ setup(
     #                                only_in_packages=False,
     #                                ),
 
-    entry_points={
-        },
+    entry_points={},
 
     zip_safe=False,
     )
