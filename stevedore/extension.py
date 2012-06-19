@@ -24,7 +24,7 @@ class ExtensionManager(object):
         self.namespace = namespace
         self.extensions = []
         for ep in pkg_resources.iter_entry_points(self.namespace):
-            LOG.debug('found extension %r', ep.name)
+            LOG.debug('found extension %r', ep)
             try:
                 ext = self._load_one_plugin(ep,
                                             invoke_on_load,
@@ -77,6 +77,7 @@ class ExtensionManager(object):
                 response.append(func(e, *args, **kwds))
             except Exception as err:
                 LOG.error('error calling %r: %s', e.name, err)
+                LOG.exception(err)
         return response
 
     def __iter__(self):
