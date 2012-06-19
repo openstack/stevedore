@@ -40,9 +40,27 @@ class ExtensionManager(object):
         return
 
     def names(self):
+        "Returns the names of the discovered extensions"
         return [e.name for e in self.extensions]
 
     def map(self, func, *args, **kwds):
+        """Iterate over the extensions invoking func() for each.
+
+        The signature for func() should be::
+
+            def func(ext, *args, **kwds):
+                pass
+
+        The first argument to func(), 'ext', is the Extension
+        instance.
+
+        Exceptions raised from within func() are logged and ignored.
+
+        :param func: Callable to invoke for each extension.
+        :param args: Variable arguments to pass to func()
+        :param kwds: Keyword arguments to pass to func()
+        :returns: List of values returned from func()
+        """
         if not self.extensions:
             raise RuntimeError('No %s extensions found' % self.namespace)
         response = []
