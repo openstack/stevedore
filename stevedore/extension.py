@@ -43,6 +43,8 @@ class ExtensionManager(object):
         return [e.name for e in self.extensions]
 
     def map(self, func, *args, **kwds):
+        if not self.extensions:
+            raise RuntimeError('No %s extensions found' % self.namespace)
         response = []
         for e in self.extensions:
             try:

@@ -68,3 +68,17 @@ def test_map_eats_errors():
                                     )
     results = em.map(mapped, 1, 2, a='A', b='B')
     assert results == []
+
+
+def test_map_errors_when_no_plugins():
+
+    def mapped(ext, *args, **kwds):
+        pass
+
+    em = extension.ExtensionManager('stevedore.test.extension.none',
+                                    invoke_on_load=True,
+                                    )
+    try:
+        em.map(mapped, 1, 2, a='A', b='B')
+    except RuntimeError as err:
+        assert 'No stevedore.test.extension.none extensions found' == str(err)
