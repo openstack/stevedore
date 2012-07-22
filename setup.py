@@ -16,7 +16,7 @@ install_requires = ['distribute',
 
 setup(
     name='stevedore',
-    version='0.1',
+    version='0.2',
 
     description='Manage dynamic plugins for Python applications',
     long_description=long_description,
@@ -49,13 +49,6 @@ setup(
     namespace_packages=[],
     packages=find_packages(),
     include_package_data=True,
-    # Scan the input for package information
-    # to grab any data files (text, images, etc.)
-    # associated with sub-packages.
-    # package_data=find_package_data(PROJECT,
-    #                                package=PROJECT,
-    #                                only_in_packages=False,
-    #                                ),
 
     entry_points={
         'stevedore.test.extension': [
