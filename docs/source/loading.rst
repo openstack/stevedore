@@ -24,6 +24,18 @@ application, but it is implied in the interface between the
 application and the driver that only one driver will be used to manage
 a given resource.
 
+.. graphviz::
+
+   digraph drivers {
+      app [label="namespace",shape="record"];
+      d1 [style=filled,color=".7 .3 1.0",label="driver 1"];
+      d2 [style=dotted,label="driver 2"];
+      d3 [style=dotted,label="driver 3"];
+      app -> d1;
+      app -> d2 [style=dotted];
+      app -> d3 [style=dotted];
+   }
+
 Examples of the *drivers* pattern include:
 
 * database client libraries used by SQLAlchemy_
@@ -44,6 +56,18 @@ a different name for the triggered event (e.g., ``startup`` and
 the namespace, so that multiple hooks can be invoked when an event
 occurs.
 
+.. graphviz::
+
+   digraph drivers {
+      app [label="namespace::event_name",shape="record"];
+      l1 [style=filled,color=".7 .3 1.0",label="event_name (lib1)"];
+      l2 [style=filled,color=".7 .3 1.0",label="event_name (lib2)"];
+      l3 [style=filled,color=".7 .3 1.0",label="event_name (lib3)"];
+      app -> l1;
+      app -> l2;
+      app -> l3;
+   }
+
 Examples of the *hooks* pattern include:
 
 * Emacs `mode hook functions`_
@@ -62,6 +86,18 @@ minimal API to inject themselves at runtime. Extensions typically want
 to be notified that they have been loaded and are being used so they
 can perform initialization or setup steps. An extension may replace
 core functionality or add to it.
+
+.. graphviz::
+
+   digraph drivers {
+      app [label="application",shape="record"];
+      e1 [style=filled,color=".7 .3 1.0",label="extension 1"];
+      e2 [style=filled,color=".7 .3 1.0",label="extension 2"];
+      e3 [style=filled,color=".7 .3 1.0",label="extension 3"];
+      app -> e1;
+      app -> e2;
+      app -> e3;
+   }
 
 Examples of the *extensions* pattern include:
 
