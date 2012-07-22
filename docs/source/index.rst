@@ -1,16 +1,13 @@
-.. stevedore documentation master file, created by
-   sphinx-quickstart on Sun Jul 22 14:01:09 2012.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to stevedore's documentation!
-=====================================
+=============================================================
+ stevedore -- Manage dynamic plugins for Python applications
+=============================================================
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
+   history
 
 
 Indices and tables
