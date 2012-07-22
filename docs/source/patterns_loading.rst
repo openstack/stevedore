@@ -45,6 +45,10 @@ Examples of the *drivers* pattern include:
 
 .. _libcloud: http://libcloud.apache.org/
 
+.. seealso::
+
+   :class:`stevedore.driver.DriverManager`
+
 Hooks -- Single Name, Many Entry Points
 =======================================
 
@@ -76,6 +80,10 @@ Examples of the *hooks* pattern include:
 .. _Django signals: https://docs.djangoproject.com/en/dev/topics/signals/
 
 .. _mode hook functions: http://www.gnu.org/software/emacs/manual/html_node/emacs/Hooks.html
+
+.. seealso::
+
+   :class:`stevedore.hook.HookManager`
 
 Extensions -- Many Names, Many Entry Points
 ===========================================
@@ -110,3 +118,7 @@ Examples of the *extensions* pattern include:
 .. _Sphinx extensions: http://sphinx.pocoo.org/extensions.html
 
 .. _Django apps: https://docs.djangoproject.com/en/dev/intro/tutorial01/
+
+.. seealso::
+
+   :class:`stevedore.extension.ExtensionManager`

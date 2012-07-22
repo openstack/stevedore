@@ -45,6 +45,10 @@ Examples of explicitly enabled extensions include:
 
 .. _Django apps: https://docs.djangoproject.com/en/dev/intro/tutorial01/
 
+.. seealso::
+
+   :class:`stevedore.named.NamedExtensionManager`
+
 
 Self-Enabled
 ============
@@ -63,3 +67,7 @@ Examples of self-enabled extensions include:
 
 .. _anydbm: http://docs.python.org/library/anydbm.html
 .. _PIL: http://www.pythonware.com/products/pil/
+
+.. seealso::
+
+   :class:`stevedore.enabled.EnabledExtensionManager`
