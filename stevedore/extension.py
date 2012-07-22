@@ -10,6 +10,16 @@ LOG = logging.getLogger(__name__)
 
 
 class Extension(object):
+    """Book-keeping object for tracking extensions.
+
+    :param name: The entry point name.
+    :type name: str
+    :param entry_point: The EntryPoint instance returned by :mod:`pkg_resources`.
+    :type entry_point: EntryPoint
+    :param plugin: The value returned by entry_point.load()
+    :param obj: The object returned by plugin(*args, **kwds) if the
+                manager invoked the extension on load.
+    """
 
     def __init__(self, name, entry_point, plugin, obj):
         self.name = name
@@ -19,6 +29,22 @@ class Extension(object):
 
 
 class ExtensionManager(object):
+    """Base class for all of the other managers.
+
+    :param namespace: The namespace for the entry points.
+    :type namespace: str
+    :param invoke_on_load: Boolean controlling whether to invoke the
+        object returned by the entry point after the driver is loaded.
+    :type invoke_on_load: bool
+    :param invoke_args: Positional arguments to pass when invoking
+        the object returned by the entry point. Only used if invoke_on_load
+        is True.
+    :type invoke_args: tuple
+    :param invoke_kwds: Named arguments to pass when invoking
+        the object returned by the entry point. Only used if invoke_on_load
+        is True.
+    :type invoke_kwds: dict
+    """
 
     def __init__(self, namespace, invoke_on_load=False, invoke_args=(), invoke_kwds={}):
         self.namespace = namespace
@@ -59,7 +85,7 @@ class ExtensionManager(object):
             def func(ext, *args, **kwds):
                 pass
 
-        The first argument to func(), 'ext', is the Extension
+        The first argument to func(), 'ext', is the :class:`Extension`
         instance.
 
         Exceptions raised from within func() are logged and ignored.

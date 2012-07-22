@@ -3,6 +3,26 @@ from .extension import ExtensionManager
 
 class EnabledExtensionManager(ExtensionManager):
     """An ExtensionManager that only loads plugins that pass a check function.
+
+    The check_func should return a boolean, with ``True`` indicating
+    that the extension should be loaded and made available and
+    ``False`` indicating that the extension should be ignored.
+
+    :param namespace: The namespace for the entry points.
+    :type namespace: str
+    :param check_func: Function to determine which extensions to load.
+    :type check_func: callable
+    :param invoke_on_load: Boolean controlling whether to invoke the
+        object returned by the entry point after the driver is loaded.
+    :type invoke_on_load: bool
+    :param invoke_args: Positional arguments to pass when invoking
+        the object returned by the entry point. Only used if invoke_on_load
+        is True.
+    :type invoke_args: tuple
+    :param invoke_kwds: Named arguments to pass when invoking
+        the object returned by the entry point. Only used if invoke_on_load
+        is True.
+    :type invoke_kwds: dict
     """
 
     def __init__(self, namespace, check_func, invoke_on_load=False,
