@@ -1,0 +1,10 @@
+#!/bin/sh
+# Based on http://jacobian.org/writing/auto-building-sphinx/
+
+set -x
+
+watchmedo shell-command \
+    --patterns='*.rst' \
+    --ignore-pattern='docs/build/*' \
+    --recursive \
+    --command='python setup.py build_sphinx'
