@@ -25,6 +25,12 @@ or::
 
 .. _pip: http://pypi.python.org/pypi/pip
 
+Download
+========
+
+stevedore releases are hosted on PyPI and can be downloaded from:
+http://pypi.python.org/pypi/stevedore
+
 Source Code
 ===========
 
