@@ -19,6 +19,7 @@ Contents:
    patterns_loading
    patterns_enabling
    managers
+   install
    history
 
 .. _setuptools entry points: http://packages.python.org/distribute/pkg_resources.html#convenience-api
