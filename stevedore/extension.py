@@ -85,8 +85,8 @@ class ExtensionManager(object):
             def func(ext, *args, **kwds):
                 pass
 
-        The first argument to func(), 'ext', is the :class:`Extension`
-        instance.
+        The first argument to func(), 'ext', is the
+        :class:`~stevedore.extension.Extension` instance.
 
         Exceptions raised from within func() are logged and ignored.
 
@@ -96,12 +96,16 @@ class ExtensionManager(object):
         :returns: List of values returned from func()
         """
         if not self.extensions:
+            # FIXME: Use a more specific exception class here.
             raise RuntimeError('No %s extensions found' % self.namespace)
         response = []
         for e in self.extensions:
             try:
                 response.append(func(e, *args, **kwds))
             except Exception as err:
+                # FIXME: Provide an argument to control
+                # whether to ignore exceptions in each
+                # plugin or stop processing.
                 LOG.error('error calling %r: %s', e.name, err)
                 LOG.exception(err)
         return response
