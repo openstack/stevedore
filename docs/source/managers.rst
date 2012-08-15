@@ -8,6 +8,7 @@ DriverManager
 .. autoclass:: stevedore.driver.DriverManager
    :members:
    :show-inheritance:
+   :special-members:
 
 HookManager
 ===========

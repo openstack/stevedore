@@ -17,7 +17,7 @@ class Extension(object):
     :param entry_point: The EntryPoint instance returned by :mod:`pkg_resources`.
     :type entry_point: EntryPoint
     :param plugin: The value returned by entry_point.load()
-    :param obj: The object returned by plugin(*args, **kwds) if the
+    :param obj: The object returned by ``plugin(*args, **kwds)`` if the
                 manager invoked the extension on load.
     """
 

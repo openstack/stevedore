@@ -38,3 +38,25 @@ class DriverManager(HookManager):
                                 ','.join('%s:%s' % (e.module_name, e.attrs[0])
                                          for e in self.extensions))
                                )
+
+    def __call__(self, func, *args, **kwds):
+        """Invokes func() for the single loaded extension.
+
+        The signature for func() should be::
+
+            def func(ext, *args, **kwds):
+                pass
+
+        The first argument to func(), 'ext', is the
+        :class:`~stevedore.extension.Extension` instance.
+
+        Exceptions raised from within func() are logged and ignored.
+
+        :param func: Callable to invoke for each extension.
+        :param args: Variable arguments to pass to func()
+        :param kwds: Keyword arguments to pass to func()
+        :returns: List of values returned from func()
+        """
+        results = self.map(func, *args, **kwds)
+        if results:
+            return results[0]

@@ -27,6 +27,8 @@ What's New?
 
  - Added dispatch managers for selecting among a set of plugins at
    runtime instead of load time.
+ - Added ``__call__`` method to ``DriverManager`` so it can be invoked
+   in a more natural fashion for a single plugin.
 
 Installing
 ==========
