@@ -32,6 +32,22 @@ EnabledExtensionManager
    :inherited-members:
    :show-inheritance:
 
+DispatchExtensionManager
+========================
+
+.. autoclass:: stevedore.dispatch.DispatchExtensionManager
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+NameDispatchExtensionManager
+============================
+
+.. autoclass:: stevedore.dispatch.NameDispatchExtensionManager
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
 ExtensionManager
 ================
 

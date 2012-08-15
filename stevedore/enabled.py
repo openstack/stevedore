@@ -2,7 +2,7 @@ from .extension import ExtensionManager
 
 
 class EnabledExtensionManager(ExtensionManager):
-    """An ExtensionManager that only loads plugins that pass a check function.
+    """Loads only plugins that pass a check function.
 
     The check_func should return a boolean, with ``True`` indicating
     that the extension should be loaded and made available and
