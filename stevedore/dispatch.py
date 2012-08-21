@@ -60,15 +60,8 @@ class DispatchExtensionManager(EnabledExtensionManager):
             raise RuntimeError('No %s extensions found' % self.namespace)
         response = []
         for e in self.extensions:
-            try:
-                if filter_func(e, *args, **kwds):
-                    response.append(func(e, *args, **kwds))
-            except Exception as err:
-                # FIXME: Provide an argument to control
-                # whether to ignore exceptions in each
-                # plugin or stop processing.
-                LOG.error('error calling %r: %s', e.name, err)
-                LOG.exception(err)
+            if filter_func(e, *args, **kwds):
+                self._invoke_one_plugin(response.append, func, e, args, kwds)
         return response
 
 
@@ -94,6 +87,17 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
     :type invoke_kwds: dict
     """
 
+    def __init__(self, namespace, check_func, invoke_on_load=False,
+                 invoke_args=(), invoke_kwds={}):
+        super(NameDispatchExtensionManager, self).__init__(
+            namespace=namespace,
+            check_func=check_func,
+            invoke_on_load=invoke_on_load,
+            invoke_args=invoke_args,
+            invoke_kwds=invoke_kwds,
+            )
+        self.by_name = dict((e.name, e) for e in self.extensions)
+
     def map(self, names, func, *args, **kwds):
         """Iterate over the extensions invoking func() for any where
         the name is in the given list of names.
@@ -114,10 +118,8 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
         :param kwds: Keyword arguments to pass to func()
         :returns: List of values returned from func()
         """
-        def name_filter(ext, *args, **kwds):
-            return ext.name in names
-        return super(NameDispatchExtensionManager, self).map(
-            name_filter,
-            func,
-            *args,
-            **kwds)
+        response = []
+        for name in names:
+            e = self.by_name[name]
+            self._invoke_one_plugin(response.append, func, e, args, kwds)
+        return response
