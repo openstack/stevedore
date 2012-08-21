@@ -100,15 +100,18 @@ class ExtensionManager(object):
             raise RuntimeError('No %s extensions found' % self.namespace)
         response = []
         for e in self.extensions:
-            try:
-                response.append(func(e, *args, **kwds))
-            except Exception as err:
-                # FIXME: Provide an argument to control
-                # whether to ignore exceptions in each
-                # plugin or stop processing.
-                LOG.error('error calling %r: %s', e.name, err)
-                LOG.exception(err)
+            self._invoke_one_plugin(response, func, e, args, kwds)
         return response
+
+    def _invoke_one_plugin(self, response, func, e, args, kwds):
+        try:
+            response.append(func(e, *args, **kwds))
+        except Exception as err:
+            # FIXME: Provide an argument to control
+            # whether to ignore exceptions in each
+            # plugin or stop processing.
+            LOG.error('error calling %r: %s', e.name, err)
+            LOG.exception(err)
 
     def __iter__(self):
         return iter(self.extensions)
