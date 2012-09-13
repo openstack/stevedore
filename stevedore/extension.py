@@ -63,6 +63,7 @@ class ExtensionManager(object):
                 raise
             except Exception as err:
                 LOG.error('Could not load %r: %s', ep.name, err)
+                LOG.exception(err)
         return
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
