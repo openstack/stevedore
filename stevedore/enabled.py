@@ -1,4 +1,9 @@
+import logging
+
 from .extension import ExtensionManager
+
+
+LOG = logging.getLogger(__name__)
 
 
 class EnabledExtensionManager(ExtensionManager):
