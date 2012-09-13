@@ -1,7 +1,7 @@
-from .hook import HookManager
+from .named import NamedExtensionManager
 
 
-class DriverManager(HookManager):
+class DriverManager(NamedExtensionManager):
     """Load a single plugin with a given name from the namespace.
 
     :param namespace: The namespace for the entry points.
@@ -23,9 +23,9 @@ class DriverManager(HookManager):
 
     def __init__(self, namespace, name,
                  invoke_on_load=False, invoke_args=(), invoke_kwds={}):
-        super(HookManager, self).__init__(
-            namespace,
-            [name],
+        super(DriverManager, self).__init__(
+            namespace=namespace,
+            names=[name],
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
