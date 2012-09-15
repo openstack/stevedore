@@ -31,7 +31,7 @@ class DriverManager(NamedExtensionManager):
             invoke_kwds=invoke_kwds,
             )
         if not self.extensions:
-            raise RuntimeError('No %r driver found' % namespace)
+            raise RuntimeError('No %r driver found, looking for %r' % (namespace, name))
         if len(self.extensions) > 1:
             raise RuntimeError('Multiple %r drivers found: %s' %
                                (namespace,
@@ -60,3 +60,10 @@ class DriverManager(NamedExtensionManager):
         results = self.map(func, *args, **kwds)
         if results:
             return results[0]
+
+    @property
+    def driver(self):
+        """Returns the driver being used by this manager.
+        """
+        ext = self.extensions[0]
+        return ext.obj if ext.obj else ext.plugin

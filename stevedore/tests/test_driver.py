@@ -2,6 +2,7 @@
 """
 
 from stevedore import driver
+from stevedore.tests import test_extension
 
 
 def test_detect_plugins():
@@ -18,8 +19,22 @@ def test_call():
     assert result == ('t1', ('a',), {'b': 'C'})
 
 
+def test_driver_property_not_invoked_on_load():
+    em = driver.DriverManager('stevedore.test.extension', 't1',
+                              invoke_on_load=False)
+    d = em.driver
+    assert d is test_extension.FauxExtension
+
+
+def test_driver_property_invoked_on_load():
+    em = driver.DriverManager('stevedore.test.extension', 't1',
+                              invoke_on_load=True)
+    d = em.driver
+    assert isinstance(d, test_extension.FauxExtension)
+
+
 def test_no_drivers():
     try:
         driver.DriverManager('stevedore.test.extension.none', 't1')
     except RuntimeError as err:
-        assert "No 'stevedore.test.extension.none' driver found" == str(err)
+        assert "No 'stevedore.test.extension.none' driver found" in str(err)

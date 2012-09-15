@@ -5,6 +5,7 @@
 0.4
 
   - Removed the ``name`` argument to plugin constructors.
+  - Added ``driver`` property to :class:`~stevedore.driver.DriverManager`.
 
 0.3
 
