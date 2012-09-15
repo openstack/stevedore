@@ -14,7 +14,8 @@ class Extension(object):
 
     :param name: The entry point name.
     :type name: str
-    :param entry_point: The EntryPoint instance returned by :mod:`pkg_resources`.
+    :param entry_point: The EntryPoint instance returned by
+        :mod:`pkg_resources`.
     :type entry_point: EntryPoint
     :param plugin: The value returned by entry_point.load()
     :param obj: The object returned by ``plugin(*args, **kwds)`` if the
@@ -46,7 +47,10 @@ class ExtensionManager(object):
     :type invoke_kwds: dict
     """
 
-    def __init__(self, namespace, invoke_on_load=False, invoke_args=(), invoke_kwds={}):
+    def __init__(self, namespace,
+                 invoke_on_load=False,
+                 invoke_args=(),
+                 invoke_kwds={}):
         self.namespace = namespace
         self.extensions = []
         for ep in pkg_resources.iter_entry_points(self.namespace):
@@ -69,7 +73,7 @@ class ExtensionManager(object):
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
         plugin = ep.load()
         if invoke_on_load:
-            obj = plugin(ep.name, *invoke_args, **invoke_kwds)
+            obj = plugin(*invoke_args, **invoke_kwds)
         else:
             obj = None
         return Extension(ep.name, ep, plugin, obj)

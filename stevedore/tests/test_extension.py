@@ -5,8 +5,7 @@ from stevedore import extension
 
 
 class FauxExtension(object):
-    def __init__(self, name, *args, **kwds):
-        self.name = name
+    def __init__(self, *args, **kwds):
         self.args = args
         self.kwds = kwds
 
