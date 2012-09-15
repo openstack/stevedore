@@ -2,6 +2,10 @@
  History
 =========
 
+0.4
+
+  - Removed the ``name`` argument to plugin constructors.
+
 0.3
 
   - Added dispatch managers for selecting among a set of plugins at
