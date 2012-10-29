@@ -1,5 +1,5 @@
 ===============
- stevedore 0.5
+ stevedore 0.6
 ===============
 
 .. tags:: stevedore release python
@@ -27,6 +27,9 @@ What's New?
 
 - Add ``TestExtensionManager`` for writing tests for classes that use
   extension managers.
+- Change the ``EnabledExtensionManager`` to load the extension before
+  calling the check function so the plugin can be asked if it should
+  be enabled.
 
 Installing
 ==========
