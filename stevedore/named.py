@@ -28,9 +28,10 @@ class NamedExtensionManager(EnabledExtensionManager):
                  invoke_on_load=False, invoke_args=(), invoke_kwds={}):
         def check(ep):
             return ep.name in names
-        super(NamedExtensionManager, self).__init__(namespace,
-                                                    check,
-                                                    invoke_on_load=invoke_on_load,
-                                                    invoke_args=invoke_args,
-                                                    invoke_kwds=invoke_kwds,
-                                                    )
+        super(NamedExtensionManager, self).__init__(
+            namespace,
+            check,
+            invoke_on_load=invoke_on_load,
+            invoke_args=invoke_args,
+            invoke_kwds=invoke_kwds,
+            )

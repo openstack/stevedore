@@ -31,7 +31,8 @@ class DriverManager(NamedExtensionManager):
             invoke_kwds=invoke_kwds,
             )
         if not self.extensions:
-            raise RuntimeError('No %r driver found, looking for %r' % (namespace, name))
+            raise RuntimeError('No %r driver found, looking for %r' %
+                               (namespace, name))
         if len(self.extensions) > 1:
             raise RuntimeError('Multiple %r drivers found: %s' %
                                (namespace,
