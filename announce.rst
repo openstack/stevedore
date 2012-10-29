@@ -1,5 +1,5 @@
 ===============
- stevedore 0.3
+ stevedore 0.5
 ===============
 
 .. tags:: stevedore release python
@@ -25,10 +25,8 @@ dynamically loaded extensions.
 What's New?
 ===========
 
-- Added dispatch managers for selecting among a set of plugins at
-  runtime instead of load time.
-- Added ``__call__`` method to ``DriverManager`` so it can be invoked
-  in a more natural fashion for a single plugin.
+- Add ``TestExtensionManager`` for writing tests for classes that use
+  extension managers.
 
 Installing
 ==========
