@@ -63,3 +63,9 @@ Extension
    :members:
    :show-inheritance:
 
+TestExtensionManager
+====================
+
+.. autoclass:: stevedore.tests.manager.TestExtensionManager
+   :members:
+   :show-inheritance:

@@ -52,7 +52,12 @@ class ExtensionManager(object):
                  invoke_args=(),
                  invoke_kwds={}):
         self.namespace = namespace
-        self.extensions = []
+        self.extensions = self._load_plugins(invoke_on_load,
+                                             invoke_args,
+                                             invoke_kwds)
+
+    def _load_plugins(self, invoke_on_load, invoke_args, invoke_kwds):
+        extensions = []
         for ep in pkg_resources.iter_entry_points(self.namespace):
             LOG.debug('found extension %r', ep)
             try:
@@ -62,13 +67,13 @@ class ExtensionManager(object):
                                             invoke_kwds,
                                             )
                 if ext:
-                    self.extensions.append(ext)
+                    extensions.append(ext)
             except KeyboardInterrupt:
                 raise
             except Exception as err:
                 LOG.error('Could not load %r: %s', ep.name, err)
                 LOG.exception(err)
-        return
+        return extensions
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
         plugin = ep.load()

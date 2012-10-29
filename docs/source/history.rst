@@ -2,6 +2,11 @@
  History
 =========
 
+0.5
+
+  - Add :class:`~stevedore.tests.manager.TestExtensionManager` for
+    writing tests for classes that use extension managers.
+
 0.4
 
   - Removed the ``name`` argument to plugin constructors.
