@@ -1,5 +1,5 @@
 ===============
- stevedore 0.6
+ stevedore 0.7
 ===============
 
 .. tags:: stevedore release python
@@ -25,11 +25,9 @@ dynamically loaded extensions.
 What's New?
 ===========
 
-- Add ``TestExtensionManager`` for writing tests for classes that use
-  extension managers.
-- Change the ``EnabledExtensionManager`` to load the extension before
-  calling the check function so the plugin can be asked if it should
-  be enabled.
+- Add memoization to the entrypoint scanning code in
+  ``ExtensionManager`` to avoid performance issues in situations where
+  lots of managers are instantiated with the same namespace argument.
 
 Installing
 ==========

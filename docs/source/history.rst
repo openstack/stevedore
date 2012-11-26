@@ -2,6 +2,13 @@
  History
 =========
 
+0.7
+
+  - Add memoization to the entrypoint scanning code in
+    :class:`~stevedore.extension.ExtensionManager` to avoid
+    performance issues in situations where lots of managers are
+    instantiated with the same namespace argument.
+
 0.6
 
   - Change the :class:`~stevedore.enabled.EnabledExtensionManager` to

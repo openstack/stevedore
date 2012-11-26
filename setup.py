@@ -16,7 +16,7 @@ install_requires = ['distribute',
 
 setup(
     name='stevedore',
-    version='0.6',
+    version='0.7',
 
     description='Manage dynamic plugins for Python applications',
     long_description=long_description,
