@@ -1,6 +1,8 @@
 """Tests for stevedore.extension
 """
 
+import mock
+
 from stevedore import extension
 
 
@@ -14,6 +16,39 @@ def test_detect_plugins():
     em = extension.ExtensionManager('stevedore.test.extension')
     names = sorted(em.names())
     assert names == ['t1', 't2']
+
+
+def test_load_multiple_times_entry_points():
+    # We expect to get the same EntryPoint object because we save them
+    # in the cache.
+    em1 = extension.ExtensionManager('stevedore.test.extension')
+    eps1 = [ext.entry_point for ext in em1]
+    em2 = extension.ExtensionManager('stevedore.test.extension')
+    eps2 = [ext.entry_point for ext in em2]
+    assert eps1[0] is eps2[0]
+
+
+def test_load_multiple_times_plugins():
+    # We expect to get the same plugin object (module or class)
+    # because the underlying import machinery will cache the values.
+    em1 = extension.ExtensionManager('stevedore.test.extension')
+    plugins1 = [ext.plugin for ext in em1]
+    em2 = extension.ExtensionManager('stevedore.test.extension')
+    plugins2 = [ext.plugin for ext in em2]
+    assert plugins1[0] is plugins2[0]
+
+
+def test_use_cache():
+    # If we insert something into the cache of entry points,
+    # the manager should not have to call into pkg_resources
+    # to find the plugins.
+    cache = extension.ExtensionManager.ENTRY_POINT_CACHE
+    cache['stevedore.test.faux'] = []
+    with mock.patch('pkg_resources.iter_entry_points',
+                    side_effect=AssertionError('called iter_entry_points')):
+        em = extension.ExtensionManager('stevedore.test.faux')
+        names = em.names()
+    assert names == []
 
 
 def test_iterable():
