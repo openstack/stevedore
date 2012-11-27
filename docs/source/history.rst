@@ -2,6 +2,10 @@
  History
 =========
 
+0.7.1
+
+  - Fix an issue with logging configuration.
+
 0.7
 
   - Add memoization to the entrypoint scanning code in
