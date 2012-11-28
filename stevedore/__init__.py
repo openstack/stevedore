@@ -8,4 +8,9 @@ import logging
 
 # Configure a NullHandler for our log messages in case
 # the app we're used from does not set up logging.
-logging.getLogger(__name__).addHandler(logging.NullHandler())
+LOG = logging.getLogger(__name__)
+try:
+    LOG.addHandler(logging.NullHandler())
+except AttributeError:
+    # No NullHandler, probably python 2.6
+    pass
