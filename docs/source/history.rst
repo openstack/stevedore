@@ -2,6 +2,10 @@
  History
 =========
 
+0.7.2
+
+  - Fix logging support for Python 2.6.
+
 0.7.1
 
   - Fix an issue with logging configuration.
