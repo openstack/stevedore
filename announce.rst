@@ -1,5 +1,5 @@
 ===============
- stevedore 0.7
+ stevedore 0.8
 ===============
 
 .. tags:: stevedore release python
@@ -25,9 +25,11 @@ dynamically loaded extensions.
 What's New?
 ===========
 
-- Add memoization to the entrypoint scanning code in
-  ``ExtensionManager`` to avoid performance issues in situations where
-  lots of managers are instantiated with the same namespace argument.
+- Ignore AssertionError exceptions generated when plugins are
+  loaded.
+- Update ``NamedExtensionManager`` to check the name of a plugin
+  before loading its code to avoid importing anything we are not going
+  to use.
 
 Installing
 ==========

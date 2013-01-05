@@ -2,7 +2,7 @@
  History
 =========
 
-dev
+0.8
 
   - Ignore AssertionError exceptions generated when plugins are
     loaded.
