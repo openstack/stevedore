@@ -2,6 +2,11 @@
  History
 =========
 
+dev
+
+  - Ignore AssertionError exceptions generated when plugins are
+    loaded.
+
 0.7.2
 
   - Fix logging support for Python 2.6.

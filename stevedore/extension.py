@@ -76,7 +76,7 @@ class ExtensionManager(object):
                                             )
                 if ext:
                     extensions.append(ext)
-            except KeyboardInterrupt:
+            except (KeyboardInterrupt, AssertionError):
                 raise
             except Exception as err:
                 LOG.error('Could not load %r: %s', ep.name, err)
