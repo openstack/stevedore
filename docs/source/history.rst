@@ -6,6 +6,9 @@ dev
 
   - Ignore AssertionError exceptions generated when plugins are
     loaded.
+  - Update :class:`~stevedore.named.NamedExtensionManager` to check
+    the name of a plugin before loading its code to avoid importing
+    anything we are not going to use.
 
 0.7.2
 
