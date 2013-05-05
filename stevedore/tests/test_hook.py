@@ -8,6 +8,6 @@ def test_hook():
         invoke_on_load=True,
         invoke_args=('a',),
         invoke_kwds={'b': 'B'},
-        )
+    )
     assert len(em.extensions) == 1
     assert em.names() == ['t1']

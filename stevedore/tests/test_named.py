@@ -10,7 +10,7 @@ def test_named():
         invoke_on_load=True,
         invoke_args=('a',),
         invoke_kwds={'b': 'B'},
-        )
+    )
     actual = em.names()
     assert actual == ['t1']
 
@@ -32,6 +32,6 @@ def test_enabled_before_load():
             invoke_on_load=True,
             invoke_args=('a',),
             invoke_kwds={'b': 'B'},
-            )
+        )
         actual = em.names()
         assert actual == []

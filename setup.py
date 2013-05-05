@@ -55,8 +55,8 @@ setup(
         'stevedore.test.extension': [
             't1 = stevedore.tests.test_extension:FauxExtension',
             't2 = stevedore.tests.test_extension:FauxExtension',
-            ],
-        },
+        ],
+    },
 
     zip_safe=False,
-    )
+)

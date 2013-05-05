@@ -29,4 +29,4 @@ class HookManager(NamedExtensionManager):
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
-            )
+        )
