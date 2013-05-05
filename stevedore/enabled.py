@@ -38,12 +38,12 @@ class EnabledExtensionManager(ExtensionManager):
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
-            )
+        )
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
         ext = super(EnabledExtensionManager, self)._load_one_plugin(
             ep, invoke_on_load, invoke_args, invoke_kwds,
-            )
+        )
         if ext and not self.check_func(ext):
             LOG.debug('ignoring extension %r', ep.name)
             return None

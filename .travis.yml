@@ -1,0 +1,13 @@
+language: python
+python:
+  - "2.6"
+  - "2.7"
+  - "3.2"
+  - "3.3"
+install:
+  - pip install flake8 --use-mirrors
+  - pip install nose mock --use-mirrors
+  - pip install -q . --use-mirrors
+before_script:
+  - flake8 stevedore setup.py
+script: nosetests stevedore

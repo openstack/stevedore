@@ -32,7 +32,7 @@ class NamedExtensionManager(ExtensionManager):
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
-            )
+        )
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
         # Check the name before going any further to prevent
@@ -42,4 +42,4 @@ class NamedExtensionManager(ExtensionManager):
             return None
         return super(NamedExtensionManager, self)._load_one_plugin(
             ep, invoke_on_load, invoke_args, invoke_kwds,
-            )
+        )

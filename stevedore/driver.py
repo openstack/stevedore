@@ -29,7 +29,7 @@ class DriverManager(NamedExtensionManager):
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
-            )
+        )
         if not self.extensions:
             raise RuntimeError('No %r driver found, looking for %r' %
                                (namespace, name))

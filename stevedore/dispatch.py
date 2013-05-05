@@ -95,7 +95,7 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
-            )
+        )
         self.by_name = dict((e.name, e) for e in self.extensions)
 
     def map(self, names, func, *args, **kwds):

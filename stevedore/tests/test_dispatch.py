@@ -15,7 +15,7 @@ def test_dispatch():
         invoke_on_load=True,
         invoke_args=('a',),
         invoke_kwds={'b': 'B'},
-        )
+    )
     assert len(em.extensions) == 2
     assert set(em.names()) == set(['t1', 't2'])
 
@@ -39,7 +39,7 @@ def test_name_dispatch():
         invoke_on_load=True,
         invoke_args=('a',),
         invoke_kwds={'b': 'B'},
-        )
+    )
     assert len(em.extensions) == 2
     assert set(em.names()) == set(['t1', 't2'])
 
