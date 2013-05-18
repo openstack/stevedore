@@ -10,7 +10,7 @@ class NamedExtensionManager(ExtensionManager):
     :param namespace: The namespace for the entry points.
     :type namespace: str
     :param names: The names of the extensions to load.
-    :type names: str
+    :type names: list(str)
     :param invoke_on_load: Boolean controlling whether to invoke the
         object returned by the entry point after the driver is loaded.
     :type invoke_on_load: bool
