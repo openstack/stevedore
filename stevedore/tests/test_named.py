@@ -43,7 +43,7 @@ def test_extensions_listed_in_name_order():
     # fail
     em = named.NamedExtensionManager(
         'stevedore.test.extension',
-        names='t1 t2',
+        names=['t1', 't2'],
         name_order=True
     )
     actual = em.names()
@@ -51,7 +51,7 @@ def test_extensions_listed_in_name_order():
 
     em = named.NamedExtensionManager(
         'stevedore.test.extension',
-        names='t2 t1',
+        names=['t2', 't1'],
         name_order=True
     )
     actual = em.names()
