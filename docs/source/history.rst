@@ -2,6 +2,14 @@
  History
 =========
 
+dev
+
+  - Add ``name_order`` parameter to
+    :class:`~stevedore.named.NamedExtensionManager` to coerce
+    :func:`map` into processing the extensions in the order they are
+    named when the manager is created, instead of the random order
+    they may have been loaded. Contributed by Daniel Rocco.
+
 0.8
 
   - Ignore AssertionError exceptions generated when plugins are
