@@ -4,7 +4,7 @@ from .extension import ExtensionManager
 class NamedExtensionManager(ExtensionManager):
     """Loads only the named extensions.
 
-    This is useful for explictly enabling extensions in a
+    This is useful for explicitly enabling extensions in a
     configuration file, for example.
 
     :param namespace: The namespace for the entry points.
@@ -22,10 +22,14 @@ class NamedExtensionManager(ExtensionManager):
         the object returned by the entry point. Only used if invoke_on_load
         is True.
     :type invoke_kwds: dict
+    :param name_order: If true, sort the loaded extensions to match the
+        order used in ``names``.
+    :type name_order: bool
     """
 
     def __init__(self, namespace, names,
-                 invoke_on_load=False, invoke_args=(), invoke_kwds={}):
+                 invoke_on_load=False, invoke_args=(), invoke_kwds={},
+                 name_order=False):
         self._names = names
         super(NamedExtensionManager, self).__init__(
             namespace,
@@ -33,6 +37,9 @@ class NamedExtensionManager(ExtensionManager):
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
         )
+
+        if name_order:
+            self.extensions.sort(key=lambda x: names.index(x.name))
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
         # Check the name before going any further to prevent
