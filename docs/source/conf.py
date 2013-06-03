@@ -251,3 +251,5 @@ texinfo_documents = [
 extlinks = {
     'issue': ('https://github.com/dreamhost/stevedore/issues/%s', 'issue '),
 }
+
+autodoc_default_flags = ['members', 'special-members', 'show-inheritance']

@@ -45,6 +45,7 @@ class ExtensionManager(object):
         the object returned by the entry point. Only used if invoke_on_load
         is True.
     :type invoke_kwds: dict
+
     """
 
     def __init__(self, namespace,
@@ -136,6 +137,11 @@ class ExtensionManager(object):
             LOG.exception(err)
 
     def __iter__(self):
+        """Produce iterator for the manager.
+
+        Iterating over an ExtensionManager produces the :class:`Extension`
+        instances in the order they would be invoked.
+        """
         return iter(self.extensions)
 
     def __getitem__(self, name):
