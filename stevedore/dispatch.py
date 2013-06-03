@@ -1,4 +1,8 @@
+import logging
+
 from .enabled import EnabledExtensionManager
+
+LOG = logging.getLogger(__name__)
 
 
 class DispatchExtensionManager(EnabledExtensionManager):
@@ -120,6 +124,10 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
         """
         response = []
         for name in names:
-            e = self.by_name[name]
-            self._invoke_one_plugin(response.append, func, e, args, kwds)
+            try:
+                e = self.by_name[name]
+            except KeyError:
+                LOG.debug('Missing extension %r being ignored', name)
+            else:
+                self._invoke_one_plugin(response.append, func, e, args, kwds)
         return response

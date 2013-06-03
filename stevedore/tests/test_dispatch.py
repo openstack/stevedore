@@ -50,3 +50,25 @@ def test_name_dispatch():
                      )
     expected = [('t2', ('first',), {'named': 'named value'})]
     assert results == expected
+
+
+def test_name_dispatch_ignore_missing():
+
+    def invoke(ep, *args, **kwds):
+        return (ep.name, args, kwds)
+
+    em = dispatch.NameDispatchExtensionManager(
+        'stevedore.test.extension',
+        lambda *args, **kwds: True,
+        invoke_on_load=True,
+        invoke_args=('a',),
+        invoke_kwds={'b': 'B'},
+    )
+
+    results = em.map(['t3', 't1'],
+                     invoke,
+                     'first',
+                     named='named value',
+                     )
+    expected = [('t1', ('first',), {'named': 'named value'})]
+    assert results == expected

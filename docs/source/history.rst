@@ -4,11 +4,14 @@
 
 dev
 
-  - Add ``name_order`` parameter to
-    :class:`~stevedore.named.NamedExtensionManager` to coerce
-    :func:`map` into processing the extensions in the order they are
-    named when the manager is created, instead of the random order
-    they may have been loaded. Contributed by Daniel Rocco.
+- Add ``name_order`` parameter to
+  :class:`~stevedore.named.NamedExtensionManager` to coerce
+  :func:`map` into processing the extensions in the order they are
+  named when the manager is created, instead of the random order
+  they may have been loaded. Contributed by Daniel Rocco.
+- Change the
+  :class:`~stevedore.dispatch.NamedDispatchExtensionManager` to ignore
+  missing extensions (:issue:`14`).
 
 0.8
 
