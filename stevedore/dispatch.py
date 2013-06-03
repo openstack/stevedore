@@ -76,8 +76,14 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
     different inputs to different extensions and can predict the name
     of the extensions before calling them.
 
+    The check_func argument should return a boolean, with ``True``
+    indicating that the extension should be loaded and made available
+    and ``False`` indicating that the extension should be ignored.
+
     :param namespace: The namespace for the entry points.
     :type namespace: str
+    :param check_func: Function to determine which extensions to load.
+    :type check_func: callable
     :param invoke_on_load: Boolean controlling whether to invoke the
         object returned by the entry point after the driver is loaded.
     :type invoke_on_load: bool
@@ -89,6 +95,7 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
         the object returned by the entry point. Only used if invoke_on_load
         is True.
     :type invoke_kwds: dict
+
     """
 
     def __init__(self, namespace, check_func, invoke_on_load=False,

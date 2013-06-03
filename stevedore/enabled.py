@@ -9,9 +9,9 @@ LOG = logging.getLogger(__name__)
 class EnabledExtensionManager(ExtensionManager):
     """Loads only plugins that pass a check function.
 
-    The check_func should return a boolean, with ``True`` indicating
-    that the extension should be loaded and made available and
-    ``False`` indicating that the extension should be ignored.
+    The check_func argument should return a boolean, with ``True``
+    indicating that the extension should be loaded and made available
+    and ``False`` indicating that the extension should be ignored.
 
     :param namespace: The namespace for the entry points.
     :type namespace: str
@@ -28,6 +28,7 @@ class EnabledExtensionManager(ExtensionManager):
         the object returned by the entry point. Only used if invoke_on_load
         is True.
     :type invoke_kwds: dict
+
     """
 
     def __init__(self, namespace, check_func, invoke_on_load=False,
