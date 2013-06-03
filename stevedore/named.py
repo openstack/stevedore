@@ -39,7 +39,8 @@ class NamedExtensionManager(ExtensionManager):
         )
 
         if name_order:
-            self.extensions.sort(key=lambda x: names.index(x.name))
+            ext_map = dict((x.name, x) for x in self.extensions)
+            self.extensions = [ext_map[n] for n in names]
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
         # Check the name before going any further to prevent
