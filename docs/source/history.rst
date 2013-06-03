@@ -12,6 +12,9 @@ dev
 - Change the
   :class:`~stevedore.dispatch.NamedDispatchExtensionManager` to ignore
   missing extensions (:issue:`14`).
+- Add ``__getitem__`` to
+  :class:`~stevedore.extension.ExtensionManager` for looking up
+  individual plugins by name (:issue:`15`).
 
 0.8
 

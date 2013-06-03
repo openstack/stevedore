@@ -55,6 +55,7 @@ class ExtensionManager(object):
         self.extensions = self._load_plugins(invoke_on_load,
                                              invoke_args,
                                              invoke_kwds)
+        self._extensions_by_name = None
 
     ENTRY_POINT_CACHE = {}
 
@@ -93,6 +94,9 @@ class ExtensionManager(object):
 
     def names(self):
         "Returns the names of the discovered extensions"
+        # We want to return the names of the extensions in the order
+        # they would be used by map(), since some subclasses change
+        # that order.
         return [e.name for e in self.extensions]
 
     def map(self, func, *args, **kwds):
@@ -133,3 +137,17 @@ class ExtensionManager(object):
 
     def __iter__(self):
         return iter(self.extensions)
+
+    def __getitem__(self, name):
+        """Return the named extension.
+
+        Accessing an ExtensionManager as a dictionary (``em['name']``)
+        produces the :class:`Extension` instance with the
+        specified name.
+        """
+        if self._extensions_by_name is None:
+            d = {}
+            for e in self.extensions:
+                d[e.name] = e
+            self._extensions_by_name = d
+        return self._extensions_by_name[name]

@@ -18,6 +18,22 @@ def test_detect_plugins():
     assert names == ['t1', 't2']
 
 
+def test_get_by_name():
+    em = extension.ExtensionManager('stevedore.test.extension')
+    e = em['t1']
+    assert e.name == 't1'
+
+
+def test_get_by_name_missing():
+    em = extension.ExtensionManager('stevedore.test.extension')
+    try:
+        em['t3']
+    except KeyError:
+        pass
+    else:
+        assert False, 'Failed to raise KeyError'
+
+
 def test_load_multiple_times_entry_points():
     # We expect to get the same EntryPoint object because we save them
     # in the cache.
