@@ -9,9 +9,12 @@ application.
 .. toctree::
    :maxdepth: 2
 
-   design
    implementation
    registration
    loading
    calling
    testing
+
+.. seealso:: 
+
+   :doc:`/essays/pycon2013`
