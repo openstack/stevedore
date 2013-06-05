@@ -15,6 +15,7 @@ dev
 - Add ``__getitem__`` to
   :class:`~stevedore.extension.ExtensionManager` for looking up
   individual plugins by name (:issue:`15`).
+- Start working on the tutorial, :doc:`tutorial/index`.
 
 0.8
 

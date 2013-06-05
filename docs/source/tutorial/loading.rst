@@ -2,17 +2,16 @@
  Loading the Plugins
 =====================
 
-Load plugins using stevedore is as easy as creating them. There are
-several different enabling and invocation patterns to choose from,
-depending on your needs.
+There are several different enabling and invocation patterns for
+consumers of plugins, depending on your needs.
 
 Loading Drivers
 ===============
 
-The most common way plugins are used is as individual drivers. There
-may be many plugin options to choose from, but only one needs to be
-loaded and called. The :class:`~stevedore.driver.DriverManager` class
-supports this pattern.
+The most common way plugins are used is as individual drivers. In this
+case, there may be many plugin options to choose from, but only one
+needs to be loaded and called. The
+:class:`~stevedore.driver.DriverManager` class supports this pattern.
 
 This example program uses a :class:`DriverManager` to load a formatter
 defined in the examples for stevedore. It then uses the formatter to
