@@ -1,25 +1,10 @@
-#!/usr/bin/env python
-
-# Bootstrap installation of Distribute
-import distribute_setup
-distribute_setup.use_setuptools()
-
 from setuptools import setup, find_packages
 
-try:
-    long_description = open('README.rst', 'rt').read()
-except IOError:
-    long_description = ''
-
-install_requires = ['distribute',
-                    ]
-
 setup(
-    name='stevedore',
-    version='0.8',
+    name='stevedore-examples',
+    version='1.0',
 
-    description='Manage dynamic plugins for Python applications',
-    long_description=long_description,
+    description='Demonstration package for stevedore',
 
     author='Doug Hellmann',
     author_email='doug.hellmann@dreamhost.com',
@@ -43,11 +28,9 @@ setup(
 
     scripts=[],
 
-    provides=['stevedore',
+    provides=['stevedore.examples',
               ],
-    install_requires=install_requires,
 
-    namespace_packages=[],
     packages=find_packages(),
     include_package_data=True,
 
@@ -56,10 +39,6 @@ setup(
             'simple = stevedore.example.simple:Simple',
             'field = stevedore.example.fields:FieldList',
             'plain = stevedore.example.simple:Simple',
-        ],
-        'stevedore.test.extension': [
-            't1 = stevedore.tests.test_extension:FauxExtension',
-            't2 = stevedore.tests.test_extension:FauxExtension',
         ],
     },
 
