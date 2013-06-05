@@ -37,7 +37,6 @@ needs to be implemented by each plugin.
 
 .. literalinclude:: ../../../stevedore/example/base.py
    :language: python
-   :linenos:
    :prepend: # stevedore/example/base.py
 
 The constructor is a concrete method because subclasses do not need to
@@ -53,14 +52,12 @@ output with each variable name and value on a single line.
 
 .. literalinclude:: ../../../stevedore/example/simple.py
    :language: python
-   :linenos:
    :prepend: # stevedore/example/simple.py
 
 An alternate implementation produces a reStructuredText `field list`_.
 
 .. literalinclude:: ../../../stevedore/example/fields.py
    :language: python
-   :linenos:
    :prepend: # stevedore/example/fields.py
 
 There are plenty of other formatting options, but these two examples
@@ -83,17 +80,15 @@ all of the necessary information in the packaging instructions:
 
 .. literalinclude:: ../../../stevedore/example/setup.py
    :language: python
-   :linenos:
-   :emphasize-lines: 38-44
    :prepend: # stevedore/example/setup.py
 
-The important lines are 38-44. The ``entry_points`` argument to
-:func:`setup` is a dictionary mapping the namespace for the plugins to
-a list of their definitions. Each item in the list should be a string
-with ``name = module:importable`` where *name* is the user-visible
-name for the plugin, *module* is the Python import reference for the
-module, and *importable* is the name of something that can be imported
-from inside the module.
+The important lines are near the bottom where the ``entry_points``
+argument to :func:`setup` is set. The value is a dictionary mapping
+the namespace for the plugins to a list of their definitions. Each
+item in the list should be a string with ``name = module:importable``
+where *name* is the user-visible name for the plugin, *module* is the
+Python import reference for the module, and *importable* is the name
+of something that can be imported from inside the module.
 
 .. literalinclude:: ../../../stevedore/example/setup.py
    :language: python
