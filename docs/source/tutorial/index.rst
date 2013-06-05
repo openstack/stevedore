@@ -12,7 +12,6 @@ application.
    naming
    creating_plugins
    loading
-   calling
    testing
 
 .. seealso::

@@ -1,0 +1,31 @@
+$ python -m stevedore.example.load_as_extension --width 30
+Formatter: simple
+a = A
+b = B
+long = word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
+
+Formatter: field
+: a : A
+: b : B
+: long : word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word
+
+Formatter: plain
+a = A
+b = B
+long = word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
