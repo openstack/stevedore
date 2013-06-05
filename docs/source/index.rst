@@ -19,6 +19,7 @@ Contents:
 
    patterns_loading
    patterns_enabling
+   tutorial/index
    managers
    install
    essays/*

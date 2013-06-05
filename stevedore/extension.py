@@ -12,6 +12,11 @@ LOG = logging.getLogger(__name__)
 class Extension(object):
     """Book-keeping object for tracking extensions.
 
+    The arguments passed to the constructor are saved as attributes of
+    the instance using the same names, and can be accessed by the
+    callables passed to :meth:`map` or when iterating over an
+    :class:`ExtensionManager` directly.
+
     :param name: The entry point name.
     :type name: str
     :param entry_point: The EntryPoint instance returned by
@@ -20,6 +25,7 @@ class Extension(object):
     :param plugin: The value returned by entry_point.load()
     :param obj: The object returned by ``plugin(*args, **kwds)`` if the
                 manager invoked the extension on load.
+
     """
 
     def __init__(self, name, entry_point, plugin, obj):
