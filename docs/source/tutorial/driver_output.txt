@@ -1,0 +1,36 @@
+$ python -m stevedore.example.load_as_driver a = A
+b = B
+long = word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
+
+$ python -m stevedore.example.load_as_driver field
+: a : A
+: b : B
+: long : word word word word word word word word word word
+    word word word word word word word word word word word
+    word word word word word word word word word word word
+    word word word word word word word word word word word
+    word word word word word word word word word word word
+    word word word word word word word word word word word
+    word word word word word word word word word word word
+    word word word word
+
+$ python -m stevedore.example.load_as_driver field --width 30
+: a : A
+: b : B
+: long : word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word word word word word
+    word
