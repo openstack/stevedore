@@ -16,7 +16,7 @@ except ImportError:
 
 setup(
     name='stevedore',
-    version='0.8',
+    version='0.9',
 
     description='Manage dynamic plugins for Python applications',
     long_description=long_description,

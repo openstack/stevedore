@@ -25,11 +25,17 @@ dynamically loaded extensions.
 What's New?
 ===========
 
-- Ignore AssertionError exceptions generated when plugins are
-  loaded.
-- Update ``NamedExtensionManager`` to check the name of a plugin
-  before loading its code to avoid importing anything we are not going
-  to use.
+- Add ``name_order`` parameter to ``NamedExtensionManager`` to coerce
+  ``map()`` into processing the extensions in the order they are named
+  when the manager is created, instead of the random order they may
+  have been loaded. Contributed by Daniel Rocco.
+- Change the ``NamedDispatchExtensionManager`` to ignore missing
+  extensions (issue 14).
+- Add ``__getitem__`` to ``ExtensionManager`` for looking up
+  individual plugins by name (issue 15).
+- Start working on the tutorial
+- Remove dependency on distribute, now that it is merged back into
+  setuptools 0.7 (issue 19).
 
 Installing
 ==========

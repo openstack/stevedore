@@ -2,7 +2,7 @@
  History
 =========
 
-dev
+0.9
 
 - Add ``name_order`` parameter to
   :class:`~stevedore.named.NamedExtensionManager` to coerce
@@ -17,7 +17,7 @@ dev
   individual plugins by name (:issue:`15`).
 - Start working on the tutorial, :doc:`tutorial/index`.
 - Remove dependency on distribute, now that it is merged back into
-  setuptools 0.7.
+  setuptools 0.7 (:issue:`19`).
 
 0.8
 
