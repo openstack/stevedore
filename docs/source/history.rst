@@ -16,6 +16,8 @@ dev
   :class:`~stevedore.extension.ExtensionManager` for looking up
   individual plugins by name (:issue:`15`).
 - Start working on the tutorial, :doc:`tutorial/index`.
+- Remove dependency on distribute, now that it is merged back into
+  setuptools 0.7.
 
 0.8
 

@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 
-# Bootstrap installation of Distribute
-import distribute_setup
-distribute_setup.use_setuptools()
-
 from setuptools import setup, find_packages
 
 try:
@@ -11,8 +7,12 @@ try:
 except IOError:
     long_description = ''
 
-install_requires = ['distribute',
-                    ]
+install_requires = []
+
+try:
+    import argparse  # noqa
+except ImportError:
+    install_requires.append('argparse')
 
 setup(
     name='stevedore',
