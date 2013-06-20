@@ -143,7 +143,6 @@ def test_map_propagate_exceptions():
         pass
 
 
-
 def test_map_errors_when_no_plugins():
 
     def mapped(ext, *args, **kwds):
