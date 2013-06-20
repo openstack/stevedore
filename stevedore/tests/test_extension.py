@@ -126,6 +126,24 @@ def test_map_eats_errors():
     assert results == []
 
 
+def test_map_propagate_exceptions():
+
+    def mapped(ext, *args, **kwds):
+        raise RuntimeError('hard coded error')
+
+    em = extension.ExtensionManager('stevedore.test.extension',
+                                    invoke_on_load=True,
+                                    propagate_map_exceptions=True
+                                    )
+
+    try:
+        em.map(mapped, 1, 2, a='A', b='B')
+        assert False
+    except:
+        pass
+
+
+
 def test_map_errors_when_no_plugins():
 
     def mapped(ext, *args, **kwds):

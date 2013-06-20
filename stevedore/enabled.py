@@ -32,13 +32,15 @@ class EnabledExtensionManager(ExtensionManager):
     """
 
     def __init__(self, namespace, check_func, invoke_on_load=False,
-                 invoke_args=(), invoke_kwds={}):
+                 invoke_args=(), invoke_kwds={},
+                 propagate_map_exceptions=False):
         self.check_func = check_func
         super(EnabledExtensionManager, self).__init__(
             namespace,
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
+            propagate_map_exceptions=propagate_map_exceptions,
         )
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):

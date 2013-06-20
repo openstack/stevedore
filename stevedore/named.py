@@ -29,13 +29,14 @@ class NamedExtensionManager(ExtensionManager):
 
     def __init__(self, namespace, names,
                  invoke_on_load=False, invoke_args=(), invoke_kwds={},
-                 name_order=False):
+                 name_order=False, propagate_map_exceptions=False):
         self._names = names
         super(NamedExtensionManager, self).__init__(
             namespace,
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
+            propagate_map_exceptions=propagate_map_exceptions,
         )
 
         if name_order:

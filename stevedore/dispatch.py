@@ -99,13 +99,15 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
     """
 
     def __init__(self, namespace, check_func, invoke_on_load=False,
-                 invoke_args=(), invoke_kwds={}):
+                 invoke_args=(), invoke_kwds={},
+                 propagate_map_exceptions=False):
         super(NameDispatchExtensionManager, self).__init__(
             namespace=namespace,
             check_func=check_func,
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
+            propagate_map_exceptions=propagate_map_exceptions,
         )
         self.by_name = dict((e.name, e) for e in self.extensions)
 

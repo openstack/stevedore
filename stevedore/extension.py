@@ -57,8 +57,10 @@ class ExtensionManager(object):
     def __init__(self, namespace,
                  invoke_on_load=False,
                  invoke_args=(),
-                 invoke_kwds={}):
+                 invoke_kwds={},
+                 propagate_map_exceptions=False):
         self.namespace = namespace
+        self.propagate_map_exceptions = propagate_map_exceptions
         self.extensions = self._load_plugins(invoke_on_load,
                                              invoke_args,
                                              invoke_kwds)
@@ -136,11 +138,11 @@ class ExtensionManager(object):
         try:
             response_callback(func(e, *args, **kwds))
         except Exception as err:
-            # FIXME: Provide an argument to control
-            # whether to ignore exceptions in each
-            # plugin or stop processing.
-            LOG.error('error calling %r: %s', e.name, err)
-            LOG.exception(err)
+            if self.propagate_map_exceptions:
+                raise
+            else:
+                LOG.error('error calling %r: %s', e.name, err)
+                LOG.exception(err)
 
     def __iter__(self):
         """Produce iterator for the manager.
