@@ -51,6 +51,10 @@ class ExtensionManager(object):
         the object returned by the entry point. Only used if invoke_on_load
         is True.
     :type invoke_kwds: dict
+    :param propagate_map_exceptions: Boolean controlling whether exceptions
+        are propagated up through the map call or whether they are logged and
+        then ignored
+    :type invoke_on_load: bool
 
     """
 
@@ -119,7 +123,9 @@ class ExtensionManager(object):
         The first argument to func(), 'ext', is the
         :class:`~stevedore.extension.Extension` instance.
 
-        Exceptions raised from within func() are logged and ignored.
+        Exceptions raised from within func() are propagated up and
+        processing stopped if self.propagate_map_exceptions is True,
+        otherwise they are logged and ignored.
 
         :param func: Callable to invoke for each extension.
         :param args: Variable arguments to pass to func()
