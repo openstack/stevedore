@@ -54,7 +54,8 @@ copyright = u'%s, DreamHost' % datetime.date.today().year
 # built documents.
 #
 # The short X.Y version.
-version = subprocess.check_output(['sh', '-c', 'cd ../..; python setup.py --version'])
+version = subprocess.Popen(['sh', '-c', 'cd ../..; python setup.py --version'],
+                           stdout=subprocess.PIPE).stdout.read()
 version = version.strip()
 # The full version, including alpha/beta/rc tags.
 release = version
