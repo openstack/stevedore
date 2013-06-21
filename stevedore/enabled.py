@@ -28,17 +28,23 @@ class EnabledExtensionManager(ExtensionManager):
         the object returned by the entry point. Only used if invoke_on_load
         is True.
     :type invoke_kwds: dict
+    :param propagate_map_exceptions: Boolean controlling whether exceptions
+        are propagated up through the map call or whether they are logged and
+        then ignored
+    :type invoke_on_load: bool
 
     """
 
     def __init__(self, namespace, check_func, invoke_on_load=False,
-                 invoke_args=(), invoke_kwds={}):
+                 invoke_args=(), invoke_kwds={},
+                 propagate_map_exceptions=False):
         self.check_func = check_func
         super(EnabledExtensionManager, self).__init__(
             namespace,
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
+            propagate_map_exceptions=propagate_map_exceptions,
         )
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):

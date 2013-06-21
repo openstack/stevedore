@@ -25,17 +25,22 @@ class NamedExtensionManager(ExtensionManager):
     :param name_order: If true, sort the loaded extensions to match the
         order used in ``names``.
     :type name_order: bool
+    :param propagate_map_exceptions: Boolean controlling whether exceptions
+        are propagated up through the map call or whether they are logged and
+        then ignored
+    :type invoke_on_load: bool
     """
 
     def __init__(self, namespace, names,
                  invoke_on_load=False, invoke_args=(), invoke_kwds={},
-                 name_order=False):
+                 name_order=False, propagate_map_exceptions=False):
         self._names = names
         super(NamedExtensionManager, self).__init__(
             namespace,
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
+            propagate_map_exceptions=propagate_map_exceptions,
         )
 
         if name_order:

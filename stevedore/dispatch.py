@@ -26,6 +26,10 @@ class DispatchExtensionManager(EnabledExtensionManager):
         the object returned by the entry point. Only used if invoke_on_load
         is True.
     :type invoke_kwds: dict
+    :param propagate_map_exceptions: Boolean controlling whether exceptions
+        are propagated up through the map call or whether they are logged and
+        then ignored
+    :type invoke_on_load: bool
     """
 
     def map(self, filter_func, func, *args, **kwds):
@@ -50,8 +54,9 @@ class DispatchExtensionManager(EnabledExtensionManager):
         The first argument to func(), 'ext', is the
         :class:`~stevedore.extension.Extension` instance.
 
-        Exceptions raised from within filter_func() and func() are
-        logged and ignored.
+        Exceptions raised from within func() are propagated up and
+        processing stopped if self.propagate_map_exceptions is True,
+        otherwise they are logged and ignored.
 
         :param filter_func: Callable to test each extension.
         :param func: Callable to invoke for each extension.
@@ -95,17 +100,23 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
         the object returned by the entry point. Only used if invoke_on_load
         is True.
     :type invoke_kwds: dict
+    :param propagate_map_exceptions: Boolean controlling whether exceptions
+        are propagated up through the map call or whether they are logged and
+        then ignored
+    :type invoke_on_load: bool
 
     """
 
     def __init__(self, namespace, check_func, invoke_on_load=False,
-                 invoke_args=(), invoke_kwds={}):
+                 invoke_args=(), invoke_kwds={},
+                 propagate_map_exceptions=False):
         super(NameDispatchExtensionManager, self).__init__(
             namespace=namespace,
             check_func=check_func,
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
+            propagate_map_exceptions=propagate_map_exceptions,
         )
         self.by_name = dict((e.name, e) for e in self.extensions)
 
@@ -121,7 +132,9 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
         The first argument to func(), 'ext', is the
         :class:`~stevedore.extension.Extension` instance.
 
-        Exceptions raised from within func() are logged and ignored.
+        Exceptions raised from within func() are propagated up and
+        processing stopped if self.propagate_map_exceptions is True,
+        otherwise they are logged and ignored.
 
         :param names: List or set of name(s) of extension(s) to invoke.
         :param func: Callable to invoke for each extension.
