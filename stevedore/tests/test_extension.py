@@ -139,7 +139,7 @@ def test_map_propagate_exceptions():
     try:
         em.map(mapped, 1, 2, a='A', b='B')
         assert False
-    except:
+    except RuntimeError:
         pass
 
 
