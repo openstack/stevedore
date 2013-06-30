@@ -54,7 +54,7 @@ class ExtensionManager(object):
     :param propagate_map_exceptions: Boolean controlling whether exceptions
         are propagated up through the map call or whether they are logged and
         then ignored
-    :type invoke_on_load: bool
+    :type propagate_map_exceptions: bool
 
     """
 
@@ -64,10 +64,37 @@ class ExtensionManager(object):
                  invoke_kwds={},
                  propagate_map_exceptions=False):
         self.namespace = namespace
+        extensions = self._load_plugins(invoke_on_load,
+                                        invoke_args,
+                                        invoke_kwds)
+        self._init_plugins(extensions,
+                           propagate_map_exceptions=propagate_map_exceptions)
+
+    @classmethod
+    def make_test_instance(cls, extensions, propagate_map_exceptions=False):
+        """Construct a test ExtensionManager
+
+        Test instances are passed a list of extensions to work from rather
+        than loading them from entry points.
+
+        :param extensions: Pre-configured Extension instances to use
+        :type extensions: list of :class:`~stevedore.extension.Extension`
+        :param propagate_map_exceptions: When calling map, controls whether
+            exceptions are propagated up through the map call or whether they
+            are logged and then ignored
+        :type propagate_map_exceptions: bool
+        :return: The manager instance, initialized for testing
+
+        """
+
+        o = cls.__new__(cls)
+        o._init_plugins(extensions,
+                        propagate_map_exceptions=propagate_map_exceptions)
+        return o
+
+    def _init_plugins(self, extensions, propagate_map_exceptions=False):
+        self.extensions = extensions
         self.propagate_map_exceptions = propagate_map_exceptions
-        self.extensions = self._load_plugins(invoke_on_load,
-                                             invoke_args,
-                                             invoke_kwds)
         self._extensions_by_name = None
 
     ENTRY_POINT_CACHE = {}
