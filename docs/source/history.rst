@@ -2,12 +2,16 @@
  History
 =========
 
-0.9
+0.10
+
 - Adds ``propagate_map_exceptions`` parameter to all of the extension
   managers which specifies whether exceptions are propagated up 
   through the map call or logged and then ignored. The default is to
   preserve the current behavior of logging and ignoring exceptions.
   Christopher Yeoh <cyeoh@au1.ibm.com>
+
+0.9
+
 - Add ``name_order`` parameter to
   :class:`~stevedore.named.NamedExtensionManager` to coerce
   :func:`map` into processing the extensions in the order they are

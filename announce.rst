@@ -1,6 +1,6 @@
-===============
- stevedore 0.8
-===============
+================
+ stevedore 0.10
+================
 
 .. tags:: stevedore release python
 
@@ -25,17 +25,11 @@ dynamically loaded extensions.
 What's New?
 ===========
 
-- Add ``name_order`` parameter to ``NamedExtensionManager`` to coerce
-  ``map()`` into processing the extensions in the order they are named
-  when the manager is created, instead of the random order they may
-  have been loaded. Contributed by Daniel Rocco.
-- Change the ``NamedDispatchExtensionManager`` to ignore missing
-  extensions (issue 14).
-- Add ``__getitem__`` to ``ExtensionManager`` for looking up
-  individual plugins by name (issue 15).
-- Start working on the tutorial
-- Remove dependency on distribute, now that it is merged back into
-  setuptools 0.7 (issue 19).
+- Adds ``propagate_map_exceptions`` parameter to all of the extension
+  managers which specifies whether exceptions are propagated up 
+  through the map call or logged and then ignored. The default is to
+  preserve the current behavior of logging and ignoring exceptions.
+  Christopher Yeoh <cyeoh@au1.ibm.com>
 
 Installing
 ==========
