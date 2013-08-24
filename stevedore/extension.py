@@ -34,6 +34,16 @@ class Extension(object):
         self.plugin = plugin
         self.obj = obj
 
+    @property
+    def entry_point_target(self):
+        """The module and attribute referenced by this extension's entry_point.
+
+        :return: A string representation of the target of the entry point in
+            'dotted.module:object' format.
+        """
+        return '%s:%s' % (self.entry_point.module_name,
+                          self.entry_point.attrs[0])
+
 
 class ExtensionManager(object):
     """Base class for all of the other managers.

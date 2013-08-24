@@ -34,12 +34,12 @@ class DriverManager(NamedExtensionManager):
             raise RuntimeError('No %r driver found, looking for %r' %
                                (namespace, name))
         if len(self.extensions) > 1:
+            discovered_drivers = ','.join(e.entry_point_target
+                                          for e in self.extensions)
+
             raise RuntimeError('Multiple %r drivers found: %s' %
-                               (namespace,
-                                ','.join('%s:%s' % (e.entry_point.module_name,
-                                                    e.entry_point.attrs[0])
-                                         for e in self.extensions))
-                               )
+                               (namespace, discovered_drivers))
+
 
     def __call__(self, func, *args, **kwds):
         """Invokes func() for the single loaded extension.
