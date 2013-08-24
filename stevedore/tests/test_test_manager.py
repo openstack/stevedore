@@ -1,7 +1,6 @@
 from mock import Mock
 from nose.tools import raises
-from stevedore import (ExtensionManager, NamedExtensionManager, HookManager,
-                       EnabledExtensionManager, DriverManager)
+from stevedore import (ExtensionManager, NamedExtensionManager, HookManager)
 from stevedore.extension import Extension
 
 

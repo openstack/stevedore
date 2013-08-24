@@ -46,7 +46,7 @@ class NamedExtensionManager(ExtensionManager):
         )
 
     @classmethod
-    def make_test_instance(cls, available_extensions, names,
+    def make_test_instance(cls, available_extensions, names=None,
                            name_order=False, propagate_map_exceptions=False):
         """Construct a test NamedExtensionManager
 
@@ -73,6 +73,7 @@ class NamedExtensionManager(ExtensionManager):
         """
 
         o = cls.__new__(cls)
+        o.namespace = 'TESTING'
         o._names = names
         o._name_order = name_order
 
@@ -80,6 +81,7 @@ class NamedExtensionManager(ExtensionManager):
         # happens in _load_one_plugin
         extensions = [extension for extension in available_extensions
                       if extension.name in names]
+
         o._init_plugins(extensions,
                         propagate_map_exceptions=propagate_map_exceptions)
         return o
