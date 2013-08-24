@@ -31,7 +31,7 @@ class EnabledExtensionManager(ExtensionManager):
     :param propagate_map_exceptions: Boolean controlling whether exceptions
         are propagated up through the map call or whether they are logged and
         then ignored
-    :type invoke_on_load: bool
+    :type propagate_map_exceptions: bool
 
     """
 
@@ -46,6 +46,40 @@ class EnabledExtensionManager(ExtensionManager):
             invoke_kwds=invoke_kwds,
             propagate_map_exceptions=propagate_map_exceptions,
         )
+
+    @classmethod
+    def make_test_instance(cls, available_extensions, check_func,
+                           propagate_map_exceptions=False):
+        """Construct a test EnabledExtensionManager
+
+        Test instances are passed a list of extensions to work from rather
+        than loading them from entry points, filtering the available
+        extensions to only those extensions that pass a check function.
+
+        :param available_extensions: Pre-configured Extension instances
+            available for use
+        :type available_extensions: list of
+            :class:`~stevedore.extension.Extension`
+        :param check_func: Function to determine which extensions to load.
+        :type check_func: callable
+        :param propagate_map_exceptions: Boolean controlling whether exceptions
+            are propagated up through the map call or whether they are logged
+            and then ignored
+        :type propagate_map_exceptions: bool
+        :return: The manager instance, initialized for testing
+
+        """
+
+        # simulate excluding plugins not passing check_func, which normally
+        # happens in _load_one_plugin
+        extensions = [extension for extension in available_extensions
+                      if check_func(extension)]
+
+        o = super(EnabledExtensionManager, cls).make_test_instance(
+            extensions, propagate_map_exceptions=propagate_map_exceptions)
+
+        o.check_func = check_func
+        return o
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
         ext = super(EnabledExtensionManager, self)._load_one_plugin(

@@ -1,6 +1,8 @@
 from mock import Mock
-from stevedore import NamedExtensionManager, HookManager
-from stevedore.extension import Extension, ExtensionManager
+from nose.tools import raises
+from stevedore import (ExtensionManager, NamedExtensionManager, HookManager,
+                       EnabledExtensionManager, DriverManager)
+from stevedore.extension import Extension
 
 
 test_extension = Extension('test_extension', None, None, None)
@@ -47,6 +49,16 @@ def test_manager_should_call_all():
     func.assert_any_call(test_extension)
 
 
+def test_manager_return_values():
+    def mapped(ext, *args, **kwds):
+        return ext.name
+
+    em = ExtensionManager.make_test_instance([test_extension2,
+                                              test_extension])
+    results = em.map(mapped)
+    assert sorted(results) == ['another_one', 'test_extension']
+
+
 def test_manager_should_eat_exceptions():
     em = ExtensionManager.make_test_instance([test_extension])
 
@@ -56,16 +68,13 @@ def test_manager_should_eat_exceptions():
     assert results == []
 
 
+@raises(RuntimeError)
 def test_manager_should_propagate_exceptions():
     em = ExtensionManager.make_test_instance([test_extension],
                                              propagate_map_exceptions=True)
     func = Mock(side_effect=RuntimeError('hard coded error'))
 
-    try:
-        em.map(func, 1, 2, a='A', b='B')
-        assert False, 'DID NOT RAISE!'
-    except RuntimeError:
-        pass
+    em.map(func, 1, 2, a='A', b='B')
 
 
 def test_named_manager_should_include_named_extensions():
