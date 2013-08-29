@@ -2,6 +2,11 @@
  History
 =========
 
+0.11
+
+- Fixes logging configuration under Python 2.6 with a NullHandler.
+  (:issue:`2`)
+
 0.10
 
 - Adds ``propagate_map_exceptions`` parameter to all of the extension

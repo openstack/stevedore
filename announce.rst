@@ -1,5 +1,5 @@
 ================
- stevedore 0.10
+ stevedore 0.11
 ================
 
 .. tags:: stevedore release python
@@ -25,11 +25,7 @@ dynamically loaded extensions.
 What's New?
 ===========
 
-- Adds ``propagate_map_exceptions`` parameter to all of the extension
-  managers which specifies whether exceptions are propagated up 
-  through the map call or logged and then ignored. The default is to
-  preserve the current behavior of logging and ignoring exceptions.
-  Christopher Yeoh <cyeoh@au1.ibm.com>
+- Fixes logging configuration under Python 2.6 with a NullHandler.
 
 Installing
 ==========
