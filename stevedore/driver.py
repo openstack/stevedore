@@ -36,7 +36,8 @@ class DriverManager(NamedExtensionManager):
         if len(self.extensions) > 1:
             raise RuntimeError('Multiple %r drivers found: %s' %
                                (namespace,
-                                ','.join('%s:%s' % (e.module_name, e.attrs[0])
+                                ','.join('%s:%s' % (e.entry_point.module_name,
+                                                    e.entry_point.attrs[0])
                                          for e in self.extensions))
                                )
 

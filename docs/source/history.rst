@@ -2,6 +2,11 @@
  History
 =========
 
+dev
+
+- Fixes an exception when reporting on an error where multiple drivers
+  have the same name (:issue:`25`, solution provided by clayg).
+
 0.11
 
 - Fixes logging configuration under Python 2.6 with a NullHandler.
