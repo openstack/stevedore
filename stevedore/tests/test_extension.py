@@ -11,6 +11,9 @@ class FauxExtension(object):
         self.args = args
         self.kwds = kwds
 
+    def get_args_and_data(self, data):
+        return self.args, self.kwds, data
+
 
 def test_detect_plugins():
     em = extension.ExtensionManager('stevedore.test.extension')
@@ -155,3 +158,12 @@ def test_map_errors_when_no_plugins():
         em.map(mapped, 1, 2, a='A', b='B')
     except RuntimeError as err:
         assert 'No stevedore.test.extension.none extensions found' == str(err)
+
+
+def test_map_method():
+    em = extension.ExtensionManager('stevedore.test.extension',
+                                    invoke_on_load=True,
+                                    )
+
+    result = em.map_method('get_args_and_data', 42)
+    assert set(r[2] for r in result) == set([42])
