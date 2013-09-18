@@ -140,6 +140,30 @@ class ExtensionManager(object):
             self._invoke_one_plugin(response.append, func, e, args, kwds)
         return response
 
+    @staticmethod
+    def _call_extension_method(extension, method_name, *args, **kwds):
+        return getattr(extension.obj, method_name)(*args, **kwds)
+
+    def map_method(self, method_name, *args, **kwds):
+        """Iterate over the extensions invoking each one's object method called `method_name`.
+
+        This is equivalent of using :meth:`map` with func set to
+        `lambda x: x.obj.method_name()`
+        while being more convenient.
+
+        Exceptions raised from within the called method are propagated up
+        and processing stopped if self.propagate_map_exceptions is True,
+        otherwise they are logged and ignored.
+
+        .. versionadded:: 0.12
+
+        :param method_name: The extension method name to call for each extension.
+        :param args: Variable arguments to pass to method
+        :param kwds: Keyword arguments to pass to method
+        :returns: List of values returned from methods
+        """
+        return self.map(self._call_extension_method, method_name, *args, **kwds)
+
     def _invoke_one_plugin(self, response_callback, func, e, args, kwds):
         try:
             response_callback(func(e, *args, **kwds))
