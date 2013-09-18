@@ -2,10 +2,14 @@
  History
 =========
 
-dev
+0.12
 
 - Fixes an exception when reporting on an error where multiple drivers
   have the same name (:issue:`25`, solution provided by clayg).
+- Switch packaging to use pbr_.
+- Add ``map_method()`` API to controllers.
+
+.. _pbr: https://github.com/openstack-dev/pbr
 
 0.11
 

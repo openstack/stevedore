@@ -25,7 +25,12 @@ dynamically loaded extensions.
 What's New?
 ===========
 
-- Fixes logging configuration under Python 2.6 with a NullHandler.
+- Fixes an exception when reporting on an error where multiple drivers
+  have the same name (bug 25, solution provided by clayg).
+- Switch packaging to use pbr_.
+- Add ``map_method()`` API to controllers.
+
+.. _pbr: https://github.com/openstack-dev/pbr
 
 Installing
 ==========
