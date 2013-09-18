@@ -28,3 +28,7 @@ pip-log.txt
 
 # Editors
 tags
+
+# pbr generated files
+AUTHORS
+ChangeLog
