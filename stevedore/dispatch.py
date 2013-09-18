@@ -88,7 +88,8 @@ class DispatchExtensionManager(EnabledExtensionManager):
         .. versionadded:: 0.12
 
         :param filter_func: Callable to test each extension.
-        :param method_name: The extension method name to call for each extension.
+        :param method_name: The extension method name to call
+                            for each extension.
         :param args: Variable arguments to pass to method
         :param kwds: Keyword arguments to pass to method
         :returns: List of values returned from methods
@@ -190,7 +191,8 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
         .. versionadded:: 0.12
 
         :param names: List or set of name(s) of extension(s) to invoke.
-        :param method_name: The extension method name to call for each extension.
+        :param method_name: The extension method name
+                            to call for each extension.
         :param args: Variable arguments to pass to method
         :param kwds: Keyword arguments to pass to method
         :returns: List of values returned from methods

@@ -145,7 +145,7 @@ class ExtensionManager(object):
         return getattr(extension.obj, method_name)(*args, **kwds)
 
     def map_method(self, method_name, *args, **kwds):
-        """Iterate over the extensions invoking each one's object method called `method_name`.
+        """Iterate over the extensions invoking a method by name.
 
         This is equivalent of using :meth:`map` with func set to
         `lambda x: x.obj.method_name()`
@@ -157,12 +157,14 @@ class ExtensionManager(object):
 
         .. versionadded:: 0.12
 
-        :param method_name: The extension method name to call for each extension.
+        :param method_name: The extension method name
+                            to call for each extension.
         :param args: Variable arguments to pass to method
         :param kwds: Keyword arguments to pass to method
         :returns: List of values returned from methods
         """
-        return self.map(self._call_extension_method, method_name, *args, **kwds)
+        return self.map(self._call_extension_method,
+                        method_name, *args, **kwds)
 
     def _invoke_one_plugin(self, response_callback, func, e, args, kwds):
         try:

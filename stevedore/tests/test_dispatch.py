@@ -88,6 +88,7 @@ def test_name_dispatch_ignore_missing():
     expected = [('t1', ('first',), {'named': 'named value'})]
     assert results == expected
 
+
 def test_name_dispatch_map_method():
     em = dispatch.NameDispatchExtensionManager(
         'stevedore.test.extension',
