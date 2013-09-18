@@ -1,5 +1,5 @@
 ================
- stevedore 0.11
+ stevedore 0.12
 ================
 
 .. tags:: stevedore release python
