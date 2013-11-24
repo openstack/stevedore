@@ -23,7 +23,6 @@ class HookManager(NamedExtensionManager):
 
     def __init__(self, namespace, name,
                  invoke_on_load=False, invoke_args=(), invoke_kwds={}):
-        self._name = name
         super(HookManager, self).__init__(
             namespace,
             [name],
@@ -32,29 +31,12 @@ class HookManager(NamedExtensionManager):
             invoke_kwds=invoke_kwds,
         )
 
-    @classmethod
-    def make_test_instance(cls, available_extensions, name):
-        """Construct a test HookManager
-
-        Test instances are passed a list of extensions to work from rather
-        than loading them from entry points, filtering the available
-        extensions to only those extensions whose name matches the name
-        argument.
-
-        :param available_extensions: Pre-configured Extension instances
-            available for use
-        :type available_extensions: list of
-            :class:`~stevedore.extension.Extension`
-        :param name: The name of the hooks to use.
-        :type name: str
-        :return: The manager instance, initialized for testing
-
-        """
-
-        o = super(HookManager, cls).make_test_instance(available_extensions,
-                                                       [name])
-        o._name = name
-        return o
+    def _init_attributes(self, namespace, names, name_order=False,
+                         propagate_map_exceptions=False):
+        super(HookManager, self)._init_attributes(
+            namespace, names,
+            propagate_map_exceptions=propagate_map_exceptions)
+        self._name = names[0]
 
     def __getitem__(self, name):
         """Return the named extensions.

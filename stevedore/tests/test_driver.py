@@ -1,19 +1,11 @@
 """Tests for stevedore.extension
 """
-from mock import Mock, sentinel
-from nose.tools import raises
 
 import mock
 import pkg_resources
 
 from stevedore import driver
-from stevedore.extension import Extension
 from stevedore.tests import test_extension
-
-
-mock_entry_point = Mock(module_name='test.extension', attrs=['obj'])
-a_driver = Extension('test_driver', mock_entry_point, sentinel.driver_plugin,
-                     sentinel.driver_obj)
 
 
 def test_detect_plugins():
@@ -67,37 +59,3 @@ def test_multiple_drivers():
         except RuntimeError as err:
             assert "Multiple" in str(err), str(err)
         fep.assert_called_with('stevedore.test.multiple_drivers')
-
-
-@raises(RuntimeError)
-def test_instance_driver_not_found_should_raise():
-    extension = Extension('a_driver', None, None, None)
-    driver.DriverManager.make_test_instance(
-        [extension], 'this_is_not_the_driver_you_are_looking_for')
-
-
-@raises(RuntimeError)
-def test_instance_multiple_drivers_found_should_raise():
-    extension = Extension('test_driver', mock_entry_point, None, None)
-    copycat = Extension('test_driver', mock_entry_point, None, None)
-
-    driver.DriverManager.make_test_instance([extension, copycat],
-                                            'test_driver')
-
-
-def test_instance_should_find_named_driver():
-    em = driver.DriverManager.make_test_instance([a_driver], 'test_driver')
-    assert ['test_driver'] == em.names()
-
-
-def test_instance_call():
-    def invoke(ext, *args, **kwds):
-        return (ext.name, args, kwds)
-    em = driver.DriverManager.make_test_instance([a_driver], 'test_driver')
-    result = em(invoke, 'a', b='C')
-    assert result == ('test_driver', ('a',), {'b': 'C'})
-
-
-def test_instance_driver():
-    em = driver.DriverManager.make_test_instance([a_driver], 'test_driver')
-    assert sentinel.driver_obj == em.driver

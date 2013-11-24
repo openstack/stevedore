@@ -73,15 +73,16 @@ class ExtensionManager(object):
                  invoke_args=(),
                  invoke_kwds={},
                  propagate_map_exceptions=False):
-        self.namespace = namespace
+        self._init_attributes(
+            namespace, propagate_map_exceptions=propagate_map_exceptions)
         extensions = self._load_plugins(invoke_on_load,
                                         invoke_args,
                                         invoke_kwds)
-        self._init_plugins(extensions,
-                           propagate_map_exceptions=propagate_map_exceptions)
+        self._init_plugins(extensions)
 
     @classmethod
-    def make_test_instance(cls, extensions, propagate_map_exceptions=False):
+    def make_test_instance(cls, extensions, namespace='TESTING',
+                           propagate_map_exceptions=False):
         """Construct a test ExtensionManager
 
         Test instances are passed a list of extensions to work from rather
@@ -89,6 +90,9 @@ class ExtensionManager(object):
 
         :param extensions: Pre-configured Extension instances to use
         :type extensions: list of :class:`~stevedore.extension.Extension`
+        :param namespace: The namespace for the manager; used only for
+            identification since the extensions are passed in.
+        :type namespace: str
         :param propagate_map_exceptions: When calling map, controls whether
             exceptions are propagated up through the map call or whether they
             are logged and then ignored
@@ -98,13 +102,17 @@ class ExtensionManager(object):
         """
 
         o = cls.__new__(cls)
-        o._init_plugins(extensions,
-                        propagate_map_exceptions=propagate_map_exceptions)
+        o._init_attributes(namespace,
+                           propagate_map_exceptions=propagate_map_exceptions)
+        o._init_plugins(extensions)
         return o
 
-    def _init_plugins(self, extensions, propagate_map_exceptions=False):
-        self.extensions = extensions
+    def _init_attributes(self, namespace, propagate_map_exceptions=False):
+        self.namespace = namespace
         self.propagate_map_exceptions = propagate_map_exceptions
+
+    def _init_plugins(self, extensions):
+        self.extensions = extensions
         self._extensions_by_name = None
 
     ENTRY_POINT_CACHE = {}

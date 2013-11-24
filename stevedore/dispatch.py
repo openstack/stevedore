@@ -142,6 +142,9 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
             invoke_kwds=invoke_kwds,
             propagate_map_exceptions=propagate_map_exceptions,
         )
+
+    def _init_plugins(self, extensions):
+        super(NameDispatchExtensionManager, self)._init_plugins(extensions)
         self.by_name = dict((e.name, e) for e in self.extensions)
 
     def map(self, names, func, *args, **kwds):

@@ -32,7 +32,7 @@ class DriverManager(NamedExtensionManager):
         )
 
     @classmethod
-    def make_test_instance(cls, available_extensions, name,
+    def make_test_instance(cls, extension, namespace='TESTING',
                            propagate_map_exceptions=False):
         """Construct a test DriverManager
 
@@ -41,12 +41,11 @@ class DriverManager(NamedExtensionManager):
         the name argument to determine which of the available_extensions should
         be used as the driver.
 
-        :param available_extensions: Pre-configured Extension instances
-            available for use
-        :type available_extensions: list of
-            :class:`~stevedore.extension.Extension`
-        :param name: The name of the driver to use.
-        :type name: str
+        :param extension: Pre-configured Extension instances
+        :type extension: list of :class:`~stevedore.extension.Extension`
+        :param namespace: The namespace for the manager; used only for
+            identification since the extensions are passed in.
+        :type namespace: str
         :param propagate_map_exceptions: Boolean controlling whether exceptions
             are propagated up through the map call or whether they are logged
             and then ignored
@@ -56,7 +55,7 @@ class DriverManager(NamedExtensionManager):
         """
 
         o = super(DriverManager, cls).make_test_instance(
-            available_extensions, [name],
+            [extension], namespace=namespace,
             propagate_map_exceptions=propagate_map_exceptions)
         return o
 
