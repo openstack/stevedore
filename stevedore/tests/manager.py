@@ -4,6 +4,7 @@ Extension manager used only for testing.
 """
 
 import logging
+import warnings
 
 from stevedore import extension
 
@@ -13,6 +14,12 @@ LOG = logging.getLogger(__name__)
 
 class TestExtensionManager(extension.ExtensionManager):
     """ExtensionManager that is explicitly initialized for tests.
+
+    .. deprecated:: 0.13
+
+       Use the :func:`make_test_instance` class method of the class
+       being replaced by the test instance instead of using this class
+       directly.
 
     :param extensions: Pre-configured Extension instances to use
                        instead of loading them from entry points.
@@ -30,6 +37,7 @@ class TestExtensionManager(extension.ExtensionManager):
         the object returned by the entry point. Only used if invoke_on_load
         is True.
     :type invoke_kwds: dict
+
     """
 
     def __init__(self, extensions,
@@ -43,6 +51,9 @@ class TestExtensionManager(extension.ExtensionManager):
                                                    invoke_kwds,
                                                    )
         self.extensions = extensions
+        warnings.warn(
+            'TestExtesionManager has been replaced by make_test_instance()',
+            DeprecationWarning)
 
     def _load_plugins(self, invoke_on_load,
                       invoke_args,
