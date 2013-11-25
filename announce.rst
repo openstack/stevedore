@@ -1,5 +1,5 @@
 ================
- stevedore 0.12
+ stevedore 0.13
 ================
 
 .. tags:: stevedore release python
@@ -25,12 +25,16 @@ dynamically loaded extensions.
 What's New?
 ===========
 
-- Fixes an exception when reporting on an error where multiple drivers
-  have the same name (bug 25, solution provided by clayg).
-- Switch packaging to use pbr_.
-- Add ``map_method()`` API to controllers.
+- Deprecate ``TestExtensionManager`` and replace with
+  ``make_test_instance()`` class method to provide test classes that
+  behave more like the production class, while still allowing the
+  extensions to be injected for testing. (contributed by drocco-007)
+- Include a work-around to avoid a cpython bug with atexit
+  (#15881). (contributed by philiptzou)
+- Update documentation to refer to setuptools instead of
+  distribute. (contributed by westurner)
+- Add pypy to the list of default test configurations.
 
-.. _pbr: https://github.com/openstack-dev/pbr
 
 Installing
 ==========
