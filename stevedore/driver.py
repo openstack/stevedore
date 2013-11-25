@@ -37,12 +37,10 @@ class DriverManager(NamedExtensionManager):
         """Construct a test DriverManager
 
         Test instances are passed a list of extensions to work from rather
-        than loading them from entry points.  DriverManager test instances use
-        the name argument to determine which of the available_extensions should
-        be used as the driver.
+        than loading them from entry points.
 
-        :param extension: Pre-configured Extension instances
-        :type extension: list of :class:`~stevedore.extension.Extension`
+        :param extension: Pre-configured Extension instance
+        :type extension: :class:`~stevedore.extension.Extension`
         :param namespace: The namespace for the manager; used only for
             identification since the extensions are passed in.
         :type namespace: str
