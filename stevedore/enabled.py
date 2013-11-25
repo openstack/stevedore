@@ -31,7 +31,7 @@ class EnabledExtensionManager(ExtensionManager):
     :param propagate_map_exceptions: Boolean controlling whether exceptions
         are propagated up through the map call or whether they are logged and
         then ignored
-    :type invoke_on_load: bool
+    :type propagate_map_exceptions: bool
 
     """
 

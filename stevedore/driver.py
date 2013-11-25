@@ -30,16 +30,48 @@ class DriverManager(NamedExtensionManager):
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
         )
+
+    @classmethod
+    def make_test_instance(cls, extension, namespace='TESTING',
+                           propagate_map_exceptions=False):
+        """Construct a test DriverManager
+
+        Test instances are passed a list of extensions to work from rather
+        than loading them from entry points.  DriverManager test instances use
+        the name argument to determine which of the available_extensions should
+        be used as the driver.
+
+        :param extension: Pre-configured Extension instances
+        :type extension: list of :class:`~stevedore.extension.Extension`
+        :param namespace: The namespace for the manager; used only for
+            identification since the extensions are passed in.
+        :type namespace: str
+        :param propagate_map_exceptions: Boolean controlling whether exceptions
+            are propagated up through the map call or whether they are logged
+            and then ignored
+        :type propagate_map_exceptions: bool
+        :return: The manager instance, initialized for testing
+
+        """
+
+        o = super(DriverManager, cls).make_test_instance(
+            [extension], namespace=namespace,
+            propagate_map_exceptions=propagate_map_exceptions)
+        return o
+
+    def _init_plugins(self, extensions, propagate_map_exceptions=False):
+        super(DriverManager, self)._init_plugins(extensions)
+
         if not self.extensions:
+            name = self._names[0]
             raise RuntimeError('No %r driver found, looking for %r' %
-                               (namespace, name))
+                               (self.namespace, name))
         if len(self.extensions) > 1:
+            discovered_drivers = ','.join(e.entry_point_target
+                                          for e in self.extensions)
+
             raise RuntimeError('Multiple %r drivers found: %s' %
-                               (namespace,
-                                ','.join('%s:%s' % (e.entry_point.module_name,
-                                                    e.entry_point.attrs[0])
-                                         for e in self.extensions))
-                               )
+                               (self.namespace, discovered_drivers))
 
     def __call__(self, func, *args, **kwds):
         """Invokes func() for the single loaded extension.

@@ -23,7 +23,6 @@ class HookManager(NamedExtensionManager):
 
     def __init__(self, namespace, name,
                  invoke_on_load=False, invoke_args=(), invoke_kwds={}):
-        self._name = name
         super(HookManager, self).__init__(
             namespace,
             [name],
@@ -31,6 +30,13 @@ class HookManager(NamedExtensionManager):
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
         )
+
+    def _init_attributes(self, namespace, names, name_order=False,
+                         propagate_map_exceptions=False):
+        super(HookManager, self)._init_attributes(
+            namespace, names,
+            propagate_map_exceptions=propagate_map_exceptions)
+        self._name = names[0]
 
     def __getitem__(self, name):
         """Return the named extensions.
