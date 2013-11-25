@@ -2,7 +2,7 @@
  History
 =========
 
-dev
+0.13
 
 - Deprecate ``TestExtensionManager`` and replace with
   ``make_test_instance()`` class method to provide test classes that
