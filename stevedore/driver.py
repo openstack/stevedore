@@ -57,7 +57,7 @@ class DriverManager(NamedExtensionManager):
             propagate_map_exceptions=propagate_map_exceptions)
         return o
 
-    def _init_plugins(self, extensions, propagate_map_exceptions=False):
+    def _init_plugins(self, extensions):
         super(DriverManager, self)._init_plugins(extensions)
 
         if not self.extensions:
