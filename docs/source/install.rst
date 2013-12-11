@@ -5,7 +5,7 @@ Installation
 Python Versions
 ===============
 
-stevedore is tested under Python 2.7 and 3.2.
+stevedore is tested under Python 2.7 and 3.3.
 
 .. _install-basic:
 
@@ -34,10 +34,10 @@ http://pypi.python.org/pypi/stevedore
 Source Code
 ===========
 
-The source is hosted on github: https://github.com/dreamhost/stevedore
+The source is hosted on the OpenStack infrastructure: https://git.openstack.org/cgit/stackforge/stevedore/
 
 Reporting Bugs
 ==============
 
-Please report bugs through the github project:
-https://github.com/dreamhost/stevedore/issues
+Please report bugs through the launchpad project:
+https://launchpad.net/python-stevedore
