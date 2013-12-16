@@ -22,18 +22,21 @@ class DriverManager(NamedExtensionManager):
     """
 
     def __init__(self, namespace, name,
-                 invoke_on_load=False, invoke_args=(), invoke_kwds={}):
+                 invoke_on_load=False, invoke_args=(), invoke_kwds={},
+                 on_load_failure_callback=None):
         super(DriverManager, self).__init__(
             namespace=namespace,
             names=[name],
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
+            on_load_failure_callback=on_load_failure_callback
         )
 
     @classmethod
     def make_test_instance(cls, extension, namespace='TESTING',
-                           propagate_map_exceptions=False):
+                           propagate_map_exceptions=False,
+                           on_load_failure_callback=None):
         """Construct a test DriverManager
 
         Test instances are passed a list of extensions to work from rather
@@ -54,7 +57,8 @@ class DriverManager(NamedExtensionManager):
 
         o = super(DriverManager, cls).make_test_instance(
             [extension], namespace=namespace,
-            propagate_map_exceptions=propagate_map_exceptions)
+            propagate_map_exceptions=propagate_map_exceptions,
+            on_load_failure_callback=on_load_failure_callback)
         return o
 
     def _init_plugins(self, extensions, propagate_map_exceptions=False):

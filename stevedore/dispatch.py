@@ -133,7 +133,8 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
 
     def __init__(self, namespace, check_func, invoke_on_load=False,
                  invoke_args=(), invoke_kwds={},
-                 propagate_map_exceptions=False):
+                 propagate_map_exceptions=False,
+                 on_load_failure_callback=None):
         super(NameDispatchExtensionManager, self).__init__(
             namespace=namespace,
             check_func=check_func,
@@ -141,6 +142,7 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
             propagate_map_exceptions=propagate_map_exceptions,
+            on_load_failure_callback=on_load_failure_callback
         )
 
     def _init_plugins(self, extensions):
