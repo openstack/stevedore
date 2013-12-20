@@ -1,4 +1,4 @@
-Changes to cliff should be submitted for review via the Gerrit tool,
+Changes should be submitted for review via the Gerrit tool,
 following the workflow documented at:
 
    http://wiki.openstack.org/GerritWorkflow
