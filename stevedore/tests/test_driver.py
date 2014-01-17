@@ -53,7 +53,7 @@ def test_multiple_drivers():
             pkg_resources.EntryPoint.parse('backend = pkg2:driver'),
         ]
         for ep in fep.return_value:
-            ep.load = lambda: 'pkg backend'
+            ep.load = lambda *args, **kwds: 'pkg backend'
         try:
             driver.DriverManager('stevedore.test.multiple_drivers', 'backend')
         except RuntimeError as err:

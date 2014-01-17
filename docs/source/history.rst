@@ -2,6 +2,12 @@
  History
 =========
 
+dev
+
+- Disable requirements checking when loading plugins. This removes
+  protection against loading the wrong version of a plugin, or that
+  plugin's dependencies.
+
 0.13
 
 - Deprecate ``TestExtensionManager`` and replace with

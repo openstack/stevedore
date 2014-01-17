@@ -143,7 +143,9 @@ class ExtensionManager(object):
         return extensions
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
-        plugin = ep.load()
+        # FIXME(dhellmann): This should be optional, controlled
+        # through the args to the constructor for the manager.
+        plugin = ep.load(require=False)
         if invoke_on_load:
             obj = plugin(*invoke_args, **invoke_kwds)
         else:
