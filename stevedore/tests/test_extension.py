@@ -5,6 +5,9 @@ import mock
 
 from stevedore import extension
 
+ALL_NAMES = ['e1', 't1', 't2']
+WORKING_NAMES = ['t1', 't2']
+
 
 class FauxExtension(object):
     def __init__(self, *args, **kwds):
@@ -15,10 +18,15 @@ class FauxExtension(object):
         return self.args, self.kwds, data
 
 
+class BrokenExtension(object):
+    def __init__(self, *args, **kwds):
+        raise IOError("Did not create")
+
+
 def test_detect_plugins():
     em = extension.ExtensionManager('stevedore.test.extension')
     names = sorted(em.names())
-    assert names == ['t1', 't2']
+    assert names == ALL_NAMES
 
 
 def test_get_by_name():
@@ -73,7 +81,7 @@ def test_use_cache():
 def test_iterable():
     em = extension.ExtensionManager('stevedore.test.extension')
     names = sorted(e.name for e in em)
-    assert names == ['t1', 't2']
+    assert names == ALL_NAMES
 
 
 def test_invoke_on_load():
@@ -96,7 +104,7 @@ def test_map_return_values():
                                     invoke_on_load=True,
                                     )
     results = em.map(mapped)
-    assert sorted(results) == ['t1', 't2']
+    assert sorted(results) == WORKING_NAMES
 
 
 def test_map_arguments():
@@ -111,7 +119,7 @@ def test_map_arguments():
     em.map(mapped, 1, 2, a='A', b='B')
     assert len(objs) == 2
     names = sorted([o[0].name for o in objs])
-    assert names == ['t1', 't2']
+    assert names == WORKING_NAMES
     for o in objs:
         assert o[1] == (1, 2)
         assert o[2] == {'a': 'A', 'b': 'B'}

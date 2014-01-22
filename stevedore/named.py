@@ -34,10 +34,12 @@ class NamedExtensionManager(ExtensionManager):
 
     def __init__(self, namespace, names,
                  invoke_on_load=False, invoke_args=(), invoke_kwds={},
-                 name_order=False, propagate_map_exceptions=False):
+                 name_order=False, propagate_map_exceptions=False,
+                 on_load_failure_callback=None):
         self._init_attributes(
             namespace, names, name_order=name_order,
-            propagate_map_exceptions=propagate_map_exceptions)
+            propagate_map_exceptions=propagate_map_exceptions,
+            on_load_failure_callback=on_load_failure_callback)
         extensions = self._load_plugins(invoke_on_load,
                                         invoke_args,
                                         invoke_kwds)
@@ -45,7 +47,8 @@ class NamedExtensionManager(ExtensionManager):
 
     @classmethod
     def make_test_instance(cls, extensions, namespace='TESTING',
-                           propagate_map_exceptions=False):
+                           propagate_map_exceptions=False,
+                           on_load_failure_callback=None):
         """Construct a test NamedExtensionManager
 
         Test instances are passed a list of extensions to use rather than
@@ -67,14 +70,17 @@ class NamedExtensionManager(ExtensionManager):
         o = cls.__new__(cls)
         names = [e.name for e in extensions]
         o._init_attributes(namespace, names,
-                           propagate_map_exceptions=propagate_map_exceptions)
+                           propagate_map_exceptions=propagate_map_exceptions,
+                           on_load_failure_callback=on_load_failure_callback)
         o._init_plugins(extensions)
         return o
 
     def _init_attributes(self, namespace, names, name_order=False,
-                         propagate_map_exceptions=False):
+                         propagate_map_exceptions=False,
+                         on_load_failure_callback=None):
         super(NamedExtensionManager, self)._init_attributes(
-            namespace, propagate_map_exceptions=propagate_map_exceptions)
+            namespace, propagate_map_exceptions=propagate_map_exceptions,
+            on_load_failure_callback=on_load_failure_callback)
 
         self._names = names
         self._name_order = name_order

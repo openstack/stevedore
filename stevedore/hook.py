@@ -22,20 +22,24 @@ class HookManager(NamedExtensionManager):
     """
 
     def __init__(self, namespace, name,
-                 invoke_on_load=False, invoke_args=(), invoke_kwds={}):
+                 invoke_on_load=False, invoke_args=(), invoke_kwds={},
+                 on_load_failure_callback=None):
         super(HookManager, self).__init__(
             namespace,
             [name],
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
+            on_load_failure_callback=on_load_failure_callback
         )
 
     def _init_attributes(self, namespace, names, name_order=False,
-                         propagate_map_exceptions=False):
+                         propagate_map_exceptions=False,
+                         on_load_failure_callback=None):
         super(HookManager, self)._init_attributes(
             namespace, names,
-            propagate_map_exceptions=propagate_map_exceptions)
+            propagate_map_exceptions=propagate_map_exceptions,
+            on_load_failure_callback=on_load_failure_callback)
         self._name = names[0]
 
     def __getitem__(self, name):

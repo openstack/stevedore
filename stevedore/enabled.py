@@ -37,7 +37,8 @@ class EnabledExtensionManager(ExtensionManager):
 
     def __init__(self, namespace, check_func, invoke_on_load=False,
                  invoke_args=(), invoke_kwds={},
-                 propagate_map_exceptions=False):
+                 propagate_map_exceptions=False,
+                 on_load_failure_callback=None):
         self.check_func = check_func
         super(EnabledExtensionManager, self).__init__(
             namespace,
@@ -45,6 +46,7 @@ class EnabledExtensionManager(ExtensionManager):
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
             propagate_map_exceptions=propagate_map_exceptions,
+            on_load_failure_callback=on_load_failure_callback
         )
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
