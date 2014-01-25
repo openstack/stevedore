@@ -133,13 +133,17 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
     :type on_load_failure_callback: function
+    :param verify_requirements: Use setuptools to enforce the
+        dependencies of the plugin(s) being loaded. Defaults to False.
+    :type verify_requirements: bool
 
     """
 
     def __init__(self, namespace, check_func, invoke_on_load=False,
                  invoke_args=(), invoke_kwds={},
                  propagate_map_exceptions=False,
-                 on_load_failure_callback=None):
+                 on_load_failure_callback=None,
+                 verify_requirements=False):
         super(NameDispatchExtensionManager, self).__init__(
             namespace=namespace,
             check_func=check_func,
@@ -147,7 +151,8 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
             propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback
+            on_load_failure_callback=on_load_failure_callback,
+            verify_requirements=verify_requirements,
         )
 
     def _init_plugins(self, extensions):

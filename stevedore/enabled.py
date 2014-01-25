@@ -37,13 +37,17 @@ class EnabledExtensionManager(ExtensionManager):
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
     :type on_load_failure_callback: function
+    :param verify_requirements: Use setuptools to enforce the
+        dependencies of the plugin(s) being loaded. Defaults to False.
+    :type verify_requirements: bool
 
     """
 
     def __init__(self, namespace, check_func, invoke_on_load=False,
                  invoke_args=(), invoke_kwds={},
                  propagate_map_exceptions=False,
-                 on_load_failure_callback=None):
+                 on_load_failure_callback=None,
+                 verify_requirements=False,):
         self.check_func = check_func
         super(EnabledExtensionManager, self).__init__(
             namespace,
@@ -51,12 +55,15 @@ class EnabledExtensionManager(ExtensionManager):
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
             propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback
+            on_load_failure_callback=on_load_failure_callback,
+            verify_requirements=verify_requirements,
         )
 
-    def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
+    def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds,
+                         verify_requirements):
         ext = super(EnabledExtensionManager, self)._load_one_plugin(
             ep, invoke_on_load, invoke_args, invoke_kwds,
+            verify_requirements,
         )
         if ext and not self.check_func(ext):
             LOG.debug('ignoring extension %r', ep.name)

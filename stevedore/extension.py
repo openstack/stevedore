@@ -70,6 +70,9 @@ class ExtensionManager(object):
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
     :type on_load_failure_callback: function
+    :param verify_requirements: Use setuptools to enforce the
+        dependencies of the plugin(s) being loaded. Defaults to False.
+    :type verify_requirements: bool
     """
 
     def __init__(self, namespace,
@@ -77,20 +80,23 @@ class ExtensionManager(object):
                  invoke_args=(),
                  invoke_kwds={},
                  propagate_map_exceptions=False,
-                 on_load_failure_callback=None):
+                 on_load_failure_callback=None,
+                 verify_requirements=False):
         self._init_attributes(
             namespace,
             propagate_map_exceptions=propagate_map_exceptions,
             on_load_failure_callback=on_load_failure_callback)
         extensions = self._load_plugins(invoke_on_load,
                                         invoke_args,
-                                        invoke_kwds)
+                                        invoke_kwds,
+                                        verify_requirements)
         self._init_plugins(extensions)
 
     @classmethod
     def make_test_instance(cls, extensions, namespace='TESTING',
                            propagate_map_exceptions=False,
-                           on_load_failure_callback=None):
+                           on_load_failure_callback=None,
+                           verify_requirements=False):
         """Construct a test ExtensionManager
 
         Test instances are passed a list of extensions to work from rather
@@ -111,6 +117,9 @@ class ExtensionManager(object):
             an entrypoint fails to load) are (manager, entrypoint,
             exception)
         :type on_load_failure_callback: function
+        :param verify_requirements: Use setuptools to enforce the
+            dependencies of the plugin(s) being loaded. Defaults to False.
+        :type verify_requirements: bool
         :return: The manager instance, initialized for testing
 
         """
@@ -140,7 +149,8 @@ class ExtensionManager(object):
             self.ENTRY_POINT_CACHE[namespace] = eps
         return self.ENTRY_POINT_CACHE[namespace]
 
-    def _load_plugins(self, invoke_on_load, invoke_args, invoke_kwds):
+    def _load_plugins(self, invoke_on_load, invoke_args, invoke_kwds,
+                      verify_requirements):
         extensions = []
         for ep in self._find_entry_points(self.namespace):
             LOG.debug('found extension %r', ep)
@@ -149,6 +159,7 @@ class ExtensionManager(object):
                                             invoke_on_load,
                                             invoke_args,
                                             invoke_kwds,
+                                            verify_requirements,
                                             )
                 if ext:
                     extensions.append(ext)
@@ -161,10 +172,9 @@ class ExtensionManager(object):
                     self._on_load_failure_callback(self, ep, err)
         return extensions
 
-    def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
-        # FIXME(dhellmann): This should be optional, controlled
-        # through the args to the constructor for the manager.
-        plugin = ep.load(require=False)
+    def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds,
+                         verify_requirements):
+        plugin = ep.load(require=verify_requirements)
         if invoke_on_load:
             obj = plugin(*invoke_args, **invoke_kwds)
         else:

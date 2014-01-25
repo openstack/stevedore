@@ -24,18 +24,23 @@ class HookManager(NamedExtensionManager):
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
     :type on_load_failure_callback: function
+    :param verify_requirements: Use setuptools to enforce the
+        dependencies of the plugin(s) being loaded. Defaults to False.
+    :type verify_requirements: bool
     """
 
     def __init__(self, namespace, name,
                  invoke_on_load=False, invoke_args=(), invoke_kwds={},
-                 on_load_failure_callback=None):
+                 on_load_failure_callback=None,
+                 verify_requirements=False):
         super(HookManager, self).__init__(
             namespace,
             [name],
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
-            on_load_failure_callback=on_load_failure_callback
+            on_load_failure_callback=on_load_failure_callback,
+            verify_requirements=verify_requirements,
         )
 
     def _init_attributes(self, namespace, names, name_order=False,

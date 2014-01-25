@@ -4,9 +4,10 @@
 
 dev
 
-- Disable requirements checking when loading plugins. This removes
-  protection against loading the wrong version of a plugin, or that
-  plugin's dependencies.
+- Provide an option to control requirements checking when loading
+  plugins, and disable it by default. This removes protection against
+  loading the wrong version of a plugin, or that plugin's
+  dependencies.
 
 0.13
 

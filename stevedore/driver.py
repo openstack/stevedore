@@ -24,24 +24,30 @@ class DriverManager(NamedExtensionManager):
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
     :type on_load_failure_callback: function
+    :param verify_requirements: Use setuptools to enforce the
+        dependencies of the plugin(s) being loaded. Defaults to False.
+    :type verify_requirements: bool
     """
 
     def __init__(self, namespace, name,
                  invoke_on_load=False, invoke_args=(), invoke_kwds={},
-                 on_load_failure_callback=None):
+                 on_load_failure_callback=None,
+                 verify_requirements=False):
         super(DriverManager, self).__init__(
             namespace=namespace,
             names=[name],
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
             invoke_kwds=invoke_kwds,
-            on_load_failure_callback=on_load_failure_callback
+            on_load_failure_callback=on_load_failure_callback,
+            verify_requirements=verify_requirements,
         )
 
     @classmethod
     def make_test_instance(cls, extension, namespace='TESTING',
                            propagate_map_exceptions=False,
-                           on_load_failure_callback=None):
+                           on_load_failure_callback=None,
+                           verify_requirements=False):
         """Construct a test DriverManager
 
         Test instances are passed a list of extensions to work from rather
@@ -62,6 +68,9 @@ class DriverManager(NamedExtensionManager):
             an entrypoint fails to load) are (manager, entrypoint,
             exception)
         :type on_load_failure_callback: function
+        :param verify_requirements: Use setuptools to enforce the
+            dependencies of the plugin(s) being loaded. Defaults to False.
+        :type verify_requirements: bool
         :return: The manager instance, initialized for testing
 
         """
@@ -69,7 +78,8 @@ class DriverManager(NamedExtensionManager):
         o = super(DriverManager, cls).make_test_instance(
             [extension], namespace=namespace,
             propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback)
+            on_load_failure_callback=on_load_failure_callback,
+            verify_requirements=verify_requirements)
         return o
 
     def _init_plugins(self, extensions):
