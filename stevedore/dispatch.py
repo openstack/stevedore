@@ -128,6 +128,11 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
         are propagated up through the map call or whether they are logged and
         then ignored
     :type invoke_on_load: bool
+    :param on_load_failure_callback: Callback function that will be called when
+        a entrypoint can not be loaded. The arguments that will be provided
+        when this is called (when an entrypoint fails to load) are
+        (manager, entrypoint, exception)
+    :type on_load_failure_callback: function
 
     """
 
