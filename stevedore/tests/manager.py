@@ -55,7 +55,5 @@ class TestExtensionManager(extension.ExtensionManager):
             'TestExtesionManager has been replaced by make_test_instance()',
             DeprecationWarning)
 
-    def _load_plugins(self, invoke_on_load,
-                      invoke_args,
-                      invoke_kwds):
+    def _load_plugins(self, *args, **kwds):
         return []
