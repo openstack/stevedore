@@ -1,5 +1,5 @@
 ================
- stevedore 0.13
+ stevedore 0.14
 ================
 
 .. tags:: stevedore release python
@@ -25,15 +25,10 @@ dynamically loaded extensions.
 What's New?
 ===========
 
-- Deprecate ``TestExtensionManager`` and replace with
-  ``make_test_instance()`` class method to provide test classes that
-  behave more like the production class, while still allowing the
-  extensions to be injected for testing. (contributed by drocco-007)
-- Include a work-around to avoid a cpython bug with atexit
-  (#15881). (contributed by philiptzou)
-- Update documentation to refer to setuptools instead of
-  distribute. (contributed by westurner)
-- Add pypy to the list of default test configurations.
+- Provide an option to control requirements checking when loading
+  plugins, and disable it by default. This removes protection against
+  loading the wrong version of a plugin, or that plugin's
+  dependencies.
 
 
 Installing

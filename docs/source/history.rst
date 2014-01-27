@@ -2,7 +2,7 @@
  History
 =========
 
-dev
+0.14
 
 - Provide an option to control requirements checking when loading
   plugins, and disable it by default. This removes protection against
