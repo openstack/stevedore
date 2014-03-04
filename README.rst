@@ -3,4 +3,8 @@ stevedore
 
 Manage dynamic plugins for Python applications
 
-See http://stevedore.readthedocs.org for the full documentation.
+* Free software: Apache license
+* Documentation: http://stevedore.readthedocs.org
+* Source: http://git.openstack.org/cgit/openstack/stevedore
+* Bugs: https://bugs.launchpad.net/python-stevedore
+
