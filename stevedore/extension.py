@@ -166,10 +166,11 @@ class ExtensionManager(object):
             except (KeyboardInterrupt, AssertionError):
                 raise
             except Exception as err:
-                LOG.error('Could not load %r: %s', ep.name, err)
-                LOG.exception(err)
                 if self._on_load_failure_callback is not None:
                     self._on_load_failure_callback(self, ep, err)
+                else:
+                    LOG.error('Could not load %r: %s', ep.name, err)
+                    LOG.exception(err)
         return extensions
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds,
