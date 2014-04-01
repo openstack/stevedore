@@ -19,7 +19,7 @@ dynamically loaded extensions.
 
 .. _stevedore: http://stevedore.readthedocs.org
 
-.. _setuptools entry points: http://packages.python.org/distribute/pkg_resources.html#convenience-api
+.. _setuptools entry points: http://packages.python.org/setuptools/pkg_resources.html#convenience-api
 
 
 What's New?
