@@ -15,7 +15,7 @@ def test_extension_failure_custom_callback():
                                     on_load_failure_callback=failure_callback)
     extensions = list(em.extensions)
     assert len(extensions) > 0
-    assert len(errors) == 1
-    (manager, entrypoint, error) = errors[0]
-    assert manager is em
-    assert isinstance(error, IOError)
+    assert len(errors) == 2
+    for manager, entrypoint, error in errors:
+        assert manager is em
+        assert isinstance(error, (IOError, ImportError))

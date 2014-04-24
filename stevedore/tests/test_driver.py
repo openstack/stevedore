@@ -43,6 +43,15 @@ def test_no_drivers():
         assert "No 'stevedore.test.extension.none' driver found" in str(err)
 
 
+def test_bad_driver():
+    try:
+        driver.DriverManager('stevedore.test.extension', 'e2')
+    except ImportError:
+        pass
+    else:
+        assert False, "No error raised"
+
+
 def test_multiple_drivers():
     # The idea for this test was contributed by clayg:
     # https://gist.github.com/clayg/6311348

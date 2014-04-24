@@ -33,6 +33,8 @@ class DriverManager(NamedExtensionManager):
                  invoke_on_load=False, invoke_args=(), invoke_kwds={},
                  on_load_failure_callback=None,
                  verify_requirements=False):
+        on_load_failure_callback = on_load_failure_callback \
+            or self._default_on_load_failure
         super(DriverManager, self).__init__(
             namespace=namespace,
             names=[name],
@@ -42,6 +44,10 @@ class DriverManager(NamedExtensionManager):
             on_load_failure_callback=on_load_failure_callback,
             verify_requirements=verify_requirements,
         )
+
+    @staticmethod
+    def _default_on_load_failure(drivermanager, ep, err):
+        raise err
 
     @classmethod
     def make_test_instance(cls, extension, namespace='TESTING',
