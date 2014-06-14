@@ -1,11 +1,12 @@
 import abc
 
+import six
 
+
+@six.add_metaclass(abc.ABCMeta)
 class FormatterBase(object):
     """Base class for example plugin used in the tutoral.
     """
-
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self, max_width=60):
         self.max_width = max_width
