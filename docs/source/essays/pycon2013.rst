@@ -314,7 +314,7 @@ often written by someone other than the core developer for the
 application.  I saw two basic techniques to help developers get their
 plugins right: convention and interfaces.
 
-.. image:: integration.jpg
+.. image:: api-enforcement.jpg
    :scale: 50
    :align: center
 
