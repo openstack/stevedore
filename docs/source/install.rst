@@ -34,7 +34,7 @@ http://pypi.python.org/pypi/stevedore
 Source Code
 ===========
 
-The source is hosted on the OpenStack infrastructure: https://git.openstack.org/cgit/stackforge/stevedore/
+The source is hosted on the OpenStack infrastructure: https://git.openstack.org/cgit/openstack/stevedore/
 
 Reporting Bugs
 ==============
