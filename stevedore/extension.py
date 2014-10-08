@@ -274,3 +274,8 @@ class ExtensionManager(object):
                 d[e.name] = e
             self._extensions_by_name = d
         return self._extensions_by_name[name]
+
+    def __contains__(self, name):
+        """Return true if name is in list of enabled extensions.
+        """
+        return any(extension.name == name for extension in self.extensions)

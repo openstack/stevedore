@@ -36,6 +36,10 @@ class TestCallback(utils.TestCase):
         e = em['t1']
         self.assertEqual(e.name, 't1')
 
+    def test_contains_by_name(self):
+        em = extension.ExtensionManager('stevedore.test.extension')
+        self.assertEqual('t1' in em, True)
+
     def test_get_by_name_missing(self):
         em = extension.ExtensionManager('stevedore.test.extension')
         try:
