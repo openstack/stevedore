@@ -15,7 +15,7 @@ dynamically loaded extensions.
 .. _setuptools entry points: http://packages.python.org/setuptools/pkg_resources.html#convenience-api
 
 * Free software: Apache license
-* Documentation: http://stevedore.readthedocs.org
+* Documentation: http://docs.openstack.org/developer/stevedore
 * Source: http://git.openstack.org/cgit/openstack/stevedore
 * Bugs: https://bugs.launchpad.net/python-stevedore
 
