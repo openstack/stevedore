@@ -32,3 +32,4 @@ tags
 # pbr generated files
 AUTHORS
 ChangeLog
+/.testrepository/
