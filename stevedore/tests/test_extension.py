@@ -169,3 +169,43 @@ class TestCallback(utils.TestCase):
 
         result = em.map_method('get_args_and_data', 42)
         self.assertEqual(set(r[2] for r in result), set([42]))
+
+
+class TestLoadRequirementsNewSetuptools(utils.TestCase):
+    # setuptools 11.3 and later
+
+    def setUp(self):
+        super(TestLoadRequirementsNewSetuptools, self).setUp()
+        self.mock_ep = mock.Mock(spec=['require', 'resolve', 'load', 'name'])
+        self.em = extension.ExtensionManager.make_test_instance([])
+
+    def test_verify_requirements(self):
+        self.em._load_one_plugin(self.mock_ep, False, (), {},
+                                 verify_requirements=True)
+        self.mock_ep.require.assert_called_once_with()
+        self.mock_ep.resolve.assert_called_once_with()
+
+    def test_no_verify_requirements(self):
+        self.em._load_one_plugin(self.mock_ep, False, (), {},
+                                 verify_requirements=False)
+        self.assertEqual(0, self.mock_ep.require.call_count)
+        self.mock_ep.resolve.assert_called_once_with()
+
+
+class TestLoadRequirementsOldSetuptools(utils.TestCase):
+    # Before setuptools 11.3
+
+    def setUp(self):
+        super(TestLoadRequirementsOldSetuptools, self).setUp()
+        self.mock_ep = mock.Mock(spec=['load', 'name'])
+        self.em = extension.ExtensionManager.make_test_instance([])
+
+    def test_verify_requirements(self):
+        self.em._load_one_plugin(self.mock_ep, False, (), {},
+                                 verify_requirements=True)
+        self.mock_ep.load.assert_called_once_with(require=True)
+
+    def test_no_verify_requirements(self):
+        self.em._load_one_plugin(self.mock_ep, False, (), {},
+                                 verify_requirements=False)
+        self.mock_ep.load.assert_called_once_with(require=False)

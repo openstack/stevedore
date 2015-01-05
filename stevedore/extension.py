@@ -175,7 +175,14 @@ class ExtensionManager(object):
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds,
                          verify_requirements):
-        plugin = ep.load(require=verify_requirements)
+        # NOTE(dhellmann): Using require=False is deprecated in
+        # setuptools 11.3.
+        if hasattr(ep, 'resolve') and hasattr(ep, 'require'):
+            if verify_requirements:
+                ep.require()
+            plugin = ep.resolve()
+        else:
+            plugin = ep.load(require=verify_requirements)
         if invoke_on_load:
             obj = plugin(*invoke_args, **invoke_kwds)
         else:
