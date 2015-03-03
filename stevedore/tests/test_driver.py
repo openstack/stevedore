@@ -1,10 +1,10 @@
 """Tests for stevedore.extension
 """
 
-import mock
 import pkg_resources
 
 from stevedore import driver
+from stevedore import extension
 from stevedore.tests import test_extension
 from stevedore.tests import utils
 
@@ -52,17 +52,25 @@ class TestCallback(utils.TestCase):
     def test_multiple_drivers(self):
         # The idea for this test was contributed by clayg:
         # https://gist.github.com/clayg/6311348
-        fep_name = 'stevedore.extension.ExtensionManager._find_entry_points'
-        with mock.patch(fep_name) as fep:
-            fep.return_value = [
+        extensions = [
+            extension.Extension(
+                'backend',
                 pkg_resources.EntryPoint.parse('backend = pkg1:driver'),
+                'pkg backend',
+                None,
+            ),
+            extension.Extension(
+                'backend',
                 pkg_resources.EntryPoint.parse('backend = pkg2:driver'),
-            ]
-            for ep in fep.return_value:
-                ep.load = lambda *args, **kwds: 'pkg backend'
-            try:
-                driver.DriverManager('stevedore.test.multiple_drivers',
-                                     'backend')
-            except RuntimeError as err:
-                self.assertIn("Multiple", str(err))
-            fep.assert_called_with('stevedore.test.multiple_drivers')
+                'pkg backend',
+                None,
+            ),
+        ]
+        try:
+            dm = driver.DriverManager.make_test_instance(extensions[0])
+            # Call the initialization code that verifies the extension
+            dm._init_plugins(extensions)
+        except RuntimeError as err:
+            self.assertIn("Multiple", str(err))
+        else:
+            self.fail('Should have had an error')
