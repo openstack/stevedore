@@ -47,7 +47,7 @@ class DriverManager(NamedExtensionManager):
 
     @staticmethod
     def _default_on_load_failure(drivermanager, ep, err):
-        raise err
+        raise
 
     @classmethod
     def make_test_instance(cls, extension, namespace='TESTING',
