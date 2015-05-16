@@ -32,6 +32,7 @@ extensions = [
     'sphinx.ext.graphviz',
     'sphinx.ext.extlinks',
     'oslosphinx',
+    'stevedore.sphinxext',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
