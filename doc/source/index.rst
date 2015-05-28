@@ -21,6 +21,7 @@ Contents:
    patterns_enabling
    tutorial/index
    managers
+   sphinxext
    install
    essays/*
    history
