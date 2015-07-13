@@ -3,10 +3,10 @@
 # process, which may cause wedges in the gate later.
 
 Pillow==2.4.0 # MIT
-sphinx>=1.1.2,!=1.2.0,!=1.3b1,<1.3
-mock>=1.0
+sphinx!=1.2.0,!=1.3b1,<1.3,>=1.1.2
+mock<1.1.0,>=1.0
 coverage>=3.6
 testrepository>=0.0.18
 discover
-oslotest>=1.2.0  # Apache-2.0
-oslosphinx>=2.2.0  # Apache-2.0
+oslotest<1.6.0,>=1.5.1 # Apache-2.0
+oslosphinx<2.6.0,>=2.5.0 # Apache-2.0
