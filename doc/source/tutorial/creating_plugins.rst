@@ -155,6 +155,7 @@ However, the plugin is registered as part of the
    :language: python
    :lines: 36-40
 
-When the plugin namespace is scanned, the entry point from the second
+When the plugin namespace is scanned, all packages on the current
+``PYTHONPATH`` are examined and the entry point from the second
 package is found and can be loaded without the application having to
 know where the plugin is actually installed.
