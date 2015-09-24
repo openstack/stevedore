@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='stevedore-examples',
+    name='stevedore-examples2',
     version='1.0',
 
     description='Demonstration package for stevedore',
@@ -27,7 +27,7 @@ setup(
 
     scripts=[],
 
-    provides=['stevedore.examples',
+    provides=['stevedore.examples2',
               ],
 
     packages=find_packages(),
@@ -35,8 +35,7 @@ setup(
 
     entry_points={
         'stevedore.example.formatter': [
-            'simple = stevedore.example.simple:Simple',
-            'plain = stevedore.example.simple:Simple',
+            'field = stevedore.example2.fields:FieldList',
         ],
     },
 

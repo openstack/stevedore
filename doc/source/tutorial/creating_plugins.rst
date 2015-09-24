@@ -54,15 +54,9 @@ output with each variable name and value on a single line.
    :language: python
    :prepend: # stevedore/example/simple.py
 
-An alternate implementation produces a reStructuredText `field list`_.
-
-.. literalinclude:: ../../../stevedore/example/fields.py
-   :language: python
-   :prepend: # stevedore/example/fields.py
-
-There are plenty of other formatting options, but these two examples
-will give us enough to work with to demonstrate registering and using
-pluins.
+There are plenty of other formatting options, but this example will
+give us enough to work with to demonstrate registering and using
+plugins.
 
 Registering the Plugins
 =======================
@@ -70,7 +64,7 @@ Registering the Plugins
 To use setuptools entry points, you must package your application or
 library using setuptools. The build and packaging process generates
 metadata which is available after installation to find the plugins
-provided by each python distribution. 
+provided by each python distribution.
 
 The entry points must be declared as belonging to a specific
 namespace, so we need to pick one before going any further. These
@@ -94,9 +88,9 @@ of something that can be imported from inside the module.
    :language: python
    :lines: 37-43
 
-In this case, there are three plugins registered. The "simple" and
-"field" plugins defined above, and a "plain" plugin, which is just an
-alias for the simple plugin.
+In this case, there are two plugins registered. The "simple" plugin
+defined above, and a "plain" plugin, which is just an alias for the
+simple plugin.
 
 setuptools Metadata
 ===================
@@ -123,3 +117,44 @@ not modify these files, except by changing the list of entry points in
 
 .. _abc module: http://docs.python.org/2/library/abc.html
 .. _field list: http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#field-lists
+
+Adding Plugins in Other Packages
+================================
+
+Part of the appeal of using entry points for plugins is that they can
+be distributed independently of an application. The namespace
+setuptools uses to find the plugins is different from the Python
+source code namespace. It is common to use a plugin namespace prefixed
+with the name of the application or library that loads the plugins, to
+ensure it is unique, but that name has no bearing on what Python
+package the code for the plugin should live in.
+
+For example, we can add an alternate implementation of a formatter
+plugin that produces a reStructuredText `field list`_.
+
+.. literalinclude:: ../../../stevedore/example2/fields.py
+   :language: python
+   :prepend: # stevedore/example2/fields.py
+
+The new plugin can then be packaged using a ``setup.py`` containing
+
+.. literalinclude:: ../../../stevedore/example2/setup.py
+   :language: python
+   :prepend: # stevedore/example2/setup.py
+
+The new plugin is in a separate ``stevedore-examples2`` package.
+
+.. literalinclude:: ../../../stevedore/example2/setup.py
+   :language: python
+   :lines: 3-4
+
+However, the plugin is registered as part of the
+``stevedore.example.formatter`` namespace.
+
+.. literalinclude:: ../../../stevedore/example2/setup.py
+   :language: python
+   :lines: 36-40
+
+When the plugin namespace is scanned, the entry point from the second
+package is found and can be loaded without the application having to
+know where the plugin is actually installed.
