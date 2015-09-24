@@ -1,4 +1,4 @@
-"""Tests for stevedore.exmaple.fields
+"""Tests for stevedore.example.fields
 """
 
 from stevedore.example import fields

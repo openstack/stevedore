@@ -53,7 +53,7 @@ Hooks -- Single Name, Many Entry Points
 =======================================
 
 *Hooks*, *signals*, or *callbacks* are invoked based on an event
-occuring within an application. All of the hooks for an application
+occurring within an application. All of the hooks for an application
 may share a single namespace (e.g., ``my.application.hooks``) and use
 a different name for the triggered event (e.g., ``startup`` and
 ``precommit``). Multiple entry points can share the same name within
