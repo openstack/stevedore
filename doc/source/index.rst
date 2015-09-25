@@ -16,6 +16,7 @@ Contents:
 
 .. toctree::
    :glob:
+   :maxdepth: 2
 
    patterns_loading
    patterns_enabling
@@ -24,6 +25,10 @@ Contents:
    sphinxext
    install
    essays/*
+
+.. toctree::
+   :maxdepth: 1
+
    history
 
 .. _setuptools entry points: http://packages.python.org/setuptools/pkg_resources.html#convenience-api
