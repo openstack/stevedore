@@ -36,6 +36,12 @@ Source Code
 
 The source is hosted on the OpenStack infrastructure: https://git.openstack.org/cgit/openstack/stevedore/
 
+Entry point inspector
+=====================
+
+To list entrypoints and registered plugins this tool can be also very useful:
+https://pypi.python.org/pypi/entry_point_inspector
+
 Reporting Bugs
 ==============
 
