@@ -1,4 +1,8 @@
+import logging
+
 from .extension import ExtensionManager
+
+LOG = logging.getLogger(__name__)
 
 
 class NamedExtensionManager(ExtensionManager):
@@ -34,6 +38,10 @@ class NamedExtensionManager(ExtensionManager):
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
     :type on_load_failure_callback: function
+    :param on_missing_entrypoints_callback: Callback function that will be
+        called when one or more names cannot be found. The provided argument
+        will be a subset of the 'names' parameter.
+    :type on_missing_entrypoints_callback: function
     :param verify_requirements: Use setuptools to enforce the
         dependencies of the plugin(s) being loaded. Defaults to False.
     :type verify_requirements: bool
@@ -44,6 +52,7 @@ class NamedExtensionManager(ExtensionManager):
                  invoke_on_load=False, invoke_args=(), invoke_kwds={},
                  name_order=False, propagate_map_exceptions=False,
                  on_load_failure_callback=None,
+                 on_missing_entrypoints_callback=None,
                  verify_requirements=False):
         self._init_attributes(
             namespace, names, name_order=name_order,
@@ -53,6 +62,13 @@ class NamedExtensionManager(ExtensionManager):
                                         invoke_args,
                                         invoke_kwds,
                                         verify_requirements)
+        missing_entrypoints = set(names) - set([e.name for e in extensions])
+        if missing_entrypoints:
+            if on_missing_entrypoints_callback:
+                on_missing_entrypoints_callback(missing_entrypoints)
+            else:
+                LOG.warning('Could not load %s' %
+                            ', '.join(missing_entrypoints))
         self._init_plugins(extensions)
 
     @classmethod
