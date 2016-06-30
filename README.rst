@@ -20,7 +20,7 @@ for managing entry points tends to be repetitive, though, so stevedore
 provides manager classes for implementing common patterns for using
 dynamically loaded extensions.
 
-.. _setuptools entry points: http://packages.python.org/setuptools/pkg_resources.html#convenience-api
+.. _setuptools entry points: http://setuptools.readthedocs.io/en/latest/pkg_resources.html?#entry-points
 
 * Free software: Apache license
 * Documentation: http://docs.openstack.org/developer/stevedore
