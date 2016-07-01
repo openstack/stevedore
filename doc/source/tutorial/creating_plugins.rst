@@ -103,7 +103,6 @@ for stevedore is located in ``stevedore.egg-info/entry_points.txt``:
 
     [stevedore.example.formatter]
     simple = stevedore.example.simple:Simple
-    field = stevedore.example.fields:FieldList
     plain = stevedore.example.simple:Simple
     
     [stevedore.test.extension]
