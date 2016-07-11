@@ -48,7 +48,7 @@ class TestCallback(utils.TestCase):
         except ImportError:
             pass
         else:
-            self.assertEquals(False, "No error raised")
+            self.assertEqual(False, "No error raised")
 
     def test_multiple_drivers(self):
         # The idea for this test was contributed by clayg:
