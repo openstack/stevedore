@@ -170,8 +170,15 @@ class ExtensionManager(object):
                 if self._on_load_failure_callback is not None:
                     self._on_load_failure_callback(self, ep, err)
                 else:
-                    LOG.error('Could not load %r: %s', ep.name, err)
-                    LOG.exception(err)
+                    # Log the reason we couldn't import the module,
+                    # usually without a traceback. The most common
+                    # reason is an ImportError due to a missing
+                    # dependency, and the error message should be
+                    # enough to debug that.  If debug logging is
+                    # enabled for our logger, provide the full
+                    # traceback.
+                    LOG.error('Could not load %r: %s', ep.name, err,
+                              exc_info=LOG.isEnabledFor(logging.DEBUG))
         return extensions
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds,
