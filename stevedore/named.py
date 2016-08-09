@@ -45,6 +45,10 @@ class NamedExtensionManager(ExtensionManager):
     :param verify_requirements: Use setuptools to enforce the
         dependencies of the plugin(s) being loaded. Defaults to False.
     :type verify_requirements: bool
+    :param warn_on_missing_entrypoint: Flag to control whether failing
+        to load a plugin is reported via a log mess. Only applies if
+        on_missing_entrypoints_callback is None.
+    :type warn_on_missing_entrypoint: bool
 
     """
 
@@ -53,7 +57,8 @@ class NamedExtensionManager(ExtensionManager):
                  name_order=False, propagate_map_exceptions=False,
                  on_load_failure_callback=None,
                  on_missing_entrypoints_callback=None,
-                 verify_requirements=False):
+                 verify_requirements=False,
+                 warn_on_missing_entrypoint=True):
         self._init_attributes(
             namespace, names, name_order=name_order,
             propagate_map_exceptions=propagate_map_exceptions,
@@ -66,7 +71,7 @@ class NamedExtensionManager(ExtensionManager):
         if self._missing_names:
             if on_missing_entrypoints_callback:
                 on_missing_entrypoints_callback(self._missing_names)
-            else:
+            elif warn_on_missing_entrypoint:
                 LOG.warning('Could not load %s' %
                             ', '.join(self._missing_names))
         self._init_plugins(extensions)
