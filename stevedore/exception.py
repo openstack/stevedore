@@ -1,9 +1,9 @@
 class NoUniqueMatch(RuntimeError):
-    """There was more that one on no extensions matching the query."""
+    """There was more than one extension, or none, that matched the query."""
 
 
 class NoMatches(NoUniqueMatch):
-    """There were no extensions with the diver name found."""
+    """There were no extensions with the driver name found."""
 
 
 class MultipleMatches(NoUniqueMatch):
