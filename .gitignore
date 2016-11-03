@@ -33,3 +33,6 @@ tags
 AUTHORS
 ChangeLog
 /.testrepository/
+
+# reno build
+releasenotes/build
