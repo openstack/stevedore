@@ -31,7 +31,7 @@ Contents:
 
    history
 
-.. _setuptools entry points: http://packages.python.org/setuptools/pkg_resources.html#convenience-api
+.. _setuptools entry points: http://setuptools.readthedocs.io/en/latest/pkg_resources.html?#entry-points
 
 Indices and tables
 ==================
