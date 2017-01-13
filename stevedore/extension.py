@@ -156,16 +156,22 @@ class ExtensionManager(object):
 
     ENTRY_POINT_CACHE = {}
 
-    def _find_entry_points(self, namespace):
-        if namespace not in self.ENTRY_POINT_CACHE:
-            eps = list(pkg_resources.iter_entry_points(namespace))
-            self.ENTRY_POINT_CACHE[namespace] = eps
-        return self.ENTRY_POINT_CACHE[namespace]
+    def list_entry_points(self):
+        """Return the list of entry points for this namespace.
+
+        The entry points are not actually loaded, their list is just read and
+        returned.
+
+        """
+        if self.namespace not in self.ENTRY_POINT_CACHE:
+            eps = list(pkg_resources.iter_entry_points(self.namespace))
+            self.ENTRY_POINT_CACHE[self.namespace] = eps
+        return self.ENTRY_POINT_CACHE[self.namespace]
 
     def _load_plugins(self, invoke_on_load, invoke_args, invoke_kwds,
                       verify_requirements):
         extensions = []
-        for ep in self._find_entry_points(self.namespace):
+        for ep in self.list_entry_points():
             LOG.debug('found extension %r', ep)
             try:
                 ext = self._load_one_plugin(ep,
