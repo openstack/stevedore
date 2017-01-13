@@ -13,6 +13,7 @@
 """ExtensionManager
 """
 
+import operator
 import pkg_resources
 
 import logging
@@ -167,6 +168,10 @@ class ExtensionManager(object):
             eps = list(pkg_resources.iter_entry_points(self.namespace))
             self.ENTRY_POINT_CACHE[self.namespace] = eps
         return self.ENTRY_POINT_CACHE[self.namespace]
+
+    def entry_points_names(self):
+        """Return the list of entry points names for this namespace."""
+        return list(map(operator.attrgetter("name"), self.list_entry_points()))
 
     def _load_plugins(self, invoke_on_load, invoke_args, invoke_kwds,
                       verify_requirements):

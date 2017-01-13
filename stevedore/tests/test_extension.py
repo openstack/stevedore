@@ -58,6 +58,12 @@ class TestCallback(utils.TestCase):
                          set(map(operator.attrgetter("name"), n)))
         self.assertEqual(4, len(n))
 
+    def test_list_entry_points_names(self):
+        em = extension.ExtensionManager('stevedore.test.extension')
+        names = em.entry_points_names()
+        self.assertEqual(set(['e1', 'e2', 't1', 't2']), set(names))
+        self.assertEqual(4, len(names))
+
     def test_contains_by_name(self):
         em = extension.ExtensionManager('stevedore.test.extension')
         self.assertEqual('t1' in em, True)
