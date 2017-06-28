@@ -16,7 +16,7 @@ application.
 
 .. seealso::
 
-   * :doc:`/essays/pycon2013`
+   * :doc:`../essays/pycon2013`
    * `Using setuptools entry points`_
    * `Package Discovery and Resource Access using pkg_resources`_
    * `Using Entry Points to Write Plugins | Pylons`_

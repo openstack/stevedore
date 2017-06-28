@@ -12,29 +12,18 @@ for managing entry points tends to be repetitive, though, so stevedore
 provides manager classes for implementing common patterns for using
 dynamically loaded extensions.
 
-Contents:
-
 .. toctree::
    :glob:
    :maxdepth: 2
 
-   patterns_loading
-   patterns_enabling
-   tutorial/index
-   managers
-   sphinxext
-   install
-   essays/*
+   user/index
+   reference/index
+   install/index
 
-.. toctree::
-   :maxdepth: 1
-
-   history
 
 .. _setuptools entry points: http://setuptools.readthedocs.io/en/latest/pkg_resources.html?#entry-points
 
-Indices and tables
-==================
+.. rubric:: Indices and tables
 
 * :ref:`genindex`
 * :ref:`search`

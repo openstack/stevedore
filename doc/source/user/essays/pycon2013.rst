@@ -476,5 +476,5 @@ patterns.
 
   * PyCon 2013 Video: http://pyvideo.org/video/1789/dynamic-code-patterns-extending-your-application
   * Slides: http://www.slideshare.net/doughellmann/dynamic-codepatterns
-  * :doc:`/patterns_loading`
-  * :doc:`/patterns_enabling`
+  * :doc:`/user/patterns_loading`
+  * :doc:`/user/patterns_enabling`

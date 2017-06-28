@@ -35,7 +35,7 @@ A Plugin Base Class
 Step 1 above is to define an abstract base class for the API that
 needs to be implemented by each plugin. 
 
-.. literalinclude:: ../../../stevedore/example/base.py
+.. literalinclude:: ../../../../stevedore/example/base.py
    :language: python
    :prepend: # stevedore/example/base.py
 
@@ -50,7 +50,7 @@ The next step is to create a couple of plugin classes with concrete
 implementations of :func:`format`. A simple example formatter produces
 output with each variable name and value on a single line.
 
-.. literalinclude:: ../../../stevedore/example/simple.py
+.. literalinclude:: ../../../../stevedore/example/simple.py
    :language: python
    :prepend: # stevedore/example/simple.py
 
@@ -72,7 +72,7 @@ plugins are formatters from the stevedore examples, so I will use the
 namespace "stevedore.example.formatter". Now it is possible to provide
 all of the necessary information in the packaging instructions:
 
-.. literalinclude:: ../../../stevedore/example/setup.py
+.. literalinclude:: ../../../../stevedore/example/setup.py
    :language: python
    :prepend: # stevedore/example/setup.py
 
@@ -84,7 +84,7 @@ where *name* is the user-visible name for the plugin, *module* is the
 Python import reference for the module, and *importable* is the name
 of something that can be imported from inside the module.
 
-.. literalinclude:: ../../../stevedore/example/setup.py
+.. literalinclude:: ../../../../stevedore/example/setup.py
    :language: python
    :lines: 37-43
 
@@ -131,26 +131,26 @@ package the code for the plugin should live in.
 For example, we can add an alternate implementation of a formatter
 plugin that produces a reStructuredText `field list`_.
 
-.. literalinclude:: ../../../stevedore/example2/fields.py
+.. literalinclude:: ../../../../stevedore/example2/fields.py
    :language: python
    :prepend: # stevedore/example2/fields.py
 
 The new plugin can then be packaged using a ``setup.py`` containing
 
-.. literalinclude:: ../../../stevedore/example2/setup.py
+.. literalinclude:: ../../../../stevedore/example2/setup.py
    :language: python
    :prepend: # stevedore/example2/setup.py
 
 The new plugin is in a separate ``stevedore-examples2`` package.
 
-.. literalinclude:: ../../../stevedore/example2/setup.py
+.. literalinclude:: ../../../../stevedore/example2/setup.py
    :language: python
    :lines: 3-4
 
 However, the plugin is registered as part of the
 ``stevedore.example.formatter`` namespace.
 
-.. literalinclude:: ../../../stevedore/example2/setup.py
+.. literalinclude:: ../../../../stevedore/example2/setup.py
    :language: python
    :lines: 36-40
 

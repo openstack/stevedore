@@ -17,7 +17,7 @@ This example program uses a :class:`DriverManager` to load a formatter
 defined in the examples for stevedore. It then uses the formatter to
 convert a data structure to a text format, which it can print.
 
-.. literalinclude:: ../../../stevedore/example/load_as_driver.py
+.. literalinclude:: ../../../../stevedore/example/load_as_driver.py
    :language: python
    :prepend: # stevedore/example/load_as_driver.py
 
@@ -28,7 +28,7 @@ registered as a formatter. The ``invoke_args`` are positional
 arguments passed to the class constructor, and are used to set the
 maximum width parameter.
 
-.. literalinclude:: ../../../stevedore/example/load_as_driver.py
+.. literalinclude:: ../../../../stevedore/example/load_as_driver.py
    :language: python
    :lines: 30-35
 
@@ -39,7 +39,7 @@ from the plugin. The single driver can be accessed via the
 :attr:`driver` property of the manager, and then its methods can be
 called directly.
 
-.. literalinclude:: ../../../stevedore/example/load_as_driver.py
+.. literalinclude:: ../../../../stevedore/example/load_as_driver.py
    :language: python
    :lines: 36-37
 
@@ -57,7 +57,7 @@ support this invocation pattern, including
 :class:`~stevedore.named.NamedExtensionManager`, and
 :class:`~stevedore.enabled.EnabledExtensionManager`.
 
-.. literalinclude:: ../../../stevedore/example/load_as_extension.py
+.. literalinclude:: ../../../../stevedore/example/load_as_extension.py
    :language: python
    :prepend: # stevedore/example/load_as_extension.py
 
@@ -65,7 +65,7 @@ The :class:`ExtensionManager` is created slightly differently from the
 :class:`DriverManager` because it does not need to know in advance
 which plugin to load. It loads all of the plugins it finds.
 
-.. literalinclude:: ../../../stevedore/example/load_as_extension.py
+.. literalinclude:: ../../../../stevedore/example/load_as_extension.py
    :language: python
    :lines: 24-28
 
@@ -75,7 +75,7 @@ with :meth:`map` in this example takes two arguments, the
 :class:`~stevedore.extension.Extension` and the data argument given to
 :meth:`map`.
 
-.. literalinclude:: ../../../stevedore/example/load_as_extension.py
+.. literalinclude:: ../../../../stevedore/example/load_as_extension.py
    :language: python
    :lines: 30-33
 
@@ -93,7 +93,7 @@ the extension name and the iterable that produces the text to
 print. As the results are processed, the name of each plugin is
 printed and then the formatted data.
 
-.. literalinclude:: ../../../stevedore/example/load_as_extension.py
+.. literalinclude:: ../../../../stevedore/example/load_as_extension.py
    :language: python
    :lines: 35-39
 
@@ -122,5 +122,5 @@ achieve different goals.
 
 .. seealso::
 
-   * :doc:`/patterns_loading`
-   * :doc:`/patterns_enabling`
+   * :doc:`../patterns_loading`
+   * :doc:`../patterns_enabling`
