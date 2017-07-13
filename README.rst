@@ -26,7 +26,7 @@ dynamically loaded extensions.
 .. _setuptools entry points: http://setuptools.readthedocs.io/en/latest/pkg_resources.html?#entry-points
 
 * Free software: Apache license
-* Documentation: http://docs.openstack.org/developer/stevedore
-* Source: http://git.openstack.org/cgit/openstack/stevedore
+* Documentation: https://docs.openstack.org/stevedore/latest
+* Source: https://git.openstack.org/cgit/openstack/stevedore
 * Bugs: https://bugs.launchpad.net/python-stevedore
 
