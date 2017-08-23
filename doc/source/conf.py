@@ -14,6 +14,16 @@
 import datetime
 import subprocess
 
+# make openstackdocstheme an optional dependency. stevedore is a low level lib
+# that is used outside of OpenStack. Not having something OpenStack specific
+# as build requirement is a good thing.
+try:
+    import openstackdocstheme
+except ImportError:
+    has_openstackdocstheme = False
+else:
+    has_openstackdocstheme = True
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -31,9 +41,10 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.graphviz',
     'sphinx.ext.extlinks',
-    'openstackdocstheme',
     'stevedore.sphinxext',
 ]
+if has_openstackdocstheme:
+    extensions.append('openstackdocstheme')
 
 # openstackdocstheme options
 repository_name = 'openstack/stevedore'
@@ -108,7 +119,8 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #html_theme = 'default'
-html_theme = 'openstackdocs'
+if has_openstackdocstheme:
+    html_theme = 'openstackdocs'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
