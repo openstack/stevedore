@@ -3,11 +3,11 @@ stevedore -- Manage dynamic plugins for Python applications
 ===========================================================
 
 .. image:: https://img.shields.io/pypi/v/stevedore.svg
-    :target: https://pypi.python.org/pypi/stevedore/
+    :target: https://pypi.org/project/stevedore/
     :alt: Latest Version
 
 .. image:: https://img.shields.io/pypi/dm/stevedore.svg
-    :target: https://pypi.python.org/pypi/stevedore/
+    :target: https://pypi.org/prpject/stevedore/
     :alt: Downloads
 
 .. image:: https://governance.openstack.org/tc/badges/stevedore.svg

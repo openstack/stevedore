@@ -23,7 +23,7 @@ or::
 
   $ sudo pip install stevedore
 
-.. _pip: http://pypi.python.org/pypi/pip
+.. _pip: http://pypi.org/project/pip
 
 Download
 ========
