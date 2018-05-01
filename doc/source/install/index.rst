@@ -29,7 +29,7 @@ Download
 ========
 
 stevedore releases are hosted on PyPI and can be downloaded from:
-http://pypi.python.org/pypi/stevedore
+http://pypi.org/project/stevedore
 
 Source Code
 ===========
@@ -40,7 +40,7 @@ Entry point inspector
 =====================
 
 To list entrypoints and registered plugins this tool can be also very useful:
-https://pypi.python.org/pypi/entry_point_inspector
+https://pypi.org/project/entry_point_inspector
 
 Reporting Bugs
 ==============
