@@ -74,7 +74,7 @@ copyright = u'2016, DreamHost'
 #
 # The short X.Y version.
 version = subprocess.Popen(['sh', '-c', 'cd ../..; python setup.py --version'],
-                           stdout=subprocess.PIPE).stdout.read()
+                           stdout=subprocess.PIPE).stdout.read().decode('utf-8')
 version = version.strip()
 # The full version, including alpha/beta/rc tags.
 release = version
