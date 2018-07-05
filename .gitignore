@@ -19,6 +19,7 @@ pip-log.txt
 # Unit test / coverage reports
 .coverage
 .tox
+.stestr/
 
 #Translations
 *.mo
@@ -32,7 +33,6 @@ tags
 # pbr generated files
 AUTHORS
 ChangeLog
-/.testrepository/
 
 # reno build
 releasenotes/build
