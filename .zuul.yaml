@@ -5,3 +5,11 @@
     gate:
       jobs:
         - openstack-tox-lower-constraints
+    templates:
+      - openstack-python-jobs
+      - openstack-python35-jobs
+      - check-requirements
+      - lib-forward-testing
+      - publish-openstack-docs-pti
+      - release-notes-jobs-python3
+      - periodic-stable-jobs
