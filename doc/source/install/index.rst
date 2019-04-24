@@ -34,7 +34,7 @@ http://pypi.org/project/stevedore
 Source Code
 ===========
 
-The source is hosted on the OpenStack infrastructure: https://git.openstack.org/cgit/openstack/stevedore/
+The source is hosted on the OpenStack infrastructure: https://opendev.org/openstack/stevedore/
 
 Entry point inspector
 =====================
