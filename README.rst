@@ -23,6 +23,6 @@ dynamically loaded extensions.
 
 * Free software: Apache license
 * Documentation: https://docs.openstack.org/stevedore/latest
-* Source: https://git.openstack.org/cgit/openstack/stevedore
+* Source: https://opendev.org/openstack/stevedore
 * Bugs: https://bugs.launchpad.net/python-stevedore
 
