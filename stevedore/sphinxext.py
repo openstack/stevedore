@@ -111,3 +111,7 @@ class ListPluginsDirective(rst.Directive):
 def setup(app):
     LOG.info('loading stevedore.sphinxext')
     app.add_directive('list-plugins', ListPluginsDirective)
+    return {
+        'parallel_read_safe': True,
+        'parallel_write_safe': True,
+    }
