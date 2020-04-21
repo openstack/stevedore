@@ -1,0 +1,4 @@
+---
+upgrade:
+  - |
+    Support for Python 2.7 is removed. Python 3.6 or greater is now required.

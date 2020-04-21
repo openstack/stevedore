@@ -35,4 +35,6 @@ AUTHORS
 ChangeLog
 
 # reno build
+RELEASENOTES.rst
 releasenotes/build
+releasenotes/notes/reno.cache
