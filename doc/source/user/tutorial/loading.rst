@@ -41,7 +41,7 @@ called directly.
 
 .. literalinclude:: ../../../../stevedore/example/load_as_driver.py
    :language: python
-   :lines: 36-37
+   :lines: 34-35
 
 Running the example program produces this output:
 
@@ -95,7 +95,7 @@ printed and then the formatted data.
 
 .. literalinclude:: ../../../../stevedore/example/load_as_extension.py
    :language: python
-   :lines: 35-39
+   :lines: 33-37
 
 The order the plugins are loaded is undefined, and depends on the
 order packages are found on the import path as well as the way the

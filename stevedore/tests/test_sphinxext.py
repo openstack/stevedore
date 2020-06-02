@@ -12,8 +12,6 @@
 """Tests for the sphinx extension
 """
 
-from __future__ import unicode_literals
-
 from stevedore import extension
 from stevedore import sphinxext
 from stevedore.tests import utils
