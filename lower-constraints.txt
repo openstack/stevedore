@@ -11,7 +11,6 @@ imagesize==0.7.1
 Jinja2==2.10
 linecache2==1.0.0
 MarkupSafe==1.0
-mock==2.0.0
 pbr==2.0.0
 Pygments==2.2.0
 python-mimeparse==1.6.0

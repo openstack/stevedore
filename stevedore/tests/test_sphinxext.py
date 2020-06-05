@@ -12,11 +12,12 @@
 """Tests for the sphinx extension
 """
 
+from unittest import mock
+
 from stevedore import extension
 from stevedore import sphinxext
 from stevedore.tests import utils
 
-import mock
 import pkg_resources
 
 
