@@ -81,7 +81,7 @@ with :meth:`map` in this example takes two arguments, the
 
 The :class:`Extension` passed :func:`format_data` is a class defined
 by stevedore that wraps the plugin. It includes the name of the
-plugin, the :class:`EntryPoint` returned by :mod:`pkg_resources`, and
+plugin, the :class:`EntryPoint` returned by :mod:`importlib.metadata`, and
 the plugin itself (the named object referenced by the plugin
 definition). When ``invoke_on_load`` is true, the :class:`Extension`
 will also have an :attr:`obj` attribute containing the value returned

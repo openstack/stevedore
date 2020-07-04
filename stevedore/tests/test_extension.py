@@ -96,13 +96,13 @@ class TestCallback(utils.TestCase):
 
     def test_use_cache(self):
         # If we insert something into the cache of entry points,
-        # the manager should not have to call into pkg_resources
+        # the manager should not have to call into entrypoints
         # to find the plugins.
         cache = extension.ExtensionManager.ENTRY_POINT_CACHE
         cache['stevedore.test.faux'] = []
-        with mock.patch('pkg_resources.iter_entry_points',
+        with mock.patch('stevedore._cache.get_group_all',
                         side_effect=
-                        AssertionError('called iter_entry_points')):
+                        AssertionError('called get_group_all')):
             em = extension.ExtensionManager('stevedore.test.faux')
             names = em.names()
         self.assertEqual(names, [])
@@ -235,9 +235,9 @@ class TestLoadRequirementsOldSetuptools(utils.TestCase):
     def test_verify_requirements(self):
         self.em._load_one_plugin(self.mock_ep, False, (), {},
                                  verify_requirements=True)
-        self.mock_ep.load.assert_called_once_with(require=True)
+        self.mock_ep.load.assert_called_once_with()
 
     def test_no_verify_requirements(self):
         self.em._load_one_plugin(self.mock_ep, False, (), {},
                                  verify_requirements=False)
-        self.mock_ep.load.assert_called_once_with(require=False)
+        self.mock_ep.load.assert_called_once_with()

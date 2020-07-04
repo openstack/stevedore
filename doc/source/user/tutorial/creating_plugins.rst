@@ -109,7 +109,7 @@ for stevedore is located in ``stevedore.egg-info/entry_points.txt``:
     t2 = stevedore.tests.test_extension:FauxExtension
     t1 = stevedore.tests.test_extension:FauxExtension
 
-:mod:`pkg_resources` uses the ``entry_points.txt`` file from all of
+:mod:`importlib.metadata` uses the ``entry_points.txt`` file from all of
 the installed packages on the import path to find plugins. You should
 not modify these files, except by changing the list of entry points in
 ``setup.py``.

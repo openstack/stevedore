@@ -14,10 +14,9 @@
 """
 
 import operator
-import pkg_resources
-
 import logging
 
+from . import _cache
 from .exception import NoMatches
 
 LOG = logging.getLogger(__name__)
@@ -34,7 +33,7 @@ class Extension(object):
     :param name: The entry point name.
     :type name: str
     :param entry_point: The EntryPoint instance returned by
-        :mod:`pkg_resources`.
+        :mod:`entrypoints`.
     :type entry_point: EntryPoint
     :param plugin: The value returned by entry_point.load()
     :param obj: The object returned by ``plugin(*args, **kwds)`` if the
@@ -55,8 +54,7 @@ class Extension(object):
         :return: A string representation of the target of the entry point in
             'dotted.module:object' format.
         """
-        return '%s:%s' % (self.entry_point.module_name,
-                          self.entry_point.attrs[0])
+        return self.entry_point.value
 
 
 class ExtensionManager(object):
@@ -174,7 +172,7 @@ class ExtensionManager(object):
 
         """
         if self.namespace not in self.ENTRY_POINT_CACHE:
-            eps = list(pkg_resources.iter_entry_points(self.namespace))
+            eps = list(_cache.get_group_all(self.namespace))
             self.ENTRY_POINT_CACHE[self.namespace] = eps
         return self.ENTRY_POINT_CACHE[self.namespace]
 
@@ -222,7 +220,7 @@ class ExtensionManager(object):
                 ep.require()
             plugin = ep.resolve()
         else:
-            plugin = ep.load(require=verify_requirements)
+            plugin = ep.load()
         if invoke_on_load:
             obj = plugin(*invoke_args, **invoke_kwds)
         else:

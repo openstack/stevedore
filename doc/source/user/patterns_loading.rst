@@ -7,7 +7,7 @@ defines the API expected by the plugin code. Each entry point has a
 name, which does not have to be unique within a given namespace. The
 flexibility of this name management system makes it possible to use
 plugins in a variety of ways. The manager classes in stevedore wrap
-:mod:`pkg_resources` to apply different rules matching the patterns
+:mod:`importlib.metadata` to apply different rules matching the patterns
 described here.
 
 Drivers -- Single Name, Single Entry Point

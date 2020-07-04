@@ -7,7 +7,7 @@ and extend your application by discovering and loading extensions
 ("*plugins*") at runtime. Many applications implement their own
 library for doing this, using ``__import__`` or
 :mod:`importlib`. stevedore avoids creating yet another extension
-mechanism by building on top of `setuptools entry points`_. The code
+mechanism by building on top of `entry points`_. The code
 for managing entry points tends to be repetitive, though, so stevedore
 provides manager classes for implementing common patterns for using
 dynamically loaded extensions.
@@ -21,7 +21,7 @@ dynamically loaded extensions.
    install/index
 
 
-.. _setuptools entry points: http://setuptools.readthedocs.io/en/latest/pkg_resources.html?#entry-points
+.. _entry points: https://docs.python.org/3/library/importlib.metadata.html#entry-points
 
 .. rubric:: Indices and tables
 
