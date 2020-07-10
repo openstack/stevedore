@@ -1,0 +1,15 @@
+---
+features:
+  - |
+    Adds a caching layer.  The cache is a single JSON file created
+    automatically in the user's home directory. It stores the parsed
+    text data from all of the metadata input files in a file with a
+    name based on the hash of the contents and `sys.path`, ensuring
+    uniqueness for applications installed into different virtual
+    environments.
+upgrade:
+  - |
+    The type of the entry point objects returned has changed from
+    `pkg_resources.EntryPoint` to `importlib.metadata.EntryPoint`. The
+    new objects still have a `load()` method, but some of the other
+    APIs are different.
