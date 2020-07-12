@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Add `extras` and `attr` properties to the `Extension` class to
+    make it easier for consumers to access the underlying properties,
+    regardless of the version of `importlib.metadata` being used.
