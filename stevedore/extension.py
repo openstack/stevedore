@@ -48,6 +48,17 @@ class Extension(object):
         self.obj = obj
 
     @property
+    def module_name(self):
+        """The name of the module from which the entry point is loaded.
+
+        :return: A string in 'dotted.module' format.
+        """
+        # NOTE: importlib_metadata from PyPI includes this but the
+        # Python 3.8 standard library does not.
+        match = self.entry_point.pattern.match(self.entry_point.value)
+        return match.group('module')
+
+    @property
     def entry_point_target(self):
         """The module and attribute referenced by this extension's entry_point.
 

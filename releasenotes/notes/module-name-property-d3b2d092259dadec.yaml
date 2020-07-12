@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add a `module_name` property to the `Extension` class to make it easier
+    for consumers to determine where the plugin is being loaded from.
