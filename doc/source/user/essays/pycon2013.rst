@@ -88,7 +88,7 @@ several different areas.
 OpenStack is a collection of components that cooperate to provide
 `Infrastructure as a Service`_ features.  Each component manages a
 different aspect of the cloud and uses a message bus to communicate
-with the other components.  
+with the other components.
 
 All of the components generate notification messages when events
 happen (like instances being created or destroyed). Capturing those
@@ -453,7 +453,7 @@ unexpected errors from the plugins any time we call into them.
 Invocation
 ----------
 
-We used all three invocation patterns, in different places.  
+We used all three invocation patterns, in different places.
 
 1. We only use one storage system at a time, so we treat the storage
    plugin like a driver.
