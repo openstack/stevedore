@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Add possibility to skip caching endpoints to the filesystem when '.disable' file is present in the cache directory.
+fixes:
+  - |
+    When python interpreter invokimg the module is located under /tmp (the case when i.e. Ansible module uses stevedore) do not try to write cache to the file system.
