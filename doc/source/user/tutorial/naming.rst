@@ -11,7 +11,7 @@ module is imported (i.e., it needs to be a module-level global).
 Names and Namespaces
 ====================
 
-Entry points are registered using a *name* in a *namespace*. 
+Entry points are registered using a *name* in a *namespace*.
 
 Entry point names are usually considered user-visible. For example,
 they frequently appear in configuration files where a driver is being

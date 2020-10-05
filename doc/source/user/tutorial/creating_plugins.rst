@@ -33,7 +33,7 @@ A Plugin Base Class
 ===================
 
 Step 1 above is to define an abstract base class for the API that
-needs to be implemented by each plugin. 
+needs to be implemented by each plugin.
 
 .. literalinclude:: ../../../../stevedore/example/base.py
    :language: python
@@ -104,7 +104,7 @@ for stevedore is located in ``stevedore.egg-info/entry_points.txt``:
     [stevedore.example.formatter]
     simple = stevedore.example.simple:Simple
     plain = stevedore.example.simple:Simple
-    
+
     [stevedore.test.extension]
     t2 = stevedore.tests.test_extension:FauxExtension
     t1 = stevedore.tests.test_extension:FauxExtension

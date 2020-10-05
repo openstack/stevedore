@@ -72,8 +72,7 @@ def _ftobytes(f):
 
 
 def _hash_settings_for_path(path):
-    """Return a hash and the path settings that created it.
-    """
+    """Return a hash and the path settings that created it."""
     paths = []
     h = hashlib.sha256()
 
