@@ -23,11 +23,9 @@ import os.path
 import struct
 import sys
 
-try:
-    # For python 3.8 and later
+if sys.version_info > (3, 10):
     import importlib.metadata as importlib_metadata
-except ImportError:
-    # For everyone else
+else:
     import importlib_metadata
 
 
@@ -108,18 +106,10 @@ def _build_cacheable_data(path):
     # Convert the namedtuple values to regular tuples
     groups = {}
     for name, group_data in real_groups.items():
-        existing = set()
         members = []
         groups[name] = members
         for ep in group_data:
-            # Filter out duplicates that can occur when testing a
-            # package that provides entry points using tox, where the
-            # package is installed in the virtualenv that tox builds
-            # and is present in the path as '.'.
             item = ep[:]  # convert namedtuple to tuple
-            if item in existing:
-                continue
-            existing.add(item)
             members.append(item)
     return {
         'groups': groups,
