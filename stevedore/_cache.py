@@ -116,7 +116,7 @@ def _build_cacheable_data(path):
             # package that provides entry points using tox, where the
             # package is installed in the virtualenv that tox builds
             # and is present in the path as '.'.
-            item = ep[:]  # convert namedtuple to tuple
+            item = ep.name, ep.value, ep.group  # convert to tuple
             if item in existing:
                 continue
             existing.add(item)
