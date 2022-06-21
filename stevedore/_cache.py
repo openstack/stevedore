@@ -15,6 +15,7 @@
 import errno
 import glob
 import hashlib
+import importlib.metadata as importlib_metadata
 import itertools
 import json
 import logging
@@ -22,13 +23,6 @@ import os
 import os.path
 import struct
 import sys
-
-try:
-    # For python 3.8 and later
-    import importlib.metadata as importlib_metadata
-except ImportError:
-    # For everyone else
-    import importlib_metadata
 
 
 log = logging.getLogger('stevedore._cache')
