@@ -60,8 +60,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'stevedore Release Notes'
-copyright = u'2016, stevedore Developers'
+project = 'stevedore Release Notes'
+copyright = '2016, stevedore Developers'
 
 # Release do not need a version number in the title, they
 # cover multiple versions.
@@ -208,8 +208,8 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     ('index', 'stevedoreReleaseNotes.tex',
-     u'stevedore Release Notes Documentation',
-     u'stevedore Developers', 'manual'),
+     'stevedore Release Notes Documentation',
+     'stevedore Developers', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -239,8 +239,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'stevedoreReleaseNotes',
-     u'stevedore Release Notes Documentation',
-     [u'stevedore Developers'], 1)
+     'stevedore Release Notes Documentation',
+     ['stevedore Developers'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -254,8 +254,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     ('index', 'stevedoreReleaseNotes',
-     u'stevedore Release Notes Documentation',
-     u'stevedore Developers', 'stevedoreReleaseNotes',
+     'stevedore Release Notes Documentation',
+     'stevedore Developers', 'stevedoreReleaseNotes',
      'One line description of project.',
      'Miscellaneous'),
 ]
