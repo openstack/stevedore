@@ -103,8 +103,16 @@ def _hash_settings_for_path(path):
     return (h.hexdigest(), paths)
 
 
-def _build_cacheable_data(path):
+def _build_cacheable_data():
     real_groups = importlib_metadata.entry_points()
+
+    if not isinstance(real_groups, dict):
+        # importlib-metadata 4.0 or later (or stdlib importlib.metadata in
+        # Python 3.9 or later)
+        real_groups = {
+            name: real_groups.select(name=name) for name in real_groups.names
+        }
+
     # Convert the namedtuple values to regular tuples
     groups = {}
     for name, group_data in real_groups.items():
@@ -159,7 +167,7 @@ class Cache:
             with open(filename, 'r') as f:
                 data = json.load(f)
         except (IOError, json.JSONDecodeError):
-            data = _build_cacheable_data(path)
+            data = _build_cacheable_data()
             data['path_values'] = path_values
             if not self._disable_caching:
                 try:
