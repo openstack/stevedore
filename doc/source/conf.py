@@ -74,8 +74,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'stevedore'
-copyright = u'2016, DreamHost'
+project = 'stevedore'
+copyright = '2016, DreamHost'
 
 
 # List of patterns, relative to source directory, that match files and
@@ -107,8 +107,8 @@ latex_documents = [
     (
         'index',
         'stevedore.tex',
-        u'stevedore Documentation',
-        u'DreamHost',
+        'stevedore Documentation',
+        'DreamHost',
         'manual'
     ),
 ]
@@ -122,8 +122,8 @@ texinfo_documents = [
     (
         'index',
         'stevedore',
-        u'stevedore Documentation',
-        u'DreamHost',
+        'stevedore Documentation',
+        'DreamHost',
         'stevedore',
         'One line description of project.',
         'Miscellaneous'
