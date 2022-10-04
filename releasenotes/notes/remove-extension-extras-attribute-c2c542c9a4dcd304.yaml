@@ -1,0 +1,7 @@
+---
+upgrade:
+  - |
+    The ``stevedore.extension.Extension`` object no longer exposes an
+    ``extras`` attribute. Entry point extras are a deprecated concept that
+    aren't useful in the context of stevedore thus the value in exposing this
+    is minimal to none.

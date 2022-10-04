@@ -268,10 +268,6 @@ class TestExtensionProperties(utils.TestCase):
         self.assertEqual('module.name', self.ext1.module_name)
         self.assertEqual('module', self.ext2.module_name)
 
-    def test_extras(self):
-        self.assertEqual(['[extra]'], self.ext1.extras)
-        self.assertEqual([], self.ext2.extras)
-
     def test_attr(self):
         self.assertEqual('attribute.name', self.ext1.attr)
         self.assertEqual('attribute', self.ext2.attr)
