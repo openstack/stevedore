@@ -110,7 +110,8 @@ def _build_cacheable_data():
         # importlib-metadata 4.0 or later (or stdlib importlib.metadata in
         # Python 3.9 or later)
         real_groups = {
-            name: real_groups.select(name=name) for name in real_groups.names
+            group: real_groups.select(group=group)
+            for group in real_groups.groups
         }
 
     # Convert the namedtuple values to regular tuples
