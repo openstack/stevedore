@@ -23,3 +23,8 @@ repos:
     hooks:
       - id: hacking
         additional_dependencies: []
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.6
+    hooks:
+      - id: bandit
+        args: ['-x', 'tests']
