@@ -46,5 +46,20 @@ packages = [
     "stevedore"
 ]
 
-[tool.bandit]
-exclude_dirs = ["tests"]
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+select = ["C4", "E4", "E5", "E7", "E9", "F", "S", "U"]
+ignore = [
+    # we only use asserts for type narrowing
+    "S101",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"stevedore/tests/*" = ["S"]
+
+[tool.ruff.format]
+quote-style = "preserve"
+docstring-code-format = true
+skip-magic-trailing-comma = true

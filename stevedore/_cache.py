@@ -143,7 +143,7 @@ class Cache:
         if any(
             [
                 os.path.isfile(os.path.join(self._dir, '.disable')),
-                sys.executable[0:4] == '/tmp',  # nosec B108,
+                sys.executable[0:4] == '/tmp',  # noqa: S108,
             ]
         ):
             self._disable_caching = True
