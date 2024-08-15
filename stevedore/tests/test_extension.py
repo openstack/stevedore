@@ -10,8 +10,7 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
-"""Tests for stevedore.extension
-"""
+"""Tests for stevedore.extension"""
 
 import importlib.metadata as importlib_metadata
 import operator
@@ -54,8 +53,9 @@ class TestCallback(utils.TestCase):
     def test_list_entry_points(self):
         em = extension.ExtensionManager('stevedore.test.extension')
         n = em.list_entry_points()
-        self.assertEqual({'e1', 'e2', 't1', 't2'},
-                         set(map(operator.attrgetter("name"), n)))
+        self.assertEqual(
+            {'e1', 'e2', 't1', 't2'}, set(map(operator.attrgetter("name"), n))
+        )
         self.assertEqual(4, len(n))
 
     def test_list_entry_points_names(self):
@@ -101,9 +101,10 @@ class TestCallback(utils.TestCase):
         # to find the plugins.
         cache = extension.ExtensionManager.ENTRY_POINT_CACHE
         cache['stevedore.test.faux'] = []
-        with mock.patch('stevedore._cache.get_group_all',
-                        side_effect=
-                        AssertionError('called get_group_all')):
+        with mock.patch(
+            'stevedore._cache.get_group_all',
+            side_effect=AssertionError('called get_group_all'),
+        ):
             em = extension.ExtensionManager('stevedore.test.faux')
             names = em.names()
         self.assertEqual(names, [])
@@ -114,11 +115,12 @@ class TestCallback(utils.TestCase):
         self.assertEqual(names, ALL_NAMES)
 
     def test_invoke_on_load(self):
-        em = extension.ExtensionManager('stevedore.test.extension',
-                                        invoke_on_load=True,
-                                        invoke_args=('a',),
-                                        invoke_kwds={'b': 'B'},
-                                        )
+        em = extension.ExtensionManager(
+            'stevedore.test.extension',
+            invoke_on_load=True,
+            invoke_args=('a',),
+            invoke_kwds={'b': 'B'},
+        )
         self.assertEqual(len(em.extensions), 2)
         for e in em.extensions:
             self.assertEqual(e.obj.args, ('a',))
@@ -128,9 +130,9 @@ class TestCallback(utils.TestCase):
         def mapped(ext, *args, **kwds):
             return ext.name
 
-        em = extension.ExtensionManager('stevedore.test.extension',
-                                        invoke_on_load=True,
-                                        )
+        em = extension.ExtensionManager(
+            'stevedore.test.extension', invoke_on_load=True
+        )
         results = em.map(mapped)
         self.assertEqual(sorted(results), WORKING_NAMES)
 
@@ -140,9 +142,9 @@ class TestCallback(utils.TestCase):
         def mapped(ext, *args, **kwds):
             objs.append((ext, args, kwds))
 
-        em = extension.ExtensionManager('stevedore.test.extension',
-                                        invoke_on_load=True,
-                                        )
+        em = extension.ExtensionManager(
+            'stevedore.test.extension', invoke_on_load=True
+        )
         em.map(mapped, 1, 2, a='A', b='B')
         self.assertEqual(len(objs), 2)
         names = sorted([o[0].name for o in objs])
@@ -155,9 +157,9 @@ class TestCallback(utils.TestCase):
         def mapped(ext, *args, **kwds):
             raise RuntimeError('hard coded error')
 
-        em = extension.ExtensionManager('stevedore.test.extension',
-                                        invoke_on_load=True,
-                                        )
+        em = extension.ExtensionManager(
+            'stevedore.test.extension', invoke_on_load=True
+        )
         results = em.map(mapped, 1, 2, a='A', b='B')
         self.assertEqual(results, [])
 
@@ -165,10 +167,11 @@ class TestCallback(utils.TestCase):
         def mapped(ext, *args, **kwds):
             raise RuntimeError('hard coded error')
 
-        em = extension.ExtensionManager('stevedore.test.extension',
-                                        invoke_on_load=True,
-                                        propagate_map_exceptions=True
-                                        )
+        em = extension.ExtensionManager(
+            'stevedore.test.extension',
+            invoke_on_load=True,
+            propagate_map_exceptions=True,
+        )
 
         try:
             em.map(mapped, 1, 2, a='A', b='B')
@@ -182,18 +185,18 @@ class TestCallback(utils.TestCase):
         def mapped(ext, *args, **kwds):
             pass
 
-        em = extension.ExtensionManager('stevedore.test.extension.none',
-                                        invoke_on_load=True,
-                                        )
+        em = extension.ExtensionManager(
+            'stevedore.test.extension.none', invoke_on_load=True
+        )
         try:
             em.map(mapped, 1, 2, a='A', b='B')
         except exception.NoMatches as err:
             self.assertEqual(expected_str, str(err))
 
     def test_map_method(self):
-        em = extension.ExtensionManager('stevedore.test.extension',
-                                        invoke_on_load=True,
-                                        )
+        em = extension.ExtensionManager(
+            'stevedore.test.extension', invoke_on_load=True
+        )
 
         result = em.map_method('get_args_and_data', 42)
         self.assertEqual({r[2] for r in result}, {42})
@@ -213,14 +216,16 @@ class TestLoadRequirementsNewSetuptools(utils.TestCase):
         self.em = extension.ExtensionManager.make_test_instance([])
 
     def test_verify_requirements(self):
-        self.em._load_one_plugin(self.mock_ep, False, (), {},
-                                 verify_requirements=True)
+        self.em._load_one_plugin(
+            self.mock_ep, False, (), {}, verify_requirements=True
+        )
         self.mock_ep.require.assert_called_once_with()
         self.mock_ep.resolve.assert_called_once_with()
 
     def test_no_verify_requirements(self):
-        self.em._load_one_plugin(self.mock_ep, False, (), {},
-                                 verify_requirements=False)
+        self.em._load_one_plugin(
+            self.mock_ep, False, (), {}, verify_requirements=False
+        )
         self.assertEqual(0, self.mock_ep.require.call_count)
         self.mock_ep.resolve.assert_called_once_with()
 
@@ -234,23 +239,24 @@ class TestLoadRequirementsOldSetuptools(utils.TestCase):
         self.em = extension.ExtensionManager.make_test_instance([])
 
     def test_verify_requirements(self):
-        self.em._load_one_plugin(self.mock_ep, False, (), {},
-                                 verify_requirements=True)
+        self.em._load_one_plugin(
+            self.mock_ep, False, (), {}, verify_requirements=True
+        )
         self.mock_ep.load.assert_called_once_with()
 
     def test_no_verify_requirements(self):
-        self.em._load_one_plugin(self.mock_ep, False, (), {},
-                                 verify_requirements=False)
+        self.em._load_one_plugin(
+            self.mock_ep, False, (), {}, verify_requirements=False
+        )
         self.mock_ep.load.assert_called_once_with()
 
 
 class TestExtensionProperties(utils.TestCase):
-
     def setUp(self):
         self.ext1 = extension.Extension(
             'name',
             importlib_metadata.EntryPoint(
-                'name', 'module.name:attribute.name [extra]', 'group_name',
+                'name', 'module.name:attribute.name [extra]', 'group_name'
             ),
             mock.Mock(),
             None,
@@ -258,7 +264,7 @@ class TestExtensionProperties(utils.TestCase):
         self.ext2 = extension.Extension(
             'name',
             importlib_metadata.EntryPoint(
-                'name', 'module:attribute', 'group_name',
+                'name', 'module:attribute', 'group_name'
             ),
             mock.Mock(),
             None,
@@ -273,7 +279,7 @@ class TestExtensionProperties(utils.TestCase):
         self.assertEqual('attribute', self.ext2.attr)
 
     def test_entry_point_target(self):
-        self.assertEqual('module.name:attribute.name [extra]',
-                         self.ext1.entry_point_target)
-        self.assertEqual('module:attribute',
-                         self.ext2.entry_point_target)
+        self.assertEqual(
+            'module.name:attribute.name [extra]', self.ext1.entry_point_target
+        )
+        self.assertEqual('module:attribute', self.ext2.entry_point_target)

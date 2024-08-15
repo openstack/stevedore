@@ -84,15 +84,15 @@ latex_documents = [
         'stevedore.tex',
         'stevedore Documentation',
         'DreamHost',
-        'manual'
-    ),
+        'manual',
+    )
 ]
 
 
 # -- Options for extlinks extension ---------------------------------------
 
 extlinks = {
-    'issue': ('https://github.com/dreamhost/stevedore/issues/%s', 'issue '),
+    'issue': ('https://github.com/dreamhost/stevedore/issues/%s', 'issue ')
 }
 
 
@@ -101,5 +101,5 @@ extlinks = {
 autodoc_default_options = {
     'members': None,
     'special-members': None,
-    'show-inheritance': None
+    'show-inheritance': None,
 }

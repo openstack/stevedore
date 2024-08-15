@@ -33,8 +33,7 @@ def _simple_list(mgr):
         ext = mgr[name]
         doc = _get_docstring(ext.plugin) or '\n'
         summary = doc.splitlines()[0].strip()
-        yield (f'* {ext.name} -- {summary}',
-               ext.module_name)
+        yield (f'* {ext.name} -- {summary}', ext.module_name)
 
 
 def _detailed_list(mgr, over='', under='-', titlecase=False):
@@ -54,9 +53,8 @@ def _detailed_list(mgr, over='', under='-', titlecase=False):
             yield (doc, ext.module_name)
         else:
             yield (
-                '.. warning:: No documentation found for {} in {}'.format(
-                    ext.name, ext.entry_point_target,
-                ),
+                f'.. warning:: No documentation found for {ext.name} in '
+                f'{ext.entry_point_target}',
                 ext.module_name,
             )
         yield ('\n', ext.module_name)
@@ -77,7 +75,7 @@ class ListPluginsDirective(rst.Directive):
 
     def run(self):
         namespace = ' '.join(self.content).strip()
-        LOG.info('documenting plugins from %r' % namespace)
+        LOG.info(f'documenting plugins from {namespace!r}')
         overline_style = self.options.get('overline-style', '')
         underline_style = self.options.get('underline-style', '=')
 
@@ -85,8 +83,7 @@ class ListPluginsDirective(rst.Directive):
             LOG.warning(f'Failed to load {ep.module}: {err}')
 
         mgr = extension.ExtensionManager(
-            namespace,
-            on_load_failure_callback=report_load_failure,
+            namespace, on_load_failure_callback=report_load_failure
         )
 
         result = ViewList()
@@ -95,8 +92,11 @@ class ListPluginsDirective(rst.Directive):
 
         if 'detailed' in self.options:
             data = _detailed_list(
-                mgr, over=overline_style, under=underline_style,
-                titlecase=titlecase)
+                mgr,
+                over=overline_style,
+                under=underline_style,
+                titlecase=titlecase,
+            )
         else:
             data = _simple_list(mgr)
         for text, source in data:
@@ -114,7 +114,4 @@ class ListPluginsDirective(rst.Directive):
 def setup(app):
     LOG.info('loading stevedore.sphinxext')
     app.add_directive('list-plugins', ListPluginsDirective)
-    return {
-        'parallel_read_safe': True,
-        'parallel_write_safe': True,
-    }
+    return {'parallel_read_safe': True, 'parallel_write_safe': True}

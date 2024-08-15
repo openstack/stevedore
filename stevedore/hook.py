@@ -47,15 +47,21 @@ class HookManager(NamedExtensionManager):
 
     """
 
-    def __init__(self, namespace, name,
-                 invoke_on_load=False, invoke_args=(), invoke_kwds={},
-                 on_load_failure_callback=None,
-                 verify_requirements=False,
-                 on_missing_entrypoints_callback=None,
-                 # NOTE(dhellmann): This default is different from the
-                 # base class because for hooks it is less likely to
-                 # be an error to have no entry points present.
-                 warn_on_missing_entrypoint=False):
+    def __init__(
+        self,
+        namespace,
+        name,
+        invoke_on_load=False,
+        invoke_args=(),
+        invoke_kwds={},
+        on_load_failure_callback=None,
+        verify_requirements=False,
+        on_missing_entrypoints_callback=None,
+        # NOTE(dhellmann): This default is different from the
+        # base class because for hooks it is less likely to
+        # be an error to have no entry points present.
+        warn_on_missing_entrypoint=False,
+    ):
         super().__init__(
             namespace,
             [name],
@@ -68,13 +74,20 @@ class HookManager(NamedExtensionManager):
             warn_on_missing_entrypoint=warn_on_missing_entrypoint,
         )
 
-    def _init_attributes(self, namespace, names, name_order=False,
-                         propagate_map_exceptions=False,
-                         on_load_failure_callback=None):
+    def _init_attributes(
+        self,
+        namespace,
+        names,
+        name_order=False,
+        propagate_map_exceptions=False,
+        on_load_failure_callback=None,
+    ):
         super()._init_attributes(
-            namespace, names,
+            namespace,
+            names,
             propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback)
+            on_load_failure_callback=on_load_failure_callback,
+        )
         self._name = names[0]
 
     def __getitem__(self, name):

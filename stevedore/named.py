@@ -64,35 +64,49 @@ class NamedExtensionManager(ExtensionManager):
 
     """
 
-    def __init__(self, namespace, names,
-                 invoke_on_load=False, invoke_args=(), invoke_kwds={},
-                 name_order=False, propagate_map_exceptions=False,
-                 on_load_failure_callback=None,
-                 on_missing_entrypoints_callback=None,
-                 verify_requirements=False,
-                 warn_on_missing_entrypoint=True):
+    def __init__(
+        self,
+        namespace,
+        names,
+        invoke_on_load=False,
+        invoke_args=(),
+        invoke_kwds={},
+        name_order=False,
+        propagate_map_exceptions=False,
+        on_load_failure_callback=None,
+        on_missing_entrypoints_callback=None,
+        verify_requirements=False,
+        warn_on_missing_entrypoint=True,
+    ):
         self._init_attributes(
-            namespace, names, name_order=name_order,
+            namespace,
+            names,
+            name_order=name_order,
             propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback)
-        extensions = self._load_plugins(invoke_on_load,
-                                        invoke_args,
-                                        invoke_kwds,
-                                        verify_requirements)
+            on_load_failure_callback=on_load_failure_callback,
+        )
+        extensions = self._load_plugins(
+            invoke_on_load, invoke_args, invoke_kwds, verify_requirements
+        )
         self._missing_names = set(names) - {e.name for e in extensions}
         if self._missing_names:
             if on_missing_entrypoints_callback:
                 on_missing_entrypoints_callback(self._missing_names)
             elif warn_on_missing_entrypoint:
-                LOG.warning('Could not load %s' %
-                            ', '.join(self._missing_names))
+                LOG.warning(
+                    'Could not load {}'.format(', '.join(self._missing_names))
+                )
         self._init_plugins(extensions)
 
     @classmethod
-    def make_test_instance(cls, extensions, namespace='TESTING',
-                           propagate_map_exceptions=False,
-                           on_load_failure_callback=None,
-                           verify_requirements=False):
+    def make_test_instance(
+        cls,
+        extensions,
+        namespace='TESTING',
+        propagate_map_exceptions=False,
+        on_load_failure_callback=None,
+        verify_requirements=False,
+    ):
         """Construct a test NamedExtensionManager
 
         Test instances are passed a list of extensions to use rather than
@@ -122,18 +136,28 @@ class NamedExtensionManager(ExtensionManager):
 
         o = cls.__new__(cls)
         names = [e.name for e in extensions]
-        o._init_attributes(namespace, names,
-                           propagate_map_exceptions=propagate_map_exceptions,
-                           on_load_failure_callback=on_load_failure_callback)
+        o._init_attributes(
+            namespace,
+            names,
+            propagate_map_exceptions=propagate_map_exceptions,
+            on_load_failure_callback=on_load_failure_callback,
+        )
         o._init_plugins(extensions)
         return o
 
-    def _init_attributes(self, namespace, names, name_order=False,
-                         propagate_map_exceptions=False,
-                         on_load_failure_callback=None):
+    def _init_attributes(
+        self,
+        namespace,
+        names,
+        name_order=False,
+        propagate_map_exceptions=False,
+        on_load_failure_callback=None,
+    ):
         super()._init_attributes(
-            namespace, propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback)
+            namespace,
+            propagate_map_exceptions=propagate_map_exceptions,
+            on_load_failure_callback=on_load_failure_callback,
+        )
 
         self._names = names
         self._missing_names = set()
@@ -143,17 +167,18 @@ class NamedExtensionManager(ExtensionManager):
         super()._init_plugins(extensions)
 
         if self._name_order:
-            self.extensions = [self[n] for n in self._names
-                               if n not in self._missing_names]
+            self.extensions = [
+                self[n] for n in self._names if n not in self._missing_names
+            ]
 
-    def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds,
-                         verify_requirements):
+    def _load_one_plugin(
+        self, ep, invoke_on_load, invoke_args, invoke_kwds, verify_requirements
+    ):
         # Check the name before going any further to prevent
         # undesirable code from being loaded at all if we are not
         # going to use it.
         if ep.name not in self._names:
             return None
         return super()._load_one_plugin(
-            ep, invoke_on_load, invoke_args, invoke_kwds,
-            verify_requirements,
+            ep, invoke_on_load, invoke_args, invoke_kwds, verify_requirements
         )

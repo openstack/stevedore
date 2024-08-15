@@ -48,20 +48,20 @@ class TestExtensionManager(extension.ExtensionManager):
 
     """
 
-    def __init__(self, extensions,
-                 namespace='test',
-                 invoke_on_load=False,
-                 invoke_args=(),
-                 invoke_kwds={}):
-        super().__init__(namespace,
-                         invoke_on_load,
-                         invoke_args,
-                         invoke_kwds,
-                         )
+    def __init__(
+        self,
+        extensions,
+        namespace='test',
+        invoke_on_load=False,
+        invoke_args=(),
+        invoke_kwds={},
+    ):
+        super().__init__(namespace, invoke_on_load, invoke_args, invoke_kwds)
         self.extensions = extensions
         warnings.warn(
             'TestExtesionManager has been replaced by make_test_instance()',
-            DeprecationWarning)
+            DeprecationWarning,
+        )
 
     def _load_plugins(self, *args, **kwds):
         return []

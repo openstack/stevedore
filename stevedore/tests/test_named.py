@@ -54,17 +54,13 @@ class TestNamed(utils.TestCase):
         # the test both ways: if the sorting is broken, one of them will
         # fail
         em = named.NamedExtensionManager(
-            'stevedore.test.extension',
-            names=['t1', 't2'],
-            name_order=True
+            'stevedore.test.extension', names=['t1', 't2'], name_order=True
         )
         actual = em.names()
         self.assertEqual(actual, ['t1', 't2'])
 
         em = named.NamedExtensionManager(
-            'stevedore.test.extension',
-            names=['t2', 't1'],
-            name_order=True
+            'stevedore.test.extension', names=['t2', 't1'], name_order=True
         )
         actual = em.names()
         self.assertEqual(actual, ['t2', 't1'])

@@ -36,8 +36,9 @@ def _get_cache_dir():
     # Linux, Unix, AIX, etc.
     if os.name == 'posix' and sys.platform != 'darwin':
         # use ~/.cache if empty OR not set
-        base_path = os.environ.get("XDG_CACHE_HOME", None) \
-            or os.path.expanduser('~/.cache')
+        base_path = os.environ.get(
+            "XDG_CACHE_HOME", None
+        ) or os.path.expanduser('~/.cache')
         return os.path.join(base_path, 'python-entrypoints')
 
     # Mac OS
@@ -46,8 +47,9 @@ def _get_cache_dir():
 
     # Windows (hopefully)
     else:
-        base_path = os.environ.get('LOCALAPPDATA', None) \
-            or os.path.expanduser('~\\AppData\\Local')
+        base_path = os.environ.get('LOCALAPPDATA', None) or os.path.expanduser(
+            '~\\AppData\\Local'
+        )
         return os.path.join(base_path, 'Python Entry Points')
 
 
@@ -82,12 +84,8 @@ def _hash_settings_for_path(path):
         paths.append((entry, mtime))
 
         for ep_file in itertools.chain(
-                glob.iglob(os.path.join(entry,
-                                        '*.dist-info',
-                                        'entry_points.txt')),
-                glob.iglob(os.path.join(entry,
-                                        '*.egg-info',
-                                        'entry_points.txt'))
+            glob.iglob(os.path.join(entry, '*.dist-info', 'entry_points.txt')),
+            glob.iglob(os.path.join(entry, '*.egg-info', 'entry_points.txt')),
         ):
             mtime = _get_mtime(ep_file)
             h.update(ep_file.encode('utf-8'))
@@ -132,7 +130,6 @@ def _build_cacheable_data():
 
 
 class Cache:
-
     def __init__(self, cache_dir=None):
         if cache_dir is None:
             cache_dir = _get_cache_dir()
@@ -143,8 +140,12 @@ class Cache:
         # Caching can be disabled by either placing .disable file into the
         # target directory or when python executable is under /tmp (this is the
         # case when executed from ansible)
-        if any([os.path.isfile(os.path.join(self._dir, '.disable')),
-                sys.executable[0:4] == '/tmp']):  # nosec B108
+        if any(
+            [
+                os.path.isfile(os.path.join(self._dir, '.disable')),
+                sys.executable[0:4] == '/tmp',  # nosec B108,
+            ]
+        ):
             self._disable_caching = True
 
     def _get_data_for_path(self, path):
@@ -196,8 +197,7 @@ class Cache:
         for name, ep in self.get_group_named(group, path=path).items():
             if name == name:
                 return ep
-        raise ValueError('No entrypoint {!r} in group {!r}'.format(
-            group, name))
+        raise ValueError(f'No entrypoint {group!r} in group {name!r}')
 
 
 _c = Cache()

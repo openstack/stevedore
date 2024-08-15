@@ -79,7 +79,7 @@ class DispatchExtensionManager(EnabledExtensionManager):
         """
         if not self.extensions:
             # FIXME: Use a more specific exception class here.
-            raise NoMatches('No %s extensions found' % self.namespace)
+            raise NoMatches(f'No {self.namespace} extensions found')
         response = []
         for e in self.extensions:
             if filter_func(e, *args, **kwds):
@@ -107,8 +107,13 @@ class DispatchExtensionManager(EnabledExtensionManager):
         :param kwds: Keyword arguments to pass to method
         :returns: List of values returned from methods
         """
-        return self.map(filter_func, self._call_extension_method,
-                        method_name, *args, **kwds)
+        return self.map(
+            filter_func,
+            self._call_extension_method,
+            method_name,
+            *args,
+            **kwds,
+        )
 
 
 class NameDispatchExtensionManager(DispatchExtensionManager):
@@ -152,11 +157,17 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
 
     """
 
-    def __init__(self, namespace, check_func, invoke_on_load=False,
-                 invoke_args=(), invoke_kwds={},
-                 propagate_map_exceptions=False,
-                 on_load_failure_callback=None,
-                 verify_requirements=False):
+    def __init__(
+        self,
+        namespace,
+        check_func,
+        invoke_on_load=False,
+        invoke_args=(),
+        invoke_kwds={},
+        propagate_map_exceptions=False,
+        on_load_failure_callback=None,
+        verify_requirements=False,
+    ):
         super().__init__(
             namespace=namespace,
             check_func=check_func,
@@ -225,5 +236,6 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
         :param kwds: Keyword arguments to pass to method
         :returns: List of values returned from methods
         """
-        return self.map(names, self._call_extension_method,
-                        method_name, *args, **kwds)
+        return self.map(
+            names, self._call_extension_method, method_name, *args, **kwds
+        )

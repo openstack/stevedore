@@ -44,13 +44,20 @@ class DriverManager(NamedExtensionManager):
     :type warn_on_missing_entrypoint: bool
     """
 
-    def __init__(self, namespace, name,
-                 invoke_on_load=False, invoke_args=(), invoke_kwds={},
-                 on_load_failure_callback=None,
-                 verify_requirements=False,
-                 warn_on_missing_entrypoint=True):
-        on_load_failure_callback = on_load_failure_callback \
-            or self._default_on_load_failure
+    def __init__(
+        self,
+        namespace,
+        name,
+        invoke_on_load=False,
+        invoke_args=(),
+        invoke_kwds={},
+        on_load_failure_callback=None,
+        verify_requirements=False,
+        warn_on_missing_entrypoint=True,
+    ):
+        on_load_failure_callback = (
+            on_load_failure_callback or self._default_on_load_failure
+        )
         super().__init__(
             namespace=namespace,
             names=[name],
@@ -59,7 +66,7 @@ class DriverManager(NamedExtensionManager):
             invoke_kwds=invoke_kwds,
             on_load_failure_callback=on_load_failure_callback,
             verify_requirements=verify_requirements,
-            warn_on_missing_entrypoint=warn_on_missing_entrypoint
+            warn_on_missing_entrypoint=warn_on_missing_entrypoint,
         )
 
     @staticmethod
@@ -67,10 +74,14 @@ class DriverManager(NamedExtensionManager):
         raise
 
     @classmethod
-    def make_test_instance(cls, extension, namespace='TESTING',
-                           propagate_map_exceptions=False,
-                           on_load_failure_callback=None,
-                           verify_requirements=False):
+    def make_test_instance(
+        cls,
+        extension,
+        namespace='TESTING',
+        propagate_map_exceptions=False,
+        on_load_failure_callback=None,
+        verify_requirements=False,
+    ):
         """Construct a test DriverManager
 
         Test instances are passed a list of extensions to work from rather
@@ -99,10 +110,12 @@ class DriverManager(NamedExtensionManager):
         """
 
         o = super().make_test_instance(
-            [extension], namespace=namespace,
+            [extension],
+            namespace=namespace,
             propagate_map_exceptions=propagate_map_exceptions,
             on_load_failure_callback=on_load_failure_callback,
-            verify_requirements=verify_requirements)
+            verify_requirements=verify_requirements,
+        )
         return o
 
     def _init_plugins(self, extensions):
@@ -110,14 +123,18 @@ class DriverManager(NamedExtensionManager):
 
         if not self.extensions:
             name = self._names[0]
-            raise NoMatches('No %r driver found, looking for %r' %
-                            (self.namespace, name))
+            raise NoMatches(
+                f'No {self.namespace!r} driver found, looking for {name!r}'
+            )
         if len(self.extensions) > 1:
-            discovered_drivers = ','.join(e.entry_point_target
-                                          for e in self.extensions)
+            discovered_drivers = ','.join(
+                e.entry_point_target for e in self.extensions
+            )
 
-            raise MultipleMatches('Multiple %r drivers found: %s' %
-                                  (self.namespace, discovered_drivers))
+            raise MultipleMatches(
+                f'Multiple {self.namespace!r} drivers found: '
+                f'{discovered_drivers}'
+            )
 
     def __call__(self, func, *args, **kwds):
         """Invokes func() for the single loaded extension.

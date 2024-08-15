@@ -16,10 +16,7 @@
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = [
-    'openstackdocstheme',
-    'reno.sphinxext',
-]
+extensions = ['openstackdocstheme', 'reno.sphinxext']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -67,9 +64,13 @@ html_static_path = ['_static']
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'stevedoreReleaseNotes.tex',
-     'stevedore Release Notes Documentation',
-     'stevedore Developers', 'manual'),
+    (
+        'index',
+        'stevedoreReleaseNotes.tex',
+        'stevedore Release Notes Documentation',
+        'stevedore Developers',
+        'manual',
+    )
 ]
 
 

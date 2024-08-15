@@ -25,8 +25,5 @@ class Simple(base.FormatterBase):
         :type data: dict(str:?)
         """
         for name, value in sorted(data.items()):
-            line = '{name} = {value}\n'.format(
-                name=name,
-                value=value,
-            )
+            line = f'{name} = {value}\n'
             yield line

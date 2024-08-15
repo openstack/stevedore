@@ -10,8 +10,8 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
-"""Tests for failure loading callback
-"""
+"""Tests for failure loading callback"""
+
 from unittest import mock
 
 from testtools.matchers import GreaterThan
@@ -28,10 +28,11 @@ class TestCallback(utils.TestCase):
         def failure_callback(manager, entrypoint, error):
             errors.append((manager, entrypoint, error))
 
-        em = extension.ExtensionManager('stevedore.test.extension',
-                                        invoke_on_load=True,
-                                        on_load_failure_callback=
-                                        failure_callback)
+        em = extension.ExtensionManager(
+            'stevedore.test.extension',
+            invoke_on_load=True,
+            on_load_failure_callback=failure_callback,
+        )
         extensions = list(em.extensions)
         self.assertTrue(len(extensions), GreaterThan(0))
         self.assertEqual(len(errors), 2)
@@ -46,11 +47,11 @@ class TestCallback(utils.TestCase):
         def callback(names):
             errors.update(names)
 
-        load_fn.return_value = [
-            extension.Extension('foo', None, None, None)
-        ]
-        named.NamedExtensionManager('stevedore.test.extension',
-                                    names=['foo', 'bar'],
-                                    invoke_on_load=True,
-                                    on_missing_entrypoints_callback=callback)
+        load_fn.return_value = [extension.Extension('foo', None, None, None)]
+        named.NamedExtensionManager(
+            'stevedore.test.extension',
+            names=['foo', 'bar'],
+            invoke_on_load=True,
+            on_missing_entrypoints_callback=callback,
+        )
         self.assertEqual(errors, {'bar'})

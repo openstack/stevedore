@@ -10,8 +10,7 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
-"""ExtensionManager
-"""
+"""ExtensionManager"""
 
 import logging
 import operator
@@ -104,28 +103,35 @@ class ExtensionManager:
     :type verify_requirements: bool
     """
 
-    def __init__(self, namespace,
-                 invoke_on_load=False,
-                 invoke_args=(),
-                 invoke_kwds={},
-                 propagate_map_exceptions=False,
-                 on_load_failure_callback=None,
-                 verify_requirements=False):
+    def __init__(
+        self,
+        namespace,
+        invoke_on_load=False,
+        invoke_args=(),
+        invoke_kwds={},
+        propagate_map_exceptions=False,
+        on_load_failure_callback=None,
+        verify_requirements=False,
+    ):
         self._init_attributes(
             namespace,
             propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback)
-        extensions = self._load_plugins(invoke_on_load,
-                                        invoke_args,
-                                        invoke_kwds,
-                                        verify_requirements)
+            on_load_failure_callback=on_load_failure_callback,
+        )
+        extensions = self._load_plugins(
+            invoke_on_load, invoke_args, invoke_kwds, verify_requirements
+        )
         self._init_plugins(extensions)
 
     @classmethod
-    def make_test_instance(cls, extensions, namespace='TESTING',
-                           propagate_map_exceptions=False,
-                           on_load_failure_callback=None,
-                           verify_requirements=False):
+    def make_test_instance(
+        cls,
+        extensions,
+        namespace='TESTING',
+        propagate_map_exceptions=False,
+        on_load_failure_callback=None,
+        verify_requirements=False,
+    ):
         """Construct a test ExtensionManager
 
         Test instances are passed a list of extensions to work from rather
@@ -154,14 +160,20 @@ class ExtensionManager:
         """
 
         o = cls.__new__(cls)
-        o._init_attributes(namespace,
-                           propagate_map_exceptions=propagate_map_exceptions,
-                           on_load_failure_callback=on_load_failure_callback)
+        o._init_attributes(
+            namespace,
+            propagate_map_exceptions=propagate_map_exceptions,
+            on_load_failure_callback=on_load_failure_callback,
+        )
         o._init_plugins(extensions)
         return o
 
-    def _init_attributes(self, namespace, propagate_map_exceptions=False,
-                         on_load_failure_callback=None):
+    def _init_attributes(
+        self,
+        namespace,
+        propagate_map_exceptions=False,
+        on_load_failure_callback=None,
+    ):
         self.namespace = namespace
         self.propagate_map_exceptions = propagate_map_exceptions
         self._on_load_failure_callback = on_load_failure_callback
@@ -197,18 +209,20 @@ class ExtensionManager:
         """Return the list of entry points names for this namespace."""
         return list(map(operator.attrgetter("name"), self.list_entry_points()))
 
-    def _load_plugins(self, invoke_on_load, invoke_args, invoke_kwds,
-                      verify_requirements):
+    def _load_plugins(
+        self, invoke_on_load, invoke_args, invoke_kwds, verify_requirements
+    ):
         extensions = []
         for ep in self.list_entry_points():
             LOG.debug('found extension %r', ep)
             try:
-                ext = self._load_one_plugin(ep,
-                                            invoke_on_load,
-                                            invoke_args,
-                                            invoke_kwds,
-                                            verify_requirements,
-                                            )
+                ext = self._load_one_plugin(
+                    ep,
+                    invoke_on_load,
+                    invoke_args,
+                    invoke_kwds,
+                    verify_requirements,
+                )
                 if ext:
                     extensions.append(ext)
             except (KeyboardInterrupt, AssertionError):
@@ -224,12 +238,17 @@ class ExtensionManager:
                     # enough to debug that.  If debug logging is
                     # enabled for our logger, provide the full
                     # traceback.
-                    LOG.error('Could not load %r: %s', ep.name, err,
-                              exc_info=LOG.isEnabledFor(logging.DEBUG))
+                    LOG.error(
+                        'Could not load %r: %s',
+                        ep.name,
+                        err,
+                        exc_info=LOG.isEnabledFor(logging.DEBUG),
+                    )
         return extensions
 
-    def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds,
-                         verify_requirements):
+    def _load_one_plugin(
+        self, ep, invoke_on_load, invoke_args, invoke_kwds, verify_requirements
+    ):
         # NOTE(dhellmann): Using require=False is deprecated in
         # setuptools 11.3.
         if hasattr(ep, 'resolve') and hasattr(ep, 'require'):
@@ -273,7 +292,7 @@ class ExtensionManager:
         """
         if not self.extensions:
             # FIXME: Use a more specific exception class here.
-            raise NoMatches('No %s extensions found' % self.namespace)
+            raise NoMatches(f'No {self.namespace} extensions found')
         response = []
         for e in self.extensions:
             self._invoke_one_plugin(response.append, func, e, args, kwds)
@@ -302,8 +321,9 @@ class ExtensionManager:
         :param kwds: Keyword arguments to pass to method
         :returns: List of values returned from methods
         """
-        return self.map(self._call_extension_method,
-                        method_name, *args, **kwds)
+        return self.map(
+            self._call_extension_method, method_name, *args, **kwds
+        )
 
     def _invoke_one_plugin(self, response_callback, func, e, args, kwds):
         try:

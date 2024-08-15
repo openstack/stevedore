@@ -29,8 +29,12 @@ test_extension = Extension('test_extension', None, None, None)
 test_extension2 = Extension('another_one', None, None, None)
 
 mock_entry_point = Mock(module_name='test.extension', attrs=['obj'])
-a_driver = Extension('test_driver', mock_entry_point, sentinel.driver_plugin,
-                     sentinel.driver_obj)
+a_driver = Extension(
+    'test_driver',
+    mock_entry_point,
+    sentinel.driver_plugin,
+    sentinel.driver_obj,
+)
 
 
 # base ExtensionManager
@@ -68,8 +72,9 @@ class TestTestManager(utils.TestCase):
         func.assert_called_once_with(test_extension)
 
     def test_manager_should_call_all(self):
-        em = ExtensionManager.make_test_instance([test_extension2,
-                                                  test_extension])
+        em = ExtensionManager.make_test_instance(
+            [test_extension2, test_extension]
+        )
         func = Mock()
         em.map(func)
         func.assert_any_call(test_extension2)
@@ -79,8 +84,9 @@ class TestTestManager(utils.TestCase):
         def mapped(ext, *args, **kwds):
             return ext.name
 
-        em = ExtensionManager.make_test_instance([test_extension2,
-                                                  test_extension])
+        em = ExtensionManager.make_test_instance(
+            [test_extension2, test_extension]
+        )
         results = em.map(mapped)
         self.assertEqual(sorted(results), ['another_one', 'test_extension'])
 
@@ -93,8 +99,9 @@ class TestTestManager(utils.TestCase):
         self.assertEqual(results, [])
 
     def test_manager_should_propagate_exceptions(self):
-        em = ExtensionManager.make_test_instance([test_extension],
-                                                 propagate_map_exceptions=True)
+        em = ExtensionManager.make_test_instance(
+            [test_extension], propagate_map_exceptions=True
+        )
         self.skipTest('Skipping temporarily')
         func = Mock(side_effect=RuntimeError('hard coded error'))
         em.map(func, 1, 2, a='A', b='B')
@@ -129,7 +136,7 @@ class TestTestManager(utils.TestCase):
         extensions = [test_extension, test_extension2]
         em = HookManager.make_test_instance(extensions)
         # This will raise KeyError if the names don't match
-        assert (em[test_extension.name])
+        assert em[test_extension.name]
 
     def test_hook_manager_should_have_default_namespace(self):
         em = HookManager.make_test_instance([test_extension])
@@ -137,8 +144,9 @@ class TestTestManager(utils.TestCase):
 
     def test_hook_manager_should_use_supplied_namespace(self):
         namespace = 'testing.1.2.3'
-        em = HookManager.make_test_instance([test_extension],
-                                            namespace=namespace)
+        em = HookManager.make_test_instance(
+            [test_extension], namespace=namespace
+        )
         self.assertEqual(namespace, em.namespace)
 
     def test_hook_manager_should_return_named_extensions(self):
@@ -190,8 +198,9 @@ class TestTestManager(utils.TestCase):
         self.assertEqual(extensions, em.extensions)
 
     def test_dispatch_map_should_invoke_filter_for_extensions(self):
-        em = DispatchExtensionManager.make_test_instance([test_extension,
-                                                          test_extension2])
+        em = DispatchExtensionManager.make_test_instance(
+            [test_extension, test_extension2]
+        )
         filter_func = Mock(return_value=False)
         args = ('A',)
         kw = {'big': 'Cheese'}
@@ -213,8 +222,9 @@ class TestTestManager(utils.TestCase):
         self.assertEqual(test_extension2, em.by_name[test_extension2.name])
 
     def test_named_dispatch_map_should_invoke_filter_for_extensions(self):
-        em = NameDispatchExtensionManager.make_test_instance([test_extension,
-                                                              test_extension2])
+        em = NameDispatchExtensionManager.make_test_instance(
+            [test_extension, test_extension2]
+        )
         func = Mock()
         args = ('A',)
         kw = {'BIGGER': 'Cheese'}

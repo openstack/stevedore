@@ -56,11 +56,17 @@ class EnabledExtensionManager(ExtensionManager):
 
     """
 
-    def __init__(self, namespace, check_func, invoke_on_load=False,
-                 invoke_args=(), invoke_kwds={},
-                 propagate_map_exceptions=False,
-                 on_load_failure_callback=None,
-                 verify_requirements=False,):
+    def __init__(
+        self,
+        namespace,
+        check_func,
+        invoke_on_load=False,
+        invoke_args=(),
+        invoke_kwds={},
+        propagate_map_exceptions=False,
+        on_load_failure_callback=None,
+        verify_requirements=False,
+    ):
         self.check_func = check_func
         super().__init__(
             namespace,
@@ -72,11 +78,11 @@ class EnabledExtensionManager(ExtensionManager):
             verify_requirements=verify_requirements,
         )
 
-    def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds,
-                         verify_requirements):
+    def _load_one_plugin(
+        self, ep, invoke_on_load, invoke_args, invoke_kwds, verify_requirements
+    ):
         ext = super()._load_one_plugin(
-            ep, invoke_on_load, invoke_args, invoke_kwds,
-            verify_requirements,
+            ep, invoke_on_load, invoke_args, invoke_kwds, verify_requirements
         )
         if ext and not self.check_func(ext):
             LOG.debug('ignoring extension %r', ep.name)
