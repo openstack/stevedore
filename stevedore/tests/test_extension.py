@@ -26,7 +26,7 @@ ALL_NAMES = ['e1', 't1', 't2']
 WORKING_NAMES = ['t1', 't2']
 
 
-class FauxExtension(object):
+class FauxExtension:
     def __init__(self, *args, **kwds):
         self.args = args
         self.kwds = kwds
@@ -35,9 +35,9 @@ class FauxExtension(object):
         return self.args, self.kwds, data
 
 
-class BrokenExtension(object):
+class BrokenExtension:
     def __init__(self, *args, **kwds):
-        raise IOError("Did not create")
+        raise OSError("Did not create")
 
 
 class TestCallback(utils.TestCase):
@@ -54,14 +54,14 @@ class TestCallback(utils.TestCase):
     def test_list_entry_points(self):
         em = extension.ExtensionManager('stevedore.test.extension')
         n = em.list_entry_points()
-        self.assertEqual(set(['e1', 'e2', 't1', 't2']),
+        self.assertEqual({'e1', 'e2', 't1', 't2'},
                          set(map(operator.attrgetter("name"), n)))
         self.assertEqual(4, len(n))
 
     def test_list_entry_points_names(self):
         em = extension.ExtensionManager('stevedore.test.extension')
         names = em.entry_points_names()
-        self.assertEqual(set(['e1', 'e2', 't1', 't2']), set(names))
+        self.assertEqual({'e1', 'e2', 't1', 't2'}, set(names))
         self.assertEqual(4, len(names))
 
     def test_contains_by_name(self):
@@ -196,11 +196,11 @@ class TestCallback(utils.TestCase):
                                         )
 
         result = em.map_method('get_args_and_data', 42)
-        self.assertEqual(set(r[2] for r in result), set([42]))
+        self.assertEqual({r[2] for r in result}, {42})
 
     def test_items(self):
         em = extension.ExtensionManager('stevedore.test.extension')
-        expected_output = set([(name, em[name]) for name in ALL_NAMES])
+        expected_output = {(name, em[name]) for name in ALL_NAMES}
         self.assertEqual(expected_output, set(em.items()))
 
 
@@ -208,7 +208,7 @@ class TestLoadRequirementsNewSetuptools(utils.TestCase):
     # setuptools 11.3 and later
 
     def setUp(self):
-        super(TestLoadRequirementsNewSetuptools, self).setUp()
+        super().setUp()
         self.mock_ep = mock.Mock(spec=['require', 'resolve', 'load', 'name'])
         self.em = extension.ExtensionManager.make_test_instance([])
 
@@ -229,7 +229,7 @@ class TestLoadRequirementsOldSetuptools(utils.TestCase):
     # Before setuptools 11.3
 
     def setUp(self):
-        super(TestLoadRequirementsOldSetuptools, self).setUp()
+        super().setUp()
         self.mock_ep = mock.Mock(spec=['load', 'name'])
         self.em = extension.ExtensionManager.make_test_instance([])
 

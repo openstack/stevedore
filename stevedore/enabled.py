@@ -62,7 +62,7 @@ class EnabledExtensionManager(ExtensionManager):
                  on_load_failure_callback=None,
                  verify_requirements=False,):
         self.check_func = check_func
-        super(EnabledExtensionManager, self).__init__(
+        super().__init__(
             namespace,
             invoke_on_load=invoke_on_load,
             invoke_args=invoke_args,
@@ -74,7 +74,7 @@ class EnabledExtensionManager(ExtensionManager):
 
     def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds,
                          verify_requirements):
-        ext = super(EnabledExtensionManager, self)._load_one_plugin(
+        ext = super()._load_one_plugin(
             ep, invoke_on_load, invoke_args, invoke_kwds,
             verify_requirements,
         )

@@ -33,7 +33,7 @@ def _make_ext(name, docstring):
 class TestSphinxExt(utils.TestCase):
 
     def setUp(self):
-        super(TestSphinxExt, self).setUp()
+        super().setUp()
         self.exts = [
             _make_ext('test1', 'One-line docstring'),
             _make_ext('test2', 'Multi-line docstring\n\nAnother para'),

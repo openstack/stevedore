@@ -79,7 +79,7 @@ class NamedExtensionManager(ExtensionManager):
                                         invoke_args,
                                         invoke_kwds,
                                         verify_requirements)
-        self._missing_names = set(names) - set([e.name for e in extensions])
+        self._missing_names = set(names) - {e.name for e in extensions}
         if self._missing_names:
             if on_missing_entrypoints_callback:
                 on_missing_entrypoints_callback(self._missing_names)
@@ -131,7 +131,7 @@ class NamedExtensionManager(ExtensionManager):
     def _init_attributes(self, namespace, names, name_order=False,
                          propagate_map_exceptions=False,
                          on_load_failure_callback=None):
-        super(NamedExtensionManager, self)._init_attributes(
+        super()._init_attributes(
             namespace, propagate_map_exceptions=propagate_map_exceptions,
             on_load_failure_callback=on_load_failure_callback)
 
@@ -140,7 +140,7 @@ class NamedExtensionManager(ExtensionManager):
         self._name_order = name_order
 
     def _init_plugins(self, extensions):
-        super(NamedExtensionManager, self)._init_plugins(extensions)
+        super()._init_plugins(extensions)
 
         if self._name_order:
             self.extensions = [self[n] for n in self._names
@@ -153,7 +153,7 @@ class NamedExtensionManager(ExtensionManager):
         # going to use it.
         if ep.name not in self._names:
             return None
-        return super(NamedExtensionManager, self)._load_one_plugin(
+        return super()._load_one_plugin(
             ep, invoke_on_load, invoke_args, invoke_kwds,
             verify_requirements,
         )

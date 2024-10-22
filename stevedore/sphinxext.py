@@ -33,7 +33,7 @@ def _simple_list(mgr):
         ext = mgr[name]
         doc = _get_docstring(ext.plugin) or '\n'
         summary = doc.splitlines()[0].strip()
-        yield ('* %s -- %s' % (ext.name, summary),
+        yield ('* {} -- {}'.format(ext.name, summary),
                ext.module_name)
 
 
@@ -82,7 +82,7 @@ class ListPluginsDirective(rst.Directive):
         underline_style = self.options.get('underline-style', '=')
 
         def report_load_failure(mgr, ep, err):
-            LOG.warning(u'Failed to load %s: %s' % (ep.module, err))
+            LOG.warning('Failed to load {}: {}'.format(ep.module, err))
 
         mgr = extension.ExtensionManager(
             namespace,

@@ -56,7 +56,7 @@ class HookManager(NamedExtensionManager):
                  # base class because for hooks it is less likely to
                  # be an error to have no entry points present.
                  warn_on_missing_entrypoint=False):
-        super(HookManager, self).__init__(
+        super().__init__(
             namespace,
             [name],
             invoke_on_load=invoke_on_load,
@@ -71,7 +71,7 @@ class HookManager(NamedExtensionManager):
     def _init_attributes(self, namespace, names, name_order=False,
                          propagate_map_exceptions=False,
                          on_load_failure_callback=None):
-        super(HookManager, self)._init_attributes(
+        super()._init_attributes(
             namespace, names,
             propagate_map_exceptions=propagate_map_exceptions,
             on_load_failure_callback=on_load_failure_callback)

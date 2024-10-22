@@ -159,9 +159,9 @@ class Cache:
         filename = os.path.join(self._dir, digest)
         try:
             log.debug('reading %s', filename)
-            with open(filename, 'r') as f:
+            with open(filename) as f:
                 data = json.load(f)
-        except (IOError, json.JSONDecodeError):
+        except (OSError, json.JSONDecodeError):
             data = _build_cacheable_data()
             data['path_values'] = path_values
             if not self._disable_caching:
@@ -170,7 +170,7 @@ class Cache:
                     os.makedirs(self._dir, exist_ok=True)
                     with open(filename, 'w') as f:
                         json.dump(data, f)
-                except (IOError, OSError):
+                except OSError:
                     # Could not create cache dir or write file.
                     pass
 
