@@ -22,7 +22,7 @@ from .exception import NoMatches
 LOG = logging.getLogger(__name__)
 
 
-class Extension(object):
+class Extension:
     """Book-keeping object for tracking extensions.
 
     The arguments passed to the constructor are saved as attributes of
@@ -74,7 +74,7 @@ class Extension(object):
         return self.entry_point.value
 
 
-class ExtensionManager(object):
+class ExtensionManager:
     """Base class for all of the other managers.
 
     :param namespace: The namespace for the entry points.

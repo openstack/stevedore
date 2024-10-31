@@ -51,7 +51,7 @@ class DriverManager(NamedExtensionManager):
                  warn_on_missing_entrypoint=True):
         on_load_failure_callback = on_load_failure_callback \
             or self._default_on_load_failure
-        super(DriverManager, self).__init__(
+        super().__init__(
             namespace=namespace,
             names=[name],
             invoke_on_load=invoke_on_load,
@@ -98,7 +98,7 @@ class DriverManager(NamedExtensionManager):
 
         """
 
-        o = super(DriverManager, cls).make_test_instance(
+        o = super().make_test_instance(
             [extension], namespace=namespace,
             propagate_map_exceptions=propagate_map_exceptions,
             on_load_failure_callback=on_load_failure_callback,
@@ -106,7 +106,7 @@ class DriverManager(NamedExtensionManager):
         return o
 
     def _init_plugins(self, extensions):
-        super(DriverManager, self)._init_plugins(extensions)
+        super()._init_plugins(extensions)
 
         if not self.extensions:
             name = self._names[0]
