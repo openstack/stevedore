@@ -1,3 +1,47 @@
 [build-system]
 requires = ["pbr>=6.1.1"]
 build-backend = "pbr.build"
+
+[project]
+name = "stevedore"
+description = "Manage dynamic plugins for Python applications"
+authors = [
+    {name = "OpenStack", email = "openstack-discuss@lists.openstack.org"},
+]
+readme = {file = "README.rst", content-type = "text/x-rst"}
+license = {text = "Apache-2.0"}
+dynamic = ["version", "dependencies"]
+requires-python = ">=3.10"
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+
+[project.urls]
+Homepage = "https://docs.openstack.org/stevedore"
+Repository = "https://opendev.org/openstack/stevedore"
+
+[project.entry-points."stevedore.example.formatter"]
+simple = "stevedore.example.simple:Simple"
+field = "stevedore.example2.fields:FieldList"
+plain = "stevedore.example.simple:Simple"
+
+[project.entry-points."stevedore.test.extension"]
+t1 = "stevedore.tests.test_extension:FauxExtension"
+t2 = "stevedore.tests.test_extension:FauxExtension"
+e1 = "stevedore.tests.test_extension:BrokenExtension"
+e2 = "stevedore.tests.notfound:UnimportableExtension"
+
+[tool.setuptools]
+packages = [
+    "stevedore"
+]
