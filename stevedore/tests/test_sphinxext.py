@@ -25,7 +25,7 @@ def _make_ext(name, docstring):
 
     inner.__doc__ = docstring
     m1 = importlib_metadata.EntryPoint(
-        name, '{}_module:{}'.format(name, name), 'group',
+        name, f'{name}_module:{name}', 'group',
     )
     return extension.Extension(name, m1, inner, None)
 
