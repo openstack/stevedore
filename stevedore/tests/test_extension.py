@@ -12,7 +12,7 @@
 
 """Tests for stevedore.extension"""
 
-import importlib.metadata as importlib_metadata
+import importlib.metadata
 import operator
 from unittest import mock
 
@@ -255,7 +255,7 @@ class TestExtensionProperties(utils.TestCase):
     def setUp(self):
         self.ext1 = extension.Extension(
             'name',
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 'name', 'module.name:attribute.name [extra]', 'group_name'
             ),
             mock.Mock(),
@@ -263,7 +263,7 @@ class TestExtensionProperties(utils.TestCase):
         )
         self.ext2 = extension.Extension(
             'name',
-            importlib_metadata.EntryPoint(
+            importlib.metadata.EntryPoint(
                 'name', 'module:attribute', 'group_name'
             ),
             mock.Mock(),

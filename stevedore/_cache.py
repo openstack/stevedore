@@ -15,7 +15,7 @@
 import errno
 import glob
 import hashlib
-import importlib.metadata as importlib_metadata
+import importlib.metadata
 import itertools
 import json
 import logging
@@ -96,23 +96,12 @@ def _hash_settings_for_path(path):
 
 
 def _build_cacheable_data():
-    real_groups = importlib_metadata.entry_points()
-
-    if not isinstance(real_groups, dict):
-        # importlib-metadata 4.0 or later (or stdlib importlib.metadata in
-        # Python 3.9 or later)
-        real_groups = {
-            group: real_groups.select(group=group)
-            for group in real_groups.groups
-        }
-
-    # Convert the namedtuple values to regular tuples
+    entry_points = importlib.metadata.entry_points()
     groups = {}
-    for name, group_data in real_groups.items():
+    for group in entry_points.groups:
         existing = set()
-        members = []
-        groups[name] = members
-        for ep in group_data:
+        groups[group] = []
+        for ep in entry_points.select(group=group):
             # Filter out duplicates that can occur when testing a
             # package that provides entry points using tox, where the
             # package is installed in the virtualenv that tox builds
@@ -121,7 +110,8 @@ def _build_cacheable_data():
             if item in existing:
                 continue
             existing.add(item)
-            members.append(item)
+            groups[group].append(item)
+
     return {
         'groups': groups,
         'sys.executable': sys.executable,
@@ -183,7 +173,7 @@ class Cache:
         data = self._get_data_for_path(path)
         group_data = data.get('groups', {}).get(group, [])
         for vals in group_data:
-            result.append(importlib_metadata.EntryPoint(*vals))
+            result.append(importlib.metadata.EntryPoint(*vals))
         return result
 
     def get_group_named(self, group, path=None):

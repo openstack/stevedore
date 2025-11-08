@@ -52,8 +52,6 @@ class Extension:
 
         :return: A string in 'dotted.module' format.
         """
-        # NOTE: importlib_metadata from PyPI includes this but the
-        # Python 3.8 standard library does not.
         match = self.entry_point.pattern.match(self.entry_point.value)
         return match.group('module')
 

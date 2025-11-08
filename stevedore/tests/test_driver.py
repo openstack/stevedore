@@ -12,7 +12,7 @@
 
 """Tests for stevedore.extension"""
 
-import importlib.metadata as importlib_metadata
+import importlib.metadata
 
 from stevedore import driver
 from stevedore import exception
@@ -71,7 +71,7 @@ class TestCallback(utils.TestCase):
         extensions = [
             extension.Extension(
                 'backend',
-                importlib_metadata.EntryPoint(
+                importlib.metadata.EntryPoint(
                     'backend', 'pkg1:driver', 'backend'
                 ),
                 'pkg backend',
@@ -79,7 +79,7 @@ class TestCallback(utils.TestCase):
             ),
             extension.Extension(
                 'backend',
-                importlib_metadata.EntryPoint(
+                importlib.metadata.EntryPoint(
                     'backend', 'pkg2:driver', 'backend'
                 ),
                 'pkg backend',

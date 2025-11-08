@@ -9,9 +9,10 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
+
 """Tests for the sphinx extension"""
 
-import importlib.metadata as importlib_metadata
+import importlib.metadata
 
 from stevedore import extension
 from stevedore import sphinxext
@@ -23,7 +24,7 @@ def _make_ext(name, docstring):
         pass
 
     inner.__doc__ = docstring
-    m1 = importlib_metadata.EntryPoint(name, f'{name}_module:{name}', 'group')
+    m1 = importlib.metadata.EntryPoint(name, f'{name}_module:{name}', 'group')
     return extension.Extension(name, m1, inner, None)
 
 
