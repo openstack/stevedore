@@ -293,7 +293,7 @@ class ExtensionManager(Generic[T]):
         self,
         ep: importlib.metadata.EntryPoint,
         invoke_on_load: bool,
-        invoke_args: tuple[Any, ...],
+        invoke_args: tuple[Any],
         invoke_kwds: dict[str, Any],
     ) -> Extension[T] | None:
         plugin = ep.load()
@@ -313,8 +313,8 @@ class ExtensionManager(Generic[T]):
     def map(
         self,
         func: Callable[Concatenate[Extension[T], P], U],
-        *args: Any,
-        **kwds: Any,
+        *args: P.args,
+        **kwds: P.kwargs,
     ) -> list[U]:
         """Iterate over the extensions invoking func() for each.
 
@@ -340,7 +340,7 @@ class ExtensionManager(Generic[T]):
             raise NoMatches(f'No {self.namespace} extensions found')
         response: list[U] = []
         for e in self.extensions:
-            self._invoke_one_plugin(response.append, func, e, args, kwds)
+            self._invoke_one_plugin(response.append, func, e, *args, **kwds)
         return response
 
     @staticmethod
@@ -377,8 +377,8 @@ class ExtensionManager(Generic[T]):
         response_callback: Callable[..., Any],
         func: Callable[Concatenate[Extension[T], P], U],
         e: Extension[T],
-        args: tuple[Any],
-        kwds: dict[str, Any],
+        *args: P.args,
+        **kwds: P.kwargs,
     ) -> None:
         try:
             response_callback(func(e, *args, **kwds))

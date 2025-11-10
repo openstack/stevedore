@@ -102,7 +102,9 @@ class DispatchExtensionManager(EnabledExtensionManager[T]):
         response: list[U] = []
         for e in self.extensions:
             if filter_func(e, *args, **kwds):
-                self._invoke_one_plugin(response.append, func, e, args, kwds)
+                self._invoke_one_plugin(
+                    response.append, func, e, *args, **kwds
+                )
         return response
 
     def map_method(  # type: ignore[override]
@@ -213,8 +215,8 @@ class NameDispatchExtensionManager(DispatchExtensionManager[T]):
         self,
         names: Sequence[str],
         func: Callable[Concatenate[Extension[T], P], U],
-        *args: Any,
-        **kwds: Any,
+        *args: P.args,
+        **kwds: P.kwargs,
     ) -> list[U]:
         """Iterate over the extensions invoking func() for any where
         the name is in the given list of names.
@@ -244,7 +246,9 @@ class NameDispatchExtensionManager(DispatchExtensionManager[T]):
             except KeyError:
                 LOG.debug('Missing extension %r being ignored', name)
             else:
-                self._invoke_one_plugin(response.append, func, e, args, kwds)
+                self._invoke_one_plugin(
+                    response.append, func, e, *args, **kwds
+                )
         return response
 
     def map_method(  # type: ignore[override]
