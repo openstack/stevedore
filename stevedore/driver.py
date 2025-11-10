@@ -38,8 +38,8 @@ class DriverManager(NamedExtensionManager):
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
     :type on_load_failure_callback: function
-    :param verify_requirements: Use setuptools to enforce the
-        dependencies of the plugin(s) being loaded. Defaults to False.
+    :param verify_requirements: **DEPRECATED** This is a no-op and will be
+        removed in a future version.
     :type verify_requirements: bool
     :type warn_on_missing_entrypoint: bool
     """
@@ -52,7 +52,7 @@ class DriverManager(NamedExtensionManager):
         invoke_args=None,
         invoke_kwds=None,
         on_load_failure_callback=None,
-        verify_requirements=False,
+        verify_requirements=None,
         warn_on_missing_entrypoint=True,
     ):
         invoke_args = () if invoke_args is None else invoke_args
@@ -82,7 +82,7 @@ class DriverManager(NamedExtensionManager):
         namespace='TESTING',
         propagate_map_exceptions=False,
         on_load_failure_callback=None,
-        verify_requirements=False,
+        verify_requirements=None,
     ):
         """Construct a test DriverManager
 
@@ -104,8 +104,8 @@ class DriverManager(NamedExtensionManager):
             an entrypoint fails to load) are (manager, entrypoint,
             exception)
         :type on_load_failure_callback: function
-        :param verify_requirements: Use setuptools to enforce the
-            dependencies of the plugin(s) being loaded. Defaults to False.
+        :param verify_requirements: **DEPRECATED** This is a no-op and will be
+            removed in a future version.
         :type verify_requirements: bool
         :return: The manager instance, initialized for testing
 

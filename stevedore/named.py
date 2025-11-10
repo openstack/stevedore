@@ -54,8 +54,8 @@ class NamedExtensionManager(ExtensionManager):
         called when one or more names cannot be found. The provided argument
         will be a subset of the 'names' parameter.
     :type on_missing_entrypoints_callback: function
-    :param verify_requirements: Use setuptools to enforce the
-        dependencies of the plugin(s) being loaded. Defaults to False.
+    :param verify_requirements: **DEPRECATED** This is a no-op and will be
+        removed in a future version.
     :type verify_requirements: bool
     :param warn_on_missing_entrypoint: Flag to control whether failing
         to load a plugin is reported via a log mess. Only applies if
@@ -75,7 +75,7 @@ class NamedExtensionManager(ExtensionManager):
         propagate_map_exceptions=False,
         on_load_failure_callback=None,
         on_missing_entrypoints_callback=None,
-        verify_requirements=False,
+        verify_requirements=None,
         warn_on_missing_entrypoint=True,
     ):
         invoke_args = () if invoke_args is None else invoke_args
@@ -88,7 +88,7 @@ class NamedExtensionManager(ExtensionManager):
             on_load_failure_callback=on_load_failure_callback,
         )
         extensions = self._load_plugins(
-            invoke_on_load, invoke_args, invoke_kwds, verify_requirements
+            invoke_on_load, invoke_args, invoke_kwds
         )
         self._missing_names = set(names) - {e.name for e in extensions}
         if self._missing_names:
@@ -107,7 +107,7 @@ class NamedExtensionManager(ExtensionManager):
         namespace='TESTING',
         propagate_map_exceptions=False,
         on_load_failure_callback=None,
-        verify_requirements=False,
+        verify_requirements=None,
     ):
         """Construct a test NamedExtensionManager
 
@@ -129,13 +129,11 @@ class NamedExtensionManager(ExtensionManager):
             an entrypoint fails to load) are (manager, entrypoint,
             exception)
         :type on_load_failure_callback: function
-        :param verify_requirements: Use setuptools to enforce the
-            dependencies of the plugin(s) being loaded. Defaults to False.
+        :param verify_requirements: **DEPRECATED** This is a no-op and will be
+            removed in a future version.
         :type verify_requirements: bool
         :return: The manager instance, initialized for testing
-
         """
-
         o = cls.__new__(cls)
         names = [e.name for e in extensions]
         o._init_attributes(
@@ -173,14 +171,12 @@ class NamedExtensionManager(ExtensionManager):
                 self[n] for n in self._names if n not in self._missing_names
             ]
 
-    def _load_one_plugin(
-        self, ep, invoke_on_load, invoke_args, invoke_kwds, verify_requirements
-    ):
+    def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
         # Check the name before going any further to prevent
         # undesirable code from being loaded at all if we are not
         # going to use it.
         if ep.name not in self._names:
             return None
         return super()._load_one_plugin(
-            ep, invoke_on_load, invoke_args, invoke_kwds, verify_requirements
+            ep, invoke_on_load, invoke_args, invoke_kwds
         )

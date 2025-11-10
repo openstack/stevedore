@@ -36,8 +36,8 @@ class HookManager(NamedExtensionManager):
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
     :type on_load_failure_callback: function
-    :param verify_requirements: Use setuptools to enforce the
-        dependencies of the plugin(s) being loaded. Defaults to False.
+    :param verify_requirements: **DEPRECATED** This is a no-op and will be
+        removed in a future version.
     :type verify_requirements: bool
     :type on_missing_entrypoints_callback: function
     :param warn_on_missing_entrypoint: Flag to control whether failing
@@ -55,7 +55,7 @@ class HookManager(NamedExtensionManager):
         invoke_args=None,
         invoke_kwds=None,
         on_load_failure_callback=None,
-        verify_requirements=False,
+        verify_requirements=None,
         on_missing_entrypoints_callback=None,
         # NOTE(dhellmann): This default is different from the
         # base class because for hooks it is less likely to

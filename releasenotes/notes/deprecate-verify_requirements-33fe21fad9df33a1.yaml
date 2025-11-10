@@ -1,0 +1,6 @@
+---
+deprecations:
+  - |
+    The ``verify_requirements`` option provided to ``ExtensionManager`` and
+    its various subclasses has been deprecated for a removal. It is a no-op
+    in modern Python.

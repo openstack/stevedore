@@ -15,6 +15,7 @@
 import importlib.metadata
 import operator
 from unittest import mock
+import warnings
 
 from stevedore import exception
 from stevedore import extension
@@ -207,48 +208,20 @@ class TestCallback(utils.TestCase):
         self.assertEqual(expected_output, set(em.items()))
 
 
-class TestLoadRequirementsNewSetuptools(utils.TestCase):
-    # setuptools 11.3 and later
-
-    def setUp(self):
-        super().setUp()
-        self.mock_ep = mock.Mock(spec=['require', 'resolve', 'load', 'name'])
-        self.em = extension.ExtensionManager.make_test_instance([])
-
+class TestDeprecations(utils.TestCase):
     def test_verify_requirements(self):
-        self.em._load_one_plugin(
-            self.mock_ep, False, (), {}, verify_requirements=True
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            self.em = extension.ExtensionManager.make_test_instance(
+                [], verify_requirements=True
+            )
+
+        self.assertEqual(1, len(w))
+        self.assertTrue(issubclass(w[-1].category, DeprecationWarning))
+        self.assertIn(
+            'The verify_requirements argument is now a no-op',
+            str(w[-1].message),
         )
-        self.mock_ep.require.assert_called_once_with()
-        self.mock_ep.resolve.assert_called_once_with()
-
-    def test_no_verify_requirements(self):
-        self.em._load_one_plugin(
-            self.mock_ep, False, (), {}, verify_requirements=False
-        )
-        self.assertEqual(0, self.mock_ep.require.call_count)
-        self.mock_ep.resolve.assert_called_once_with()
-
-
-class TestLoadRequirementsOldSetuptools(utils.TestCase):
-    # Before setuptools 11.3
-
-    def setUp(self):
-        super().setUp()
-        self.mock_ep = mock.Mock(spec=['load', 'name'])
-        self.em = extension.ExtensionManager.make_test_instance([])
-
-    def test_verify_requirements(self):
-        self.em._load_one_plugin(
-            self.mock_ep, False, (), {}, verify_requirements=True
-        )
-        self.mock_ep.load.assert_called_once_with()
-
-    def test_no_verify_requirements(self):
-        self.em._load_one_plugin(
-            self.mock_ep, False, (), {}, verify_requirements=False
-        )
-        self.mock_ep.load.assert_called_once_with()
 
 
 class TestExtensionProperties(utils.TestCase):

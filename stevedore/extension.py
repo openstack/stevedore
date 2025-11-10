@@ -14,6 +14,7 @@
 
 import logging
 import operator
+import warnings
 
 from . import _cache
 from .exception import NoMatches
@@ -96,8 +97,8 @@ class ExtensionManager:
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
     :type on_load_failure_callback: function
-    :param verify_requirements: Use setuptools to enforce the
-        dependencies of the plugin(s) being loaded. Defaults to False.
+    :param verify_requirements: **DEPRECATED** This is a no-op and will be
+        removed in a future version.
     :type verify_requirements: bool
     """
 
@@ -109,17 +110,25 @@ class ExtensionManager:
         invoke_kwds=None,
         propagate_map_exceptions=False,
         on_load_failure_callback=None,
-        verify_requirements=False,
+        verify_requirements=None,
     ):
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
+
+        if verify_requirements is not None:
+            warnings.warn(
+                'The verify_requirements argument is now a no-op and is '
+                'deprecated for removal. Remove the argument from calls.',
+                DeprecationWarning,
+            )
+
         self._init_attributes(
             namespace,
             propagate_map_exceptions=propagate_map_exceptions,
             on_load_failure_callback=on_load_failure_callback,
         )
         extensions = self._load_plugins(
-            invoke_on_load, invoke_args, invoke_kwds, verify_requirements
+            invoke_on_load, invoke_args, invoke_kwds
         )
         self._init_plugins(extensions)
 
@@ -130,7 +139,7 @@ class ExtensionManager:
         namespace='TESTING',
         propagate_map_exceptions=False,
         on_load_failure_callback=None,
-        verify_requirements=False,
+        verify_requirements=None,
     ):
         """Construct a test ExtensionManager
 
@@ -152,12 +161,17 @@ class ExtensionManager:
             an entrypoint fails to load) are (manager, entrypoint,
             exception)
         :type on_load_failure_callback: function
-        :param verify_requirements: Use setuptools to enforce the
-            dependencies of the plugin(s) being loaded. Defaults to False.
+        :param verify_requirements: **DEPRECATED** This is a no-op and will be
+            removed in a future version.
         :type verify_requirements: bool
         :return: The manager instance, initialized for testing
-
         """
+        if verify_requirements is not None:
+            warnings.warn(
+                'The verify_requirements argument is now a no-op and is '
+                'deprecated for removal. Remove the argument from calls.',
+                DeprecationWarning,
+            )
 
         o = cls.__new__(cls)
         o._init_attributes(
@@ -209,19 +223,13 @@ class ExtensionManager:
         """Return the list of entry points names for this namespace."""
         return list(map(operator.attrgetter("name"), self.list_entry_points()))
 
-    def _load_plugins(
-        self, invoke_on_load, invoke_args, invoke_kwds, verify_requirements
-    ):
+    def _load_plugins(self, invoke_on_load, invoke_args, invoke_kwds):
         extensions = []
         for ep in self.list_entry_points():
             LOG.debug('found extension %r', ep)
             try:
                 ext = self._load_one_plugin(
-                    ep,
-                    invoke_on_load,
-                    invoke_args,
-                    invoke_kwds,
-                    verify_requirements,
+                    ep, invoke_on_load, invoke_args, invoke_kwds
                 )
                 if ext:
                     extensions.append(ext)
@@ -246,17 +254,8 @@ class ExtensionManager:
                     )
         return extensions
 
-    def _load_one_plugin(
-        self, ep, invoke_on_load, invoke_args, invoke_kwds, verify_requirements
-    ):
-        # NOTE(dhellmann): Using require=False is deprecated in
-        # setuptools 11.3.
-        if hasattr(ep, 'resolve') and hasattr(ep, 'require'):
-            if verify_requirements:
-                ep.require()
-            plugin = ep.resolve()
-        else:
-            plugin = ep.load()
+    def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
+        plugin = ep.load()
         if invoke_on_load:
             obj = plugin(*invoke_args, **invoke_kwds)
         else:

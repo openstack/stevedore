@@ -151,10 +151,9 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
     :type on_load_failure_callback: function
-    :param verify_requirements: Use setuptools to enforce the
-        dependencies of the plugin(s) being loaded. Defaults to False.
+    :param verify_requirements: **DEPRECATED** This is a no-op and will be
+        removed in a future version.
     :type verify_requirements: bool
-
     """
 
     def __init__(
@@ -166,7 +165,7 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
         invoke_kwds=None,
         propagate_map_exceptions=False,
         on_load_failure_callback=None,
-        verify_requirements=False,
+        verify_requirements=None,
     ):
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
