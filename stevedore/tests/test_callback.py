@@ -14,8 +14,6 @@
 
 from unittest import mock
 
-from testtools.matchers import GreaterThan
-
 from stevedore import extension
 from stevedore import named
 from stevedore.tests import utils
@@ -34,7 +32,7 @@ class TestCallback(utils.TestCase):
             on_load_failure_callback=failure_callback,
         )
         extensions = list(em.extensions)
-        self.assertTrue(len(extensions), GreaterThan(0))
+        self.assertGreater(len(extensions), 0)
         self.assertEqual(len(errors), 2)
         for manager, entrypoint, error in errors:
             self.assertIs(manager, em)
