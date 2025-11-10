@@ -118,6 +118,8 @@ class ExtensionManager(Generic[T]):
         removed in a future version.
     """
 
+    ENTRY_POINT_CACHE: dict[str, list[importlib.metadata.EntryPoint]] = {}
+
     def __init__(
         self,
         namespace: str,
@@ -201,8 +203,6 @@ class ExtensionManager(Generic[T]):
                 d[e.name] = e
             self._extensions_by_name_cache = d
         return self._extensions_by_name_cache
-
-    ENTRY_POINT_CACHE: dict[str, list[importlib.metadata.EntryPoint]] = {}
 
     def list_entry_points(self) -> list[importlib.metadata.EntryPoint]:
         """Return the list of entry points for this namespace.

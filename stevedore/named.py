@@ -84,28 +84,21 @@ class NamedExtensionManager(ExtensionManager[T]):
         verify_requirements: bool | None = None,
         warn_on_missing_entrypoint: bool = True,
     ) -> None:
-        invoke_args = () if invoke_args is None else invoke_args
-        invoke_kwds = {} if invoke_kwds is None else invoke_kwds
-
-        self.namespace = namespace
-        self.propagate_map_exceptions = propagate_map_exceptions
-        self._on_load_failure_callback = on_load_failure_callback
         self._names = names
-        self._missing_names = set()
+        self._missing_names: set[str] = set()
         self._name_order = name_order
+        self._on_missing_entrypoints_callback = on_missing_entrypoints_callback
+        self._warn_on_missing_entrypoint = warn_on_missing_entrypoint
 
-        extensions = self._load_plugins(
-            invoke_on_load, invoke_args, invoke_kwds
+        super().__init__(
+            namespace,
+            invoke_on_load=invoke_on_load,
+            invoke_args=invoke_args,
+            invoke_kwds=invoke_kwds,
+            propagate_map_exceptions=propagate_map_exceptions,
+            on_load_failure_callback=on_load_failure_callback,
+            verify_requirements=verify_requirements,
         )
-        self._missing_names = set(names) - {e.name for e in extensions}
-        if self._missing_names:
-            if on_missing_entrypoints_callback:
-                on_missing_entrypoints_callback(self._missing_names)
-            elif warn_on_missing_entrypoint:
-                LOG.warning(
-                    'Could not load {}'.format(', '.join(self._missing_names))
-                )
-        self._init_plugins(extensions)
 
     @classmethod
     def make_test_instance(
@@ -160,6 +153,27 @@ class NamedExtensionManager(ExtensionManager[T]):
             self.extensions = [
                 self[n] for n in self._names if n not in self._missing_names
             ]
+
+    def _load_plugins(
+        self,
+        invoke_on_load: bool,
+        invoke_args: tuple[Any, ...],
+        invoke_kwds: dict[str, Any],
+    ) -> list[Extension[T]]:
+        extensions = super()._load_plugins(
+            invoke_on_load, invoke_args, invoke_kwds
+        )
+
+        self._missing_names = set(self._names) - {e.name for e in extensions}
+        if self._missing_names:
+            if self._on_missing_entrypoints_callback:
+                self._on_missing_entrypoints_callback(self._missing_names)
+            elif self._warn_on_missing_entrypoint:
+                LOG.warning(
+                    'Could not load {}'.format(', '.join(self._missing_names))
+                )
+
+        return extensions
 
     def _load_one_plugin(
         self,

@@ -70,6 +70,7 @@ class DriverManager(NamedExtensionManager[T]):
         on_load_failure_callback = (
             on_load_failure_callback or self._default_on_load_failure
         )
+
         super().__init__(
             namespace=namespace,
             names=[name],

@@ -67,6 +67,7 @@ class HookManager(NamedExtensionManager[T]):
     ):
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
+
         super().__init__(
             namespace,
             [name],

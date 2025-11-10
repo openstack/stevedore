@@ -38,7 +38,7 @@ class TestCallback(utils.TestCase):
             self.assertIs(manager, em)
             self.assertIsInstance(error, (IOError, ImportError))
 
-    @mock.patch('stevedore.named.NamedExtensionManager._load_plugins')
+    @mock.patch('stevedore.extension.ExtensionManager._load_plugins')
     def test_missing_entrypoints_callback(self, load_fn):
         errors = set()
 
