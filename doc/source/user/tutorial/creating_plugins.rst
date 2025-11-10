@@ -72,9 +72,9 @@ plugins are formatters from the stevedore examples, so I will use the
 namespace "stevedore.example.formatter". Now it is possible to provide
 all of the necessary information in the packaging instructions:
 
-.. literalinclude:: ../../../../stevedore/example/setup.py
-   :language: python
-   :prepend: # stevedore/example/setup.py
+.. literalinclude:: ../../../../stevedore/example/pyproject.toml
+   :language: toml
+   :prepend: # stevedore/example/pyproject.toml
 
 The important lines are near the bottom where the ``entry_points``
 argument to :func:`setup` is set. The value is a dictionary mapping
@@ -84,9 +84,9 @@ where *name* is the user-visible name for the plugin, *module* is the
 Python import reference for the module, and *importable* is the name
 of something that can be imported from inside the module.
 
-.. literalinclude:: ../../../../stevedore/example/setup.py
-   :language: python
-   :lines: 37-43
+.. literalinclude:: ../../../../stevedore/example/pyproject.toml
+   :language: toml
+   :lines: 33-35
 
 In this case, there are two plugins registered. The "simple" plugin
 defined above, and a "plain" plugin, which is just an alias for the
@@ -112,7 +112,7 @@ for stevedore is located in ``stevedore.egg-info/entry_points.txt``:
 :mod:`importlib.metadata` uses the ``entry_points.txt`` file from all of
 the installed packages on the import path to find plugins. You should
 not modify these files, except by changing the list of entry points in
-``setup.py``.
+``pyproject.toml`` (or ``setup.py`` or ``setup.cfg``).
 
 .. _abc module: http://docs.python.org/2/library/abc.html
 .. _field list: http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#field-lists
@@ -135,24 +135,24 @@ plugin that produces a reStructuredText `field list`_.
    :language: python
    :prepend: # stevedore/example2/fields.py
 
-The new plugin can then be packaged using a ``setup.py`` containing
+The new plugin can then be packaged using a ``pyproject.toml`` containing
 
-.. literalinclude:: ../../../../stevedore/example2/setup.py
-   :language: python
-   :prepend: # stevedore/example2/setup.py
+.. literalinclude:: ../../../../stevedore/example2/pyproject.toml
+   :language: toml
+   :prepend: # stevedore/example2/pyproject.toml
 
 The new plugin is in a separate ``stevedore-examples2`` package.
 
-.. literalinclude:: ../../../../stevedore/example2/setup.py
-   :language: python
-   :lines: 3-4
+.. literalinclude:: ../../../../stevedore/example2/pyproject.toml
+   :language: toml
+   :lines: 37-39
 
 However, the plugin is registered as part of the
 ``stevedore.example.formatter`` namespace.
 
-.. literalinclude:: ../../../../stevedore/example2/setup.py
-   :language: python
-   :lines: 36-40
+.. literalinclude:: ../../../../stevedore/example2/pyproject.toml
+   :language: toml
+   :lines: 33
 
 When the plugin namespace is scanned, all packages on the current
 ``PYTHONPATH`` are examined and the entry point from the second
