@@ -51,7 +51,7 @@ class TestCache(utils.TestCase):
         sot = _cache.Cache()
         sot._disable_caching = True
         mock_open.side_effect = IOError
-        sot._get_data_for_path('fake')
+        sot._get_data_for_path(('fake',))
         mock_mkdir.assert_not_called()
 
     def test__build_cacheable_data(self):

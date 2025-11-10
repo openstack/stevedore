@@ -15,12 +15,15 @@
 Extension manager used only for testing.
 """
 
+from typing import TypeVar
 import warnings
 
 from stevedore import extension
 
+T = TypeVar('T')
 
-class TestExtensionManager(extension.ExtensionManager):
+
+class TestExtensionManager(extension.ExtensionManager[T]):
     """ExtensionManager that is explicitly initialized for tests.
 
     .. deprecated:: 0.13

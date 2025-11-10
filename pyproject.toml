@@ -61,7 +61,10 @@ exclude = '''(?x)(
 
 [[tool.mypy.overrides]]
 module = ["stevedore.tests.*"]
-ignore_errors = true
+disallow_untyped_calls = false
+disallow_untyped_defs = false
+disallow_subclassing_any = false
+disallow_any_generics = false
 
 [tool.ruff]
 line-length = 79

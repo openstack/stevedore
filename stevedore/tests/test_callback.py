@@ -47,7 +47,9 @@ class TestCallback(utils.TestCase):
         def callback(names):
             errors.update(names)
 
-        load_fn.return_value = [extension.Extension('foo', None, None, None)]
+        load_fn.return_value = [
+            extension.Extension('foo', None, None, None)  # type: ignore
+        ]
         named.NamedExtensionManager(
             'stevedore.test.extension',
             names=['foo', 'bar'],

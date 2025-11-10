@@ -14,6 +14,7 @@
 
 import importlib.metadata
 import operator
+from typing import Any
 from unittest import mock
 import warnings
 
@@ -42,16 +43,19 @@ class BrokenExtension:
 
 class TestCallback(utils.TestCase):
     def test_detect_plugins(self):
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager('stevedore.test.extension')
         names = sorted(em.names())
         self.assertEqual(names, ALL_NAMES)
 
     def test_get_by_name(self):
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager('stevedore.test.extension')
         e = em['t1']
         self.assertEqual(e.name, 't1')
 
     def test_list_entry_points(self):
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager('stevedore.test.extension')
         n = em.list_entry_points()
         self.assertEqual(
@@ -60,16 +64,19 @@ class TestCallback(utils.TestCase):
         self.assertEqual(4, len(n))
 
     def test_list_entry_points_names(self):
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager('stevedore.test.extension')
         names = em.entry_points_names()
         self.assertEqual({'e1', 'e2', 't1', 't2'}, set(names))
         self.assertEqual(4, len(names))
 
     def test_contains_by_name(self):
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager('stevedore.test.extension')
         self.assertIn('t1', em, True)
 
     def test_get_by_name_missing(self):
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager('stevedore.test.extension')
         try:
             em['t3']
@@ -81,8 +88,10 @@ class TestCallback(utils.TestCase):
     def test_load_multiple_times_entry_points(self):
         # We expect to get the same EntryPoint object because we save them
         # in the cache.
+        em1: extension.ExtensionManager[Any]
         em1 = extension.ExtensionManager('stevedore.test.extension')
         eps1 = [ext.entry_point for ext in em1]
+        em2: extension.ExtensionManager[Any]
         em2 = extension.ExtensionManager('stevedore.test.extension')
         eps2 = [ext.entry_point for ext in em2]
         self.assertIs(eps1[0], eps2[0])
@@ -90,8 +99,10 @@ class TestCallback(utils.TestCase):
     def test_load_multiple_times_plugins(self):
         # We expect to get the same plugin object (module or class)
         # because the underlying import machinery will cache the values.
+        em1: extension.ExtensionManager[Any]
         em1 = extension.ExtensionManager('stevedore.test.extension')
         plugins1 = [ext.plugin for ext in em1]
+        em2: extension.ExtensionManager[Any]
         em2 = extension.ExtensionManager('stevedore.test.extension')
         plugins2 = [ext.plugin for ext in em2]
         self.assertIs(plugins1[0], plugins2[0])
@@ -106,16 +117,19 @@ class TestCallback(utils.TestCase):
             'stevedore._cache.get_group_all',
             side_effect=AssertionError('called get_group_all'),
         ):
+            em: extension.ExtensionManager[Any]
             em = extension.ExtensionManager('stevedore.test.faux')
             names = em.names()
         self.assertEqual(names, [])
 
     def test_iterable(self):
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager('stevedore.test.extension')
         names = sorted(e.name for e in em)
         self.assertEqual(names, ALL_NAMES)
 
     def test_invoke_on_load(self):
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager(
             'stevedore.test.extension',
             invoke_on_load=True,
@@ -124,13 +138,15 @@ class TestCallback(utils.TestCase):
         )
         self.assertEqual(len(em.extensions), 2)
         for e in em.extensions:
+            assert e.obj is not None
             self.assertEqual(e.obj.args, ('a',))
             self.assertEqual(e.obj.kwds, {'b': 'B'})
 
     def test_map_return_values(self):
-        def mapped(ext, *args, **kwds):
+        def mapped(ext, /, *args, **kwds):
             return ext.name
 
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager(
             'stevedore.test.extension', invoke_on_load=True
         )
@@ -140,9 +156,10 @@ class TestCallback(utils.TestCase):
     def test_map_arguments(self):
         objs = []
 
-        def mapped(ext, *args, **kwds):
+        def mapped(ext, /, *args, **kwds):
             objs.append((ext, args, kwds))
 
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager(
             'stevedore.test.extension', invoke_on_load=True
         )
@@ -155,9 +172,10 @@ class TestCallback(utils.TestCase):
             self.assertEqual(o[2], {'a': 'A', 'b': 'B'})
 
     def test_map_eats_errors(self):
-        def mapped(ext, *args, **kwds):
+        def mapped(ext, /, *args, **kwds):
             raise RuntimeError('hard coded error')
 
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager(
             'stevedore.test.extension', invoke_on_load=True
         )
@@ -165,9 +183,10 @@ class TestCallback(utils.TestCase):
         self.assertEqual(results, [])
 
     def test_map_propagate_exceptions(self):
-        def mapped(ext, *args, **kwds):
+        def mapped(ext, /, *args, **kwds):
             raise RuntimeError('hard coded error')
 
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager(
             'stevedore.test.extension',
             invoke_on_load=True,
@@ -183,9 +202,10 @@ class TestCallback(utils.TestCase):
     def test_map_errors_when_no_plugins(self):
         expected_str = 'No stevedore.test.extension.none extensions found'
 
-        def mapped(ext, *args, **kwds):
+        def mapped(ext, /, *args, **kwds):
             pass
 
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager(
             'stevedore.test.extension.none', invoke_on_load=True
         )
@@ -195,6 +215,7 @@ class TestCallback(utils.TestCase):
             self.assertEqual(expected_str, str(err))
 
     def test_map_method(self):
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager(
             'stevedore.test.extension', invoke_on_load=True
         )
@@ -203,6 +224,7 @@ class TestCallback(utils.TestCase):
         self.assertEqual({r[2] for r in result}, {42})
 
     def test_items(self):
+        em: extension.ExtensionManager[Any]
         em = extension.ExtensionManager('stevedore.test.extension')
         expected_output = {(name, em[name]) for name in ALL_NAMES}
         self.assertEqual(expected_output, set(em.items()))
@@ -212,7 +234,7 @@ class TestDeprecations(utils.TestCase):
     def test_verify_requirements(self):
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always')
-            self.em = extension.ExtensionManager.make_test_instance(
+            extension.ExtensionManager.make_test_instance(
                 [], verify_requirements=True
             )
 

@@ -10,6 +10,7 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
+from typing import Any
 from unittest.mock import Mock
 from unittest.mock import sentinel
 
@@ -25,8 +26,8 @@ from stevedore import HookManager
 from stevedore import NamedExtensionManager
 
 
-test_extension = Extension('test_extension', None, None, None)
-test_extension2 = Extension('another_one', None, None, None)
+test_extension = Extension('test_extension', None, None, None)  # type: ignore
+test_extension2 = Extension('another_one', None, None, None)  # type: ignore
 
 mock_entry_point = Mock(module_name='test.extension', attrs=['obj'])
 a_driver = Extension(
@@ -45,11 +46,13 @@ class TestTestManager(utils.TestCase):
         self.assertEqual(extensions, em.extensions)
 
     def test_instance_should_have_default_namespace(self):
+        em: ExtensionManager[Any]
         em = ExtensionManager.make_test_instance([])
         self.assertEqual(em.namespace, 'TESTING')
 
     def test_instance_should_use_supplied_namespace(self):
         namespace = 'testing.1.2.3'
+        em: ExtensionManager[Any]
         em = ExtensionManager.make_test_instance([], namespace=namespace)
         self.assertEqual(namespace, em.namespace)
 
@@ -81,7 +84,7 @@ class TestTestManager(utils.TestCase):
         func.assert_any_call(test_extension)
 
     def test_manager_return_values(self):
-        def mapped(ext, *args, **kwds):
+        def mapped(ext, /, *args, **kwds):
             return ext.name
 
         em = ExtensionManager.make_test_instance(
@@ -113,11 +116,13 @@ class TestTestManager(utils.TestCase):
         self.assertEqual(extensions, em.extensions)
 
     def test_named_manager_should_have_default_namespace(self):
+        em: NamedExtensionManager[Any]
         em = NamedExtensionManager.make_test_instance([])
         self.assertEqual(em.namespace, 'TESTING')
 
     def test_named_manager_should_use_supplied_namespace(self):
         namespace = 'testing.1.2.3'
+        em: NamedExtensionManager[Any]
         em = NamedExtensionManager.make_test_instance([], namespace=namespace)
         self.assertEqual(namespace, em.namespace)
 
@@ -150,8 +155,8 @@ class TestTestManager(utils.TestCase):
         self.assertEqual(namespace, em.namespace)
 
     def test_hook_manager_should_return_named_extensions(self):
-        hook1 = Extension('captain', None, None, None)
-        hook2 = Extension('captain', None, None, None)
+        hook1 = Extension('captain', None, None, None)  # type: ignore
+        hook2 = Extension('captain', None, None, None)  # type: ignore
         em = HookManager.make_test_instance([hook1, hook2])
         self.assertEqual([hook1, hook2], em['captain'])
 
@@ -174,7 +179,7 @@ class TestTestManager(utils.TestCase):
         self.assertEqual(['test_driver'], em.names())
 
     def test_instance_call(self):
-        def invoke(ext, *args, **kwds):
+        def invoke(ext, /, *args, **kwds):
             return ext.name, args, kwds
 
         em = DriverManager.make_test_instance(a_driver)
@@ -204,7 +209,7 @@ class TestTestManager(utils.TestCase):
         filter_func = Mock(return_value=False)
         args = ('A',)
         kw = {'big': 'Cheese'}
-        em.map(filter_func, None, *args, **kw)
+        em.map(filter_func, None, *args, **kw)  # type: ignore
         filter_func.assert_any_call(test_extension, *args, **kw)
         filter_func.assert_any_call(test_extension2, *args, **kw)
 

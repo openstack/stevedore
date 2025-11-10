@@ -10,22 +10,22 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
+from typing import Any
+
 from stevedore import dispatch
 from stevedore.tests import utils
 
 
-def check_dispatch(ep, *args, **kwds):
+def check_dispatch(ep, /, *args, **kwds):
     return ep.name == 't2'
 
 
 class TestDispatch(utils.TestCase):
-    def check_dispatch(ep, *args, **kwds):
-        return ep.name == 't2'
-
     def test_dispatch(self):
-        def invoke(ep, *args, **kwds):
+        def invoke(ep, /, *args, **kwds):
             return (ep.name, args, kwds)
 
+        em: dispatch.DispatchExtensionManager[Any]
         em = dispatch.DispatchExtensionManager(
             'stevedore.test.extension',
             lambda *args, **kwds: True,
@@ -41,6 +41,7 @@ class TestDispatch(utils.TestCase):
         self.assertEqual(results, expected)
 
     def test_dispatch_map_method(self):
+        em: dispatch.DispatchExtensionManager[Any]
         em = dispatch.DispatchExtensionManager(
             'stevedore.test.extension',
             lambda *args, **kwds: True,
@@ -53,9 +54,10 @@ class TestDispatch(utils.TestCase):
         self.assertEqual(results, [(('a',), {'b': 'B'}, 'first')])
 
     def test_name_dispatch(self):
-        def invoke(ep, *args, **kwds):
+        def invoke(ep, /, *args, **kwds):
             return (ep.name, args, kwds)
 
+        em: dispatch.DispatchExtensionManager[Any]
         em = dispatch.NameDispatchExtensionManager(
             'stevedore.test.extension',
             lambda *args, **kwds: True,
@@ -71,9 +73,10 @@ class TestDispatch(utils.TestCase):
         self.assertEqual(results, expected)
 
     def test_name_dispatch_ignore_missing(self):
-        def invoke(ep, *args, **kwds):
+        def invoke(ep, /, *args, **kwds):
             return (ep.name, args, kwds)
 
+        em: dispatch.DispatchExtensionManager[Any]
         em = dispatch.NameDispatchExtensionManager(
             'stevedore.test.extension',
             lambda *args, **kwds: True,
@@ -87,6 +90,7 @@ class TestDispatch(utils.TestCase):
         self.assertEqual(results, expected)
 
     def test_name_dispatch_map_method(self):
+        em: dispatch.DispatchExtensionManager[Any]
         em = dispatch.NameDispatchExtensionManager(
             'stevedore.test.extension',
             lambda *args, **kwds: True,

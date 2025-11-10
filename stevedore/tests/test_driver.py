@@ -13,6 +13,7 @@
 """Tests for stevedore.extension"""
 
 import importlib.metadata
+from typing import Any
 
 from stevedore import driver
 from stevedore import exception
@@ -23,19 +24,22 @@ from stevedore.tests import utils
 
 class TestCallback(utils.TestCase):
     def test_detect_plugins(self):
+        em: driver.DriverManager[Any]
         em = driver.DriverManager('stevedore.test.extension', 't1')
         names = sorted(em.names())
         self.assertEqual(names, ['t1'])
 
     def test_call(self):
-        def invoke(ext, *args, **kwds):
+        def invoke(ext, /, *args, **kwds):
             return (ext.name, args, kwds)
 
+        em: driver.DriverManager[Any]
         em = driver.DriverManager('stevedore.test.extension', 't1')
         result = em(invoke, 'a', b='C')
         self.assertEqual(result, ('t1', ('a',), {'b': 'C'}))
 
     def test_driver_property_not_invoked_on_load(self):
+        em: driver.DriverManager[Any]
         em = driver.DriverManager(
             'stevedore.test.extension', 't1', invoke_on_load=False
         )
@@ -43,6 +47,7 @@ class TestCallback(utils.TestCase):
         self.assertIs(d, test_extension.FauxExtension)
 
     def test_driver_property_invoked_on_load(self):
+        em: driver.DriverManager[Any]
         em = driver.DriverManager(
             'stevedore.test.extension', 't1', invoke_on_load=True
         )
@@ -68,13 +73,13 @@ class TestCallback(utils.TestCase):
     def test_multiple_drivers(self):
         # The idea for this test was contributed by clayg:
         # https://gist.github.com/clayg/6311348
-        extensions = [
+        extensions: list[extension.Extension[Any]] = [
             extension.Extension(
                 'backend',
                 importlib.metadata.EntryPoint(
                     'backend', 'pkg1:driver', 'backend'
                 ),
-                'pkg backend',
+                lambda x: None,
                 None,
             ),
             extension.Extension(
@@ -82,7 +87,7 @@ class TestCallback(utils.TestCase):
                 importlib.metadata.EntryPoint(
                     'backend', 'pkg2:driver', 'backend'
                 ),
-                'pkg backend',
+                lambda x: None,
                 None,
             ),
         ]
