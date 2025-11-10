@@ -52,8 +52,8 @@ class HookManager(NamedExtensionManager):
         namespace,
         name,
         invoke_on_load=False,
-        invoke_args=(),
-        invoke_kwds={},
+        invoke_args=None,
+        invoke_kwds=None,
         on_load_failure_callback=None,
         verify_requirements=False,
         on_missing_entrypoints_callback=None,
@@ -62,6 +62,8 @@ class HookManager(NamedExtensionManager):
         # be an error to have no entry points present.
         warn_on_missing_entrypoint=False,
     ):
+        invoke_args = () if invoke_args is None else invoke_args
+        invoke_kwds = {} if invoke_kwds is None else invoke_kwds
         super().__init__(
             namespace,
             [name],

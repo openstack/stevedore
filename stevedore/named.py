@@ -69,8 +69,8 @@ class NamedExtensionManager(ExtensionManager):
         namespace,
         names,
         invoke_on_load=False,
-        invoke_args=(),
-        invoke_kwds={},
+        invoke_args=None,
+        invoke_kwds=None,
         name_order=False,
         propagate_map_exceptions=False,
         on_load_failure_callback=None,
@@ -78,6 +78,8 @@ class NamedExtensionManager(ExtensionManager):
         verify_requirements=False,
         warn_on_missing_entrypoint=True,
     ):
+        invoke_args = () if invoke_args is None else invoke_args
+        invoke_kwds = {} if invoke_kwds is None else invoke_kwds
         self._init_attributes(
             namespace,
             names,
