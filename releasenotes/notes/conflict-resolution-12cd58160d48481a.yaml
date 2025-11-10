@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    Entry point names are not unique and it is possible for many entry points
+    to exist with the same name and namespace. This can be problematic where
+    the name itself is relevant. To address this, a new ``conflict_resolver``
+    parameter has been added to all extension managers. This is a callable that
+    can be used to handle conflicts when retrieving entry points by name. This
+    defaults to the current behavior of returning the last found entry point,
+    though it will now log a warning.

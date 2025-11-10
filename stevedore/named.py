@@ -20,8 +20,10 @@ from typing import TYPE_CHECKING
 from typing import TypeVar
 import warnings
 
+from .extension import ConflictResolverT
 from .extension import Extension
 from .extension import ExtensionManager
+from .extension import ignore_conflicts
 from .extension import OnLoadFailureCallbackT
 
 if TYPE_CHECKING:
@@ -66,6 +68,9 @@ class NamedExtensionManager(ExtensionManager[T]):
     :param warn_on_missing_entrypoint: Flag to control whether failing
         to load a plugin is reported via a log mess. Only applies if
         on_missing_entrypoints_callback is None.
+    :param conflict_resolver: A callable that determines what to do in the
+        event that there are multiple entrypoints in the same group with the
+        same name. This is only used if retrieving entrypoint by name.
     """
 
     def __init__(
@@ -83,6 +88,8 @@ class NamedExtensionManager(ExtensionManager[T]):
         ) = None,
         verify_requirements: bool | None = None,
         warn_on_missing_entrypoint: bool = True,
+        *,
+        conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
     ) -> None:
         self._names = names
         self._missing_names: set[str] = set()
@@ -98,6 +105,7 @@ class NamedExtensionManager(ExtensionManager[T]):
             propagate_map_exceptions=propagate_map_exceptions,
             on_load_failure_callback=on_load_failure_callback,
             verify_requirements=verify_requirements,
+            conflict_resolver=conflict_resolver,
         )
 
     @classmethod
@@ -108,6 +116,8 @@ class NamedExtensionManager(ExtensionManager[T]):
         propagate_map_exceptions: bool = False,
         on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
         verify_requirements: bool | None = None,
+        *,
+        conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
     ) -> 'Self':
         """Construct a test NamedExtensionManager
 
@@ -127,6 +137,9 @@ class NamedExtensionManager(ExtensionManager[T]):
             exception)
         :param verify_requirements: **DEPRECATED** This is a no-op and will be
             removed in a future version.
+        :param conflict_resolver: A callable that determines what to do in the
+            event that there are multiple entrypoints in the same group with
+            the same name. This is only used if retrieving entrypoint by name.
         :return: The manager instance, initialized for testing
         """
         if verify_requirements is not None:
@@ -143,6 +156,7 @@ class NamedExtensionManager(ExtensionManager[T]):
         o._names = [e.name for e in extensions]
         o._missing_names = set()
         o._name_order = False
+        o._conflict_resolver = conflict_resolver
         o._init_plugins(extensions)
         return o
 

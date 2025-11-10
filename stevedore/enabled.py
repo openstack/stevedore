@@ -16,8 +16,10 @@ import logging
 from typing import Any
 from typing import TypeVar
 
+from .extension import ConflictResolverT
 from .extension import Extension
 from .extension import ExtensionManager
+from .extension import ignore_conflicts
 from .extension import OnLoadFailureCallbackT
 
 LOG = logging.getLogger(__name__)
@@ -51,6 +53,9 @@ class EnabledExtensionManager(ExtensionManager[T]):
         (manager, entrypoint, exception)
     :param verify_requirements: **DEPRECATED** This is a no-op and will be
         removed in a future version.
+    :param conflict_resolver: A callable that determines what to do in the
+        event that there are multiple entrypoints in the same group with the
+        same name. This is only used if retrieving entrypoint by name.
     """
 
     def __init__(
@@ -63,6 +68,8 @@ class EnabledExtensionManager(ExtensionManager[T]):
         propagate_map_exceptions: bool = False,
         on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
         verify_requirements: bool | None = None,
+        *,
+        conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
     ):
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
@@ -77,6 +84,7 @@ class EnabledExtensionManager(ExtensionManager[T]):
             propagate_map_exceptions=propagate_map_exceptions,
             on_load_failure_callback=on_load_failure_callback,
             verify_requirements=verify_requirements,
+            conflict_resolver=conflict_resolver,
         )
 
     def _load_one_plugin(

@@ -20,8 +20,10 @@ from typing import TypeVar
 
 from .exception import MultipleMatches
 from .exception import NoMatches
+from .extension import ConflictResolverT
 from .extension import Extension
 from .extension import ExtensionManager
+from .extension import ignore_conflicts
 from .extension import OnLoadFailureCallbackT
 from .named import NamedExtensionManager
 
@@ -52,6 +54,12 @@ class DriverManager(NamedExtensionManager[T]):
         (manager, entrypoint, exception)
     :param verify_requirements: **DEPRECATED** This is a no-op and will be
         removed in a future version.
+    :param warn_on_missing_entrypoint: Flag to control whether failing
+        to load a plugin is reported via a log mess. Only applies if
+        on_missing_entrypoints_callback is None.
+    :param conflict_resolver: A callable that determines what to do in the
+        event that there are multiple entrypoints in the same group with the
+        same name. This is only used if retrieving entrypoint by name.
     """
 
     def __init__(
@@ -64,6 +72,8 @@ class DriverManager(NamedExtensionManager[T]):
         on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
         verify_requirements: bool | None = None,
         warn_on_missing_entrypoint: bool = True,
+        *,
+        conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
     ) -> None:
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
@@ -80,6 +90,7 @@ class DriverManager(NamedExtensionManager[T]):
             on_load_failure_callback=on_load_failure_callback,
             verify_requirements=verify_requirements,
             warn_on_missing_entrypoint=warn_on_missing_entrypoint,
+            conflict_resolver=conflict_resolver,
         )
 
     @staticmethod
@@ -98,6 +109,8 @@ class DriverManager(NamedExtensionManager[T]):
         propagate_map_exceptions: bool = False,
         on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
         verify_requirements: bool | None = None,
+        *,
+        conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
     ) -> 'Self':
         """Construct a test DriverManager
 
@@ -117,6 +130,9 @@ class DriverManager(NamedExtensionManager[T]):
             exception)
         :param verify_requirements: **DEPRECATED** This is a no-op and will be
             removed in a future version.
+        :param conflict_resolver: A callable that determines what to do in the
+            event that there are multiple entrypoints in the same group with
+            the same name. This is only used if retrieving entrypoint by name.
         :return: The manager instance, initialized for testing
         """
         o = super().make_test_instance(
@@ -125,6 +141,7 @@ class DriverManager(NamedExtensionManager[T]):
             propagate_map_exceptions=propagate_map_exceptions,
             on_load_failure_callback=on_load_failure_callback,
             verify_requirements=verify_requirements,
+            conflict_resolver=conflict_resolver,
         )
         return o
 

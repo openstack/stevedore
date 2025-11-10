@@ -13,7 +13,9 @@
 from typing import Any
 from typing import TypeVar
 
+from .extension import ConflictResolverT
 from .extension import Extension
+from .extension import ignore_conflicts
 from .extension import OnLoadFailureCallbackT
 from .named import NamedExtensionManager
 from .named import OnMissingEntrypointsCallbackT
@@ -46,6 +48,9 @@ class HookManager(NamedExtensionManager[T]):
     :param warn_on_missing_entrypoint: Flag to control whether failing
         to load a plugin is reported via a log mess. Only applies if
         on_missing_entrypoints_callback is None.
+    :param conflict_resolver: A callable that determines what to do in the
+        event that there are multiple entrypoints in the same group with the
+        same name. This is only used if retrieving entrypoint by name.
     """
 
     def __init__(
@@ -64,6 +69,8 @@ class HookManager(NamedExtensionManager[T]):
         # base class because for hooks it is less likely to
         # be an error to have no entry points present.
         warn_on_missing_entrypoint: bool = False,
+        *,
+        conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
     ):
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds

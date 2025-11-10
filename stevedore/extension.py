@@ -16,6 +16,7 @@ from collections.abc import Callable
 from collections.abc import ItemsView
 from collections.abc import Iterator
 import importlib.metadata
+import itertools
 import logging
 import operator
 from typing import Any
@@ -23,10 +24,12 @@ from typing import Concatenate
 from typing import Generic
 from typing import ParamSpec
 from typing import TYPE_CHECKING
+from typing import TypeAlias
 from typing import TypeVar
 import warnings
 
 from . import _cache
+from .exception import MultipleMatches
 from .exception import NoMatches
 
 if TYPE_CHECKING:
@@ -90,9 +93,51 @@ class Extension(Generic[T]):
         return self.entry_point.value
 
 
-OnLoadFailureCallbackT = Callable[
+#: OnLoadFailureCallbackT defines the type for callbacks when a plugin fails
+#: to load. The callback callable should expect the extension manager instance,
+#: the underlying entrypoint instance, and the exception raised during
+#: attempted loading.
+OnLoadFailureCallbackT: TypeAlias = Callable[
     ['ExtensionManager[T]', importlib.metadata.EntryPoint, BaseException], None
 ]
+
+#: ConflictResolver defines the type for conflict resolution callables. The
+#: callable should expect the extension namespace, extension name, and a list
+#: of the entrypoints themselves.
+ConflictResolverT: TypeAlias = Callable[
+    [str, str, list[Extension[T]]], Extension[T]
+]
+
+
+def ignore_conflicts(
+    namespace: str, name: str, entrypoints: list[Extension[T]]
+) -> Extension[T]:
+    LOG.warning(
+        "multiple implementations found for the '%(name)s' extension in "
+        "%(namespace)s namespace: %(conflicts)s",
+        {
+            'name': name,
+            'namespace': namespace,
+            'conflicts': ', '.join(
+                ep.plugin.__qualname__ for ep in entrypoints
+            ),
+        },
+    )
+    # use the most last found entrypoint
+    return entrypoints[-1]
+
+
+def error_on_conflict(
+    namespace: str, name: str, entrypoints: list[Extension[T]]
+) -> Extension[T]:
+    raise MultipleMatches(
+        "multiple implementations found for the '{name}' command in "
+        "{namespace} namespace: {conflicts}".format(
+            name=name,
+            namespace=namespace,
+            conflicts=', '.join(ep.plugin.__qualname__ for ep in entrypoints),
+        )
+    )
 
 
 class ExtensionManager(Generic[T]):
@@ -116,6 +161,9 @@ class ExtensionManager(Generic[T]):
         (manager, entrypoint, exception)
     :param verify_requirements: **DEPRECATED** This is a no-op and will be
         removed in a future version.
+    :param conflict_resolver: A callable that determines what to do in the
+        event that there are multiple entrypoints in the same group with the
+        same name. This is only used if retrieving entrypoint by name.
     """
 
     ENTRY_POINT_CACHE: dict[str, list[importlib.metadata.EntryPoint]] = {}
@@ -129,6 +177,8 @@ class ExtensionManager(Generic[T]):
         propagate_map_exceptions: bool = False,
         on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
         verify_requirements: bool | None = None,
+        *,
+        conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
     ) -> None:
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
@@ -143,9 +193,12 @@ class ExtensionManager(Generic[T]):
         self.namespace = namespace
         self.propagate_map_exceptions = propagate_map_exceptions
         self._on_load_failure_callback = on_load_failure_callback
+        self._conflict_resolver = conflict_resolver
+
         extensions = self._load_plugins(
             invoke_on_load, invoke_args, invoke_kwds
         )
+
         self._init_plugins(extensions)
 
     @classmethod
@@ -156,6 +209,8 @@ class ExtensionManager(Generic[T]):
         propagate_map_exceptions: bool = False,
         on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
         verify_requirements: bool | None = None,
+        *,
+        conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
     ) -> 'Self':
         """Construct a test ExtensionManager
 
@@ -175,6 +230,9 @@ class ExtensionManager(Generic[T]):
             exception)
         :param verify_requirements: **DEPRECATED** This is a no-op and will be
             removed in a future version.
+        :param conflict_resolver: A callable that determines what to do in the
+            event that there are multiple entrypoints in the same group with
+            the same name. This is only used if retrieving entrypoint by name.
         :return: The manager instance, initialized for testing
         """
         if verify_requirements is not None:
@@ -188,6 +246,7 @@ class ExtensionManager(Generic[T]):
         o.namespace = namespace
         o.propagate_map_exceptions = propagate_map_exceptions
         o._on_load_failure_callback = on_load_failure_callback
+        o._conflict_resolver = conflict_resolver
         o._init_plugins(extensions)
         return o
 
@@ -199,8 +258,19 @@ class ExtensionManager(Generic[T]):
     def _extensions_by_name(self) -> dict[str, Extension[T]]:
         if self._extensions_by_name_cache is None:
             d = {}
-            for e in self.extensions:
-                d[e.name] = e
+            for name, _extensions in itertools.groupby(
+                self.extensions, lambda x: x.name
+            ):
+                extensions = list(_extensions)
+                if len(extensions) > 1:
+                    ext = self._conflict_resolver(
+                        self.namespace, name, extensions
+                    )
+                else:
+                    ext = extensions[0]
+
+                d[name] = ext
+
             self._extensions_by_name_cache = d
         return self._extensions_by_name_cache
 
@@ -209,7 +279,6 @@ class ExtensionManager(Generic[T]):
 
         The entry points are not actually loaded, their list is just read and
         returned.
-
         """
         if self.namespace not in self.ENTRY_POINT_CACHE:
             eps = list(_cache.get_group_all(self.namespace))
@@ -274,7 +343,7 @@ class ExtensionManager(Generic[T]):
         return Extension(ep.name, ep, plugin, obj)
 
     def names(self) -> list[str]:
-        "Returns the names of the discovered extensions"
+        """Returns the names of the discovered extensions"""
         # We want to return the names of the extensions in the order
         # they would be used by map(), since some subclasses change
         # that order.

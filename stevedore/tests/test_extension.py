@@ -230,6 +230,101 @@ class TestCallback(utils.TestCase):
         self.assertEqual(expected_output, set(em.items()))
 
 
+class TestConflictResolution(utils.TestCase):
+    def test_ignore_conflicts(self):
+        """Test that ignore_conflicts logs a warning when conflicts exist."""
+        extensions = [
+            extension.Extension(
+                'conflict',
+                importlib.metadata.EntryPoint(
+                    'conflict', 'module1:Class1', 'test.group'
+                ),
+                type('TestClass1', (), {}),
+                None,
+            ),
+            extension.Extension(
+                'conflict',
+                importlib.metadata.EntryPoint(
+                    'conflict', 'module2:Class2', 'test.group'
+                ),
+                type('TestClass2', (), {}),
+                None,
+            ),
+        ]
+
+        with self.assertLogs('stevedore.extension', level='WARNING') as log:
+            result = extension.ignore_conflicts(
+                'test.group', 'conflict', extensions
+            )
+
+        self.assertIs(result, extensions[-1])
+        self.assertEqual(len(log.records), 1)
+        warning_msg = log.records[0].getMessage()
+        self.assertIn("multiple implementations found", warning_msg)
+        self.assertIn("'conflict' extension", warning_msg)
+        self.assertIn("test.group namespace", warning_msg)
+
+    def test_error_on_conflict(self):
+        """Test error_on_conflict raises MultipleMatches exception."""
+        extensions = [
+            extension.Extension(
+                'conflict',
+                importlib.metadata.EntryPoint(
+                    'conflict', 'module1:Class1', 'test.group'
+                ),
+                type('TestClass1', (), {}),
+                None,
+            ),
+            extension.Extension(
+                'conflict',
+                importlib.metadata.EntryPoint(
+                    'conflict', 'module2:Class2', 'test.group'
+                ),
+                type('TestClass2', (), {}),
+                None,
+            ),
+        ]
+
+        with self.assertRaises(exception.MultipleMatches) as cm:
+            extension.error_on_conflict('test.group', 'conflict', extensions)
+
+        error_msg = str(cm.exception)
+        self.assertIn("multiple implementations found", error_msg)
+        self.assertIn("'conflict' command", error_msg)
+        self.assertIn("test.group namespace", error_msg)
+
+    def test_custom_conflict_resolver(self):
+        """Test using a custom conflict resolver function."""
+
+        def first_resolver(namespace, name, extensions):
+            return extensions[0]
+
+        ext1 = extension.Extension(
+            'test',
+            importlib.metadata.EntryPoint(
+                'test', 'module1:Class1', 'test.group'
+            ),
+            type('TestClass1', (), {}),
+            None,
+        )
+        ext2 = extension.Extension(
+            'test',
+            importlib.metadata.EntryPoint(
+                'test', 'module2:Class2', 'test.group'
+            ),
+            type('TestClass2', (), {}),
+            None,
+        )
+
+        em = extension.ExtensionManager.make_test_instance(
+            [ext1, ext2], conflict_resolver=first_resolver
+        )
+
+        # Should get the first extension when accessing by name
+        result = em['test']
+        self.assertIs(result, ext1)
+
+
 class TestDeprecations(utils.TestCase):
     def test_verify_requirements(self):
         with warnings.catch_warnings(record=True) as w:
