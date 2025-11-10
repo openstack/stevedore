@@ -10,15 +10,28 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
+from collections.abc import Callable
+from collections.abc import Sequence
 import logging
+from typing import Any
+from typing import Concatenate
+from typing import ParamSpec
+from typing import TypeVar
 
 from .enabled import EnabledExtensionManager
 from .exception import NoMatches
+from .extension import Extension
+from .extension import OnLoadFailureCallbackT
 
 LOG = logging.getLogger(__name__)
 
+T = TypeVar('T')
+U = TypeVar('U')
+P = ParamSpec('P')
+Q = ParamSpec('Q')
 
-class DispatchExtensionManager(EnabledExtensionManager):
+
+class DispatchExtensionManager(EnabledExtensionManager[T]):
     """Loads all plugins and filters on execution.
 
     This is useful for long-running processes that need to pass
@@ -45,7 +58,13 @@ class DispatchExtensionManager(EnabledExtensionManager):
     :type invoke_on_load: bool
     """
 
-    def map(self, filter_func, func, *args, **kwds):
+    def map(  # type: ignore[override]
+        self,
+        filter_func: Callable[Concatenate[Extension[T], P], bool],
+        func: Callable[Concatenate[Extension[T], Q], U],
+        *args: Any,
+        **kwds: Any,
+    ) -> list[U]:
         """Iterate over the extensions invoking func() for any where
         filter_func() returns True.
 
@@ -80,13 +99,19 @@ class DispatchExtensionManager(EnabledExtensionManager):
         if not self.extensions:
             # FIXME: Use a more specific exception class here.
             raise NoMatches(f'No {self.namespace} extensions found')
-        response = []
+        response: list[U] = []
         for e in self.extensions:
             if filter_func(e, *args, **kwds):
                 self._invoke_one_plugin(response.append, func, e, args, kwds)
         return response
 
-    def map_method(self, filter_func, method_name, *args, **kwds):
+    def map_method(  # type: ignore[override]
+        self,
+        filter_func: Callable[Concatenate[Extension[T], P], bool],
+        method_name: str,
+        *args: Any,
+        **kwds: Any,
+    ) -> Any:
         """Iterate over the extensions invoking each one's object method called
         `method_name` for any where filter_func() returns True.
 
@@ -116,7 +141,7 @@ class DispatchExtensionManager(EnabledExtensionManager):
         )
 
 
-class NameDispatchExtensionManager(DispatchExtensionManager):
+class NameDispatchExtensionManager(DispatchExtensionManager[T]):
     """Loads all plugins and filters on execution.
 
     This is useful for long-running processes that need to pass
@@ -158,14 +183,14 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
 
     def __init__(
         self,
-        namespace,
-        check_func,
-        invoke_on_load=False,
-        invoke_args=None,
-        invoke_kwds=None,
-        propagate_map_exceptions=False,
-        on_load_failure_callback=None,
-        verify_requirements=None,
+        namespace: str,
+        check_func: Callable[[Extension[T]], bool],
+        invoke_on_load: bool = False,
+        invoke_args: tuple[Any, ...] | None = None,
+        invoke_kwds: dict[str, Any] | None = None,
+        propagate_map_exceptions: bool = False,
+        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+        verify_requirements: bool | None = None,
     ):
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
@@ -180,11 +205,17 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
             verify_requirements=verify_requirements,
         )
 
-    def _init_plugins(self, extensions):
+    def _init_plugins(self, extensions: list[Extension[T]]) -> None:
         super()._init_plugins(extensions)
         self.by_name = {e.name: e for e in self.extensions}
 
-    def map(self, names, func, *args, **kwds):
+    def map(  # type: ignore[override]
+        self,
+        names: Sequence[str],
+        func: Callable[Concatenate[Extension[T], P], U],
+        *args: Any,
+        **kwds: Any,
+    ) -> list[U]:
         """Iterate over the extensions invoking func() for any where
         the name is in the given list of names.
 
@@ -206,7 +237,7 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
         :param kwds: Keyword arguments to pass to func()
         :returns: List of values returned from func()
         """
-        response = []
+        response: list[U] = []
         for name in names:
             try:
                 e = self.by_name[name]
@@ -216,7 +247,9 @@ class NameDispatchExtensionManager(DispatchExtensionManager):
                 self._invoke_one_plugin(response.append, func, e, args, kwds)
         return response
 
-    def map_method(self, names, method_name, *args, **kwds):
+    def map_method(  # type: ignore[override]
+        self, names: Sequence[str], method_name: str, *args: Any, **kwds: Any
+    ) -> Any:
         """Iterate over the extensions invoking each one's object method called
         `method_name` for any where the name is in the given list of names.
 

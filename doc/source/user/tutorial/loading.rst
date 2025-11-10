@@ -30,7 +30,7 @@ maximum width parameter.
 
 .. literalinclude:: ../../../../stevedore/example/load_as_driver.py
    :language: python
-   :lines: 30-35
+   :lines: 33-40
 
 After the manager is created, it holds a reference to a single object
 returned by calling the code registered for the plugin. That object is
@@ -41,7 +41,7 @@ called directly.
 
 .. literalinclude:: ../../../../stevedore/example/load_as_driver.py
    :language: python
-   :lines: 34-35
+   :lines: 43-44
 
 Running the example program produces this output:
 
@@ -67,7 +67,7 @@ which plugin to load. It loads all of the plugins it finds.
 
 .. literalinclude:: ../../../../stevedore/example/load_as_extension.py
    :language: python
-   :lines: 24-28
+   :lines: 34-39
 
 To call the plugins, use the :meth:`map` method, passing a callable to
 be invoked for each extension. The :func:`format_data` function used
@@ -77,7 +77,7 @@ with :meth:`map` in this example takes two arguments, the
 
 .. literalinclude:: ../../../../stevedore/example/load_as_extension.py
    :language: python
-   :lines: 30-33
+   :lines: 41-47
 
 The :class:`Extension` passed :func:`format_data` is a class defined
 by stevedore that wraps the plugin. It includes the name of the
@@ -95,7 +95,7 @@ printed and then the formatted data.
 
 .. literalinclude:: ../../../../stevedore/example/load_as_extension.py
    :language: python
-   :lines: 33-37
+   :lines: 49-53
 
 The order the plugins are loaded is undefined, and depends on the
 order packages are found on the import path as well as the way the

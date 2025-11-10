@@ -10,12 +10,30 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
+from collections.abc import Callable
+import importlib.metadata
+from typing import Any
+from typing import Concatenate
+from typing import ParamSpec
+from typing import TYPE_CHECKING
+from typing import TypeVar
+
 from .exception import MultipleMatches
 from .exception import NoMatches
+from .extension import Extension
+from .extension import ExtensionManager
+from .extension import OnLoadFailureCallbackT
 from .named import NamedExtensionManager
 
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
-class DriverManager(NamedExtensionManager):
+T = TypeVar('T')
+U = TypeVar('U')
+P = ParamSpec('P')
+
+
+class DriverManager(NamedExtensionManager[T]):
     """Load a single plugin with a given name from the namespace.
 
     :param namespace: The namespace for the entry points.
@@ -46,15 +64,15 @@ class DriverManager(NamedExtensionManager):
 
     def __init__(
         self,
-        namespace,
-        name,
-        invoke_on_load=False,
-        invoke_args=None,
-        invoke_kwds=None,
-        on_load_failure_callback=None,
-        verify_requirements=None,
-        warn_on_missing_entrypoint=True,
-    ):
+        namespace: str,
+        name: str,
+        invoke_on_load: bool = False,
+        invoke_args: tuple[Any, ...] | None = None,
+        invoke_kwds: dict[str, Any] | None = None,
+        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+        verify_requirements: bool | None = None,
+        warn_on_missing_entrypoint: bool = True,
+    ) -> None:
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
         on_load_failure_callback = (
@@ -72,18 +90,22 @@ class DriverManager(NamedExtensionManager):
         )
 
     @staticmethod
-    def _default_on_load_failure(drivermanager, ep, err):
+    def _default_on_load_failure(
+        manager: 'ExtensionManager[T]',
+        ep: importlib.metadata.EntryPoint,
+        err: BaseException,
+    ) -> None:
         raise
 
     @classmethod
-    def make_test_instance(
+    def make_test_instance(  # type: ignore[override]
         cls,
-        extension,
-        namespace='TESTING',
-        propagate_map_exceptions=False,
-        on_load_failure_callback=None,
-        verify_requirements=None,
-    ):
+        extension: Extension[T],
+        namespace: str = 'TESTING',
+        propagate_map_exceptions: bool = False,
+        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+        verify_requirements: bool | None = None,
+    ) -> 'Self':
         """Construct a test DriverManager
 
         Test instances are passed a list of extensions to work from rather
@@ -120,7 +142,7 @@ class DriverManager(NamedExtensionManager):
         )
         return o
 
-    def _init_plugins(self, extensions):
+    def _init_plugins(self, extensions: list[Extension[T]]) -> None:
         super()._init_plugins(extensions)
 
         if not self.extensions:
@@ -138,7 +160,12 @@ class DriverManager(NamedExtensionManager):
                 f'{discovered_drivers}'
             )
 
-    def __call__(self, func, *args, **kwds):
+    def __call__(
+        self,
+        func: Callable[Concatenate[Extension[T], P], U],
+        *args: Any,
+        **kwds: Any,
+    ) -> U | None:
         """Invokes func() for the single loaded extension.
 
         The signature for func() should be::
@@ -159,9 +186,10 @@ class DriverManager(NamedExtensionManager):
         results = self.map(func, *args, **kwds)
         if results:
             return results[0]
+        return None
 
     @property
-    def driver(self):
+    def driver(self) -> T | Callable[..., T]:
         """Returns the driver being used by this manager."""
         ext = self.extensions[0]
         return ext.obj if ext.obj else ext.plugin

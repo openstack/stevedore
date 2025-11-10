@@ -23,12 +23,13 @@ import os
 import os.path
 import struct
 import sys
-
+from typing import TypeAlias
+from typing import TypedDict
 
 log = logging.getLogger('stevedore._cache')
 
 
-def _get_cache_dir():
+def _get_cache_dir() -> str:
     """Locate a platform-appropriate cache directory to use.
 
     Does not ensure that the cache directory exists.
@@ -36,9 +37,9 @@ def _get_cache_dir():
     # Linux, Unix, AIX, etc.
     if os.name == 'posix' and sys.platform != 'darwin':
         # use ~/.cache if empty OR not set
-        base_path = os.environ.get(
-            "XDG_CACHE_HOME", None
-        ) or os.path.expanduser('~/.cache')
+        base_path = os.environ.get('XDG_CACHE_HOME') or os.path.expanduser(
+            '~/.cache'
+        )
         return os.path.join(base_path, 'python-entrypoints')
 
     # Mac OS
@@ -47,13 +48,13 @@ def _get_cache_dir():
 
     # Windows (hopefully)
     else:
-        base_path = os.environ.get('LOCALAPPDATA', None) or os.path.expanduser(
+        base_path = os.environ.get('LOCALAPPDATA') or os.path.expanduser(
             '~\\AppData\\Local'
         )
         return os.path.join(base_path, 'Python Entry Points')
 
 
-def _get_mtime(name):
+def _get_mtime(name: str) -> float:
     try:
         s = os.stat(name)
         return s.st_mtime
@@ -63,11 +64,15 @@ def _get_mtime(name):
     return -1.0
 
 
-def _ftobytes(f):
+def _ftobytes(f: float) -> bytes:
     return struct.Struct('f').pack(f)
 
 
-def _hash_settings_for_path(path):
+_PathHashEntryT: TypeAlias = list[tuple[str, float]]
+_PathHashSettingsT: TypeAlias = tuple[str, _PathHashEntryT]
+
+
+def _hash_settings_for_path(path: tuple[str, ...]) -> _PathHashSettingsT:
     """Return a hash and the path settings that created it."""
     paths = []
     h = hashlib.sha256()
@@ -95,9 +100,20 @@ def _hash_settings_for_path(path):
     return (h.hexdigest(), paths)
 
 
-def _build_cacheable_data():
+_CacheEntry = TypedDict(
+    '_CacheEntry',
+    {
+        'groups': dict[str, list[tuple[str, str, str]]],
+        'sys.executable': str,
+        'sys.prefix': str,
+        'path_values': _PathHashEntryT,
+    },
+)
+
+
+def _build_cacheable_data() -> _CacheEntry:
     entry_points = importlib.metadata.entry_points()
-    groups = {}
+    groups: dict[str, list[tuple[str, str, str]]] = {}
     for group in entry_points.groups:
         existing = set()
         groups[group] = []
@@ -116,15 +132,16 @@ def _build_cacheable_data():
         'groups': groups,
         'sys.executable': sys.executable,
         'sys.prefix': sys.prefix,
+        'path_values': [],
     }
 
 
 class Cache:
-    def __init__(self, cache_dir=None):
+    def __init__(self, cache_dir: str | None = None) -> None:
         if cache_dir is None:
             cache_dir = _get_cache_dir()
         self._dir = cache_dir
-        self._internal = {}
+        self._internal: dict[tuple[str, ...], _CacheEntry] = {}
         self._disable_caching = False
 
         # Caching can be disabled by either placing .disable file into the
@@ -138,20 +155,18 @@ class Cache:
         ):
             self._disable_caching = True
 
-    def _get_data_for_path(self, path):
-        if path is None:
-            path = sys.path
+    def _get_data_for_path(self, path: tuple[str, ...] | None) -> _CacheEntry:
+        internal_key = tuple(sys.path) if path is None else tuple(path)
 
-        internal_key = tuple(path)
         if internal_key in self._internal:
             return self._internal[internal_key]
 
-        digest, path_values = _hash_settings_for_path(path)
+        digest, path_values = _hash_settings_for_path(internal_key)
         filename = os.path.join(self._dir, digest)
         try:
             log.debug('reading %s', filename)
             with open(filename) as f:
-                data = json.load(f)
+                data: _CacheEntry = json.load(f)
         except (OSError, json.JSONDecodeError):
             data = _build_cacheable_data()
             data['path_values'] = path_values
@@ -168,7 +183,9 @@ class Cache:
         self._internal[internal_key] = data
         return data
 
-    def get_group_all(self, group, path=None):
+    def get_group_all(
+        self, group: str, path: tuple[str, ...] | None = None
+    ) -> list[importlib.metadata.EntryPoint]:
         result = []
         data = self._get_data_for_path(path)
         group_data = data.get('groups', {}).get(group, [])
@@ -176,14 +193,18 @@ class Cache:
             result.append(importlib.metadata.EntryPoint(*vals))
         return result
 
-    def get_group_named(self, group, path=None):
+    def get_group_named(
+        self, group: str, path: tuple[str, ...] | None = None
+    ) -> dict[str, importlib.metadata.EntryPoint]:
         result = {}
         for ep in self.get_group_all(group, path=path):
             if ep.name not in result:
                 result[ep.name] = ep
         return result
 
-    def get_single(self, group, name, path=None):
+    def get_single(
+        self, group: str, name: str, path: tuple[str, ...] | None = None
+    ) -> importlib.metadata.EntryPoint:
         for name, ep in self.get_group_named(group, path=path).items():
             if name == name:
                 return ep

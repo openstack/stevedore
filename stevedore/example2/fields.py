@@ -12,7 +12,10 @@
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+from collections.abc import Iterable
 import textwrap
+from typing import Any
 
 from stevedore.example import base
 
@@ -29,7 +32,7 @@ class FieldList(base.FormatterBase):
           a hanging indent
     """
 
-    def format(self, data):
+    def format(self, data: dict[str, Any]) -> Iterable[str]:
         """Format the data and return unicode text.
 
         :param data: A dictionary with string keys and simple types as

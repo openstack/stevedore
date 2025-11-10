@@ -10,15 +10,22 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
+from collections.abc import Callable
+import importlib.metadata
 import logging
+from typing import Any
+from typing import TypeVar
 
+from .extension import Extension
 from .extension import ExtensionManager
-
+from .extension import OnLoadFailureCallbackT
 
 LOG = logging.getLogger(__name__)
 
+T = TypeVar('T')
 
-class EnabledExtensionManager(ExtensionManager):
+
+class EnabledExtensionManager(ExtensionManager[T]):
     """Loads only plugins that pass a check function.
 
     The check_func argument should return a boolean, with ``True``
@@ -57,14 +64,14 @@ class EnabledExtensionManager(ExtensionManager):
 
     def __init__(
         self,
-        namespace,
-        check_func,
-        invoke_on_load=False,
-        invoke_args=None,
-        invoke_kwds=None,
-        propagate_map_exceptions=False,
-        on_load_failure_callback=None,
-        verify_requirements=None,
+        namespace: str,
+        check_func: Callable[[Extension[T]], bool],
+        invoke_on_load: bool = False,
+        invoke_args: tuple[Any, ...] | None = None,
+        invoke_kwds: dict[str, Any] | None = None,
+        propagate_map_exceptions: bool = False,
+        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+        verify_requirements: bool | None = None,
     ):
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
@@ -79,7 +86,13 @@ class EnabledExtensionManager(ExtensionManager):
             verify_requirements=verify_requirements,
         )
 
-    def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
+    def _load_one_plugin(
+        self,
+        ep: importlib.metadata.EntryPoint,
+        invoke_on_load: bool,
+        invoke_args: tuple[Any, ...],
+        invoke_kwds: dict[str, Any],
+    ) -> Extension[T] | None:
         ext = super()._load_one_plugin(
             ep, invoke_on_load, invoke_args, invoke_kwds
         )

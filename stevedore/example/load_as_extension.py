@@ -12,9 +12,14 @@
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import argparse
+from collections.abc import Iterable
+from typing import Any
 
 from stevedore import extension
+
+from .base import FormatterBase
 
 
 if __name__ == '__main__':
@@ -26,13 +31,17 @@ if __name__ == '__main__':
 
     data = {'a': 'A', 'b': 'B', 'long': 'word ' * 80}
 
+    mgr: extension.ExtensionManager[FormatterBase]
     mgr = extension.ExtensionManager(
         namespace='stevedore.example.formatter',
         invoke_on_load=True,
         invoke_args=(parsed_args.width,),
     )
 
-    def format_data(ext, data):
+    def format_data(
+        ext: extension.Extension[FormatterBase], data: dict[str, Any], /
+    ) -> tuple[str, Iterable[str]]:
+        assert ext.obj is not None
         return (ext.name, ext.obj.format(data))
 
     results = mgr.map(format_data, data)

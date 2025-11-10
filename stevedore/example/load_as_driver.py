@@ -12,9 +12,12 @@
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import argparse
 
 from stevedore import driver
+
+from .base import FormatterBase
 
 
 if __name__ == '__main__':
@@ -29,11 +32,13 @@ if __name__ == '__main__':
 
     data = {'a': 'A', 'b': 'B', 'long': 'word ' * 80}
 
-    mgr = driver.DriverManager(
+    mgr: driver.DriverManager[FormatterBase] = driver.DriverManager(
         namespace='stevedore.example.formatter',
         name=parsed_args.format,
         invoke_on_load=True,
         invoke_args=(parsed_args.width,),
     )
+    # okay because invoke_on_load is true
+    assert isinstance(mgr.driver, FormatterBase)
     for chunk in mgr.driver.format(data):
         print(chunk, end='')

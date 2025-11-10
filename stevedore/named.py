@@ -10,14 +10,29 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
+from collections.abc import Callable
+from collections.abc import Iterable
+from collections.abc import Sequence
+import importlib.metadata
 import logging
+from typing import Any
+from typing import TYPE_CHECKING
+from typing import TypeVar
 
+from .extension import Extension
 from .extension import ExtensionManager
+from .extension import OnLoadFailureCallbackT
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 LOG = logging.getLogger(__name__)
 
+T = TypeVar('T')
+OnMissingEntrypointsCallbackT = Callable[[Iterable[str]], None]
 
-class NamedExtensionManager(ExtensionManager):
+
+class NamedExtensionManager(ExtensionManager[T]):
     """Loads only the named extensions.
 
     This is useful for explicitly enabling extensions in a
@@ -66,18 +81,20 @@ class NamedExtensionManager(ExtensionManager):
 
     def __init__(
         self,
-        namespace,
-        names,
-        invoke_on_load=False,
-        invoke_args=None,
-        invoke_kwds=None,
-        name_order=False,
-        propagate_map_exceptions=False,
-        on_load_failure_callback=None,
-        on_missing_entrypoints_callback=None,
-        verify_requirements=None,
-        warn_on_missing_entrypoint=True,
-    ):
+        namespace: str,
+        names: Sequence[str],
+        invoke_on_load: bool = False,
+        invoke_args: tuple[Any, ...] | None = None,
+        invoke_kwds: dict[str, Any] | None = None,
+        name_order: bool = False,
+        propagate_map_exceptions: bool = False,
+        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+        on_missing_entrypoints_callback: (
+            OnMissingEntrypointsCallbackT | None
+        ) = None,
+        verify_requirements: bool | None = None,
+        warn_on_missing_entrypoint: bool = True,
+    ) -> None:
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
         self._init_attributes(
@@ -103,12 +120,12 @@ class NamedExtensionManager(ExtensionManager):
     @classmethod
     def make_test_instance(
         cls,
-        extensions,
-        namespace='TESTING',
-        propagate_map_exceptions=False,
-        on_load_failure_callback=None,
-        verify_requirements=None,
-    ):
+        extensions: list[Extension[T]],
+        namespace: str = 'TESTING',
+        propagate_map_exceptions: bool = False,
+        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+        verify_requirements: bool | None = None,
+    ) -> 'Self':
         """Construct a test NamedExtensionManager
 
         Test instances are passed a list of extensions to use rather than
@@ -145,14 +162,15 @@ class NamedExtensionManager(ExtensionManager):
         o._init_plugins(extensions)
         return o
 
-    def _init_attributes(
+    def _init_attributes(  # type: ignore[override]
         self,
-        namespace,
-        names,
-        name_order=False,
-        propagate_map_exceptions=False,
-        on_load_failure_callback=None,
-    ):
+        namespace: str,
+        names: Sequence[str],
+        name_order: bool = False,
+        *,
+        propagate_map_exceptions: bool = False,
+        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+    ) -> None:
         super()._init_attributes(
             namespace,
             propagate_map_exceptions=propagate_map_exceptions,
@@ -163,7 +181,7 @@ class NamedExtensionManager(ExtensionManager):
         self._missing_names = set()
         self._name_order = name_order
 
-    def _init_plugins(self, extensions):
+    def _init_plugins(self, extensions: list[Extension[T]]) -> None:
         super()._init_plugins(extensions)
 
         if self._name_order:
@@ -171,12 +189,19 @@ class NamedExtensionManager(ExtensionManager):
                 self[n] for n in self._names if n not in self._missing_names
             ]
 
-    def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
+    def _load_one_plugin(
+        self,
+        ep: importlib.metadata.EntryPoint,
+        invoke_on_load: bool,
+        invoke_args: tuple[Any, ...],
+        invoke_kwds: dict[str, Any],
+    ) -> Extension[T] | None:
         # Check the name before going any further to prevent
         # undesirable code from being loaded at all if we are not
         # going to use it.
         if ep.name not in self._names:
             return None
+
         return super()._load_one_plugin(
             ep, invoke_on_load, invoke_args, invoke_kwds
         )

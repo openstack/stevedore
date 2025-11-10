@@ -12,17 +12,20 @@
 # implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import abc
+from collections.abc import Iterable
+from typing import Any
 
 
 class FormatterBase(metaclass=abc.ABCMeta):
     """Base class for example plugin used in the tutorial."""
 
-    def __init__(self, max_width=60):
+    def __init__(self, max_width: int = 60) -> None:
         self.max_width = max_width
 
     @abc.abstractmethod
-    def format(self, data):
+    def format(self, data: dict[str, Any]) -> Iterable[str]:
         """Format the data and return unicode text.
 
         :param data: A dictionary with string keys and simple types as

@@ -10,12 +10,19 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from collections.abc import Callable
+from collections.abc import Iterable
+from collections.abc import Sequence
+import importlib.metadata
 import inspect
+from typing import Any
+from typing import TypeVar
 
 from docutils import nodes
 from docutils.parsers import rst
 from docutils.parsers.rst import directives
-from docutils.statemachine import ViewList
+from docutils.statemachine import StringList
+from sphinx.application import Sphinx
 from sphinx.util import logging
 from sphinx.util.nodes import nested_parse_with_titles
 
@@ -23,12 +30,16 @@ from stevedore import extension
 
 LOG = logging.getLogger(__name__)
 
+T = TypeVar('T')
 
-def _get_docstring(plugin):
+
+def _get_docstring(plugin: Callable[..., T]) -> str:
     return inspect.getdoc(plugin) or ''
 
 
-def _simple_list(mgr):
+def _simple_list(
+    mgr: extension.ExtensionManager[T],
+) -> Iterable[tuple[str, str]]:
     for name in sorted(mgr.names()):
         ext = mgr[name]
         doc = _get_docstring(ext.plugin) or '\n'
@@ -36,7 +47,12 @@ def _simple_list(mgr):
         yield (f'* {ext.name} -- {summary}', ext.module_name)
 
 
-def _detailed_list(mgr, over='', under='-', titlecase=False):
+def _detailed_list(
+    mgr: extension.ExtensionManager[T],
+    over: str = '',
+    under: str = '-',
+    titlecase: bool = False,
+) -> Iterable[tuple[str, str]]:
     for name in sorted(mgr.names()):
         ext = mgr[name]
         if over:
@@ -73,20 +89,25 @@ class ListPluginsDirective(rst.Directive):
 
     has_content = True
 
-    def run(self):
+    def run(self) -> Sequence[nodes.Node]:
         namespace = ' '.join(self.content).strip()
         LOG.info(f'documenting plugins from {namespace!r}')
         overline_style = self.options.get('overline-style', '')
         underline_style = self.options.get('underline-style', '=')
 
-        def report_load_failure(mgr, ep, err):
+        def report_load_failure(
+            mgr: extension.ExtensionManager[T],
+            ep: importlib.metadata.EntryPoint,
+            err: BaseException,
+        ) -> None:
             LOG.warning(f'Failed to load {ep.module}: {err}')
 
+        mgr: extension.ExtensionManager[Any]
         mgr = extension.ExtensionManager(
             namespace, on_load_failure_callback=report_load_failure
         )
 
-        result = ViewList()
+        result = StringList()
 
         titlecase = 'titlecase' in self.options
 
@@ -111,7 +132,7 @@ class ListPluginsDirective(rst.Directive):
         return node.children
 
 
-def setup(app):
+def setup(app: Sphinx) -> dict[str, Any]:
     LOG.info('loading stevedore.sphinxext')
     app.add_directive('list-plugins', ListPluginsDirective)
     return {'parallel_read_safe': True, 'parallel_write_safe': True}

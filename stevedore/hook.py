@@ -10,10 +10,19 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
+from collections.abc import Sequence
+from typing import Any
+from typing import TypeVar
+
+from .extension import Extension
+from .extension import OnLoadFailureCallbackT
 from .named import NamedExtensionManager
+from .named import OnMissingEntrypointsCallbackT
+
+T = TypeVar('T')
 
 
-class HookManager(NamedExtensionManager):
+class HookManager(NamedExtensionManager[T]):
     """Coordinate execution of multiple extensions using a common name.
 
     :param namespace: The namespace for the entry points.
@@ -49,18 +58,20 @@ class HookManager(NamedExtensionManager):
 
     def __init__(
         self,
-        namespace,
-        name,
-        invoke_on_load=False,
-        invoke_args=None,
-        invoke_kwds=None,
-        on_load_failure_callback=None,
-        verify_requirements=None,
-        on_missing_entrypoints_callback=None,
+        namespace: str,
+        name: str,
+        invoke_on_load: bool = False,
+        invoke_args: tuple[Any, ...] | None = None,
+        invoke_kwds: dict[str, Any] | None = None,
+        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+        on_missing_entrypoints_callback: (
+            OnMissingEntrypointsCallbackT | None
+        ) = None,
+        verify_requirements: bool | None = None,
         # NOTE(dhellmann): This default is different from the
         # base class because for hooks it is less likely to
         # be an error to have no entry points present.
-        warn_on_missing_entrypoint=False,
+        warn_on_missing_entrypoint: bool = False,
     ):
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
@@ -76,14 +87,15 @@ class HookManager(NamedExtensionManager):
             warn_on_missing_entrypoint=warn_on_missing_entrypoint,
         )
 
-    def _init_attributes(
+    def _init_attributes(  # type: ignore[override]
         self,
-        namespace,
-        names,
-        name_order=False,
-        propagate_map_exceptions=False,
-        on_load_failure_callback=None,
-    ):
+        namespace: str,
+        names: Sequence[str],
+        name_order: bool = False,
+        *,
+        propagate_map_exceptions: bool = False,
+        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+    ) -> None:
         super()._init_attributes(
             namespace,
             names,
@@ -92,7 +104,9 @@ class HookManager(NamedExtensionManager):
         )
         self._name = names[0]
 
-    def __getitem__(self, name):
+    def __getitem__(  # type: ignore[override]
+        self, name: str
+    ) -> list[Extension[T]]:
         """Return the named extensions.
 
         Accessing a HookManager as a dictionary (``em['name']``)

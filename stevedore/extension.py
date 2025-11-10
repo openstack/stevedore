@@ -12,17 +12,34 @@
 
 """ExtensionManager"""
 
+from collections.abc import Callable
+from collections.abc import ItemsView
+from collections.abc import Iterator
+import importlib.metadata
 import logging
 import operator
+from typing import Any
+from typing import Concatenate
+from typing import Generic
+from typing import ParamSpec
+from typing import TYPE_CHECKING
+from typing import TypeVar
 import warnings
 
 from . import _cache
 from .exception import NoMatches
 
+if TYPE_CHECKING:
+    from typing_extensions import Self
+
 LOG = logging.getLogger(__name__)
 
+T = TypeVar('T')
+U = TypeVar('U')
+P = ParamSpec('P')
 
-class Extension:
+
+class Extension(Generic[T]):
     """Book-keeping object for tracking extensions.
 
     The arguments passed to the constructor are saved as attributes of
@@ -41,29 +58,33 @@ class Extension:
 
     """
 
-    def __init__(self, name, entry_point, plugin, obj):
+    def __init__(
+        self,
+        name: str,
+        entry_point: importlib.metadata.EntryPoint,
+        plugin: Callable[..., T],
+        obj: T | None,
+    ) -> None:
         self.name = name
         self.entry_point = entry_point
         self.plugin = plugin
         self.obj = obj
 
     @property
-    def module_name(self):
+    def module_name(self) -> str:
         """The name of the module from which the entry point is loaded.
 
         :return: A string in 'dotted.module' format.
         """
-        match = self.entry_point.pattern.match(self.entry_point.value)
-        return match.group('module')
+        return self.entry_point.module
 
     @property
-    def attr(self):
+    def attr(self) -> str:
         """The attribute of the module to be loaded."""
-        match = self.entry_point.pattern.match(self.entry_point.value)
-        return match.group('attr')
+        return self.entry_point.attr
 
     @property
-    def entry_point_target(self):
+    def entry_point_target(self) -> str:
         """The module and attribute referenced by this extension's entry_point.
 
         :return: A string representation of the target of the entry point in
@@ -72,7 +93,12 @@ class Extension:
         return self.entry_point.value
 
 
-class ExtensionManager:
+OnLoadFailureCallbackT = Callable[
+    ['ExtensionManager[T]', importlib.metadata.EntryPoint, BaseException], None
+]
+
+
+class ExtensionManager(Generic[T]):
     """Base class for all of the other managers.
 
     :param namespace: The namespace for the entry points.
@@ -104,14 +130,14 @@ class ExtensionManager:
 
     def __init__(
         self,
-        namespace,
-        invoke_on_load=False,
-        invoke_args=None,
-        invoke_kwds=None,
-        propagate_map_exceptions=False,
-        on_load_failure_callback=None,
-        verify_requirements=None,
-    ):
+        namespace: str,
+        invoke_on_load: bool = False,
+        invoke_args: tuple[Any, ...] | None = None,
+        invoke_kwds: dict[str, Any] | None = None,
+        propagate_map_exceptions: bool = False,
+        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+        verify_requirements: bool | None = None,
+    ) -> None:
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
 
@@ -135,12 +161,12 @@ class ExtensionManager:
     @classmethod
     def make_test_instance(
         cls,
-        extensions,
-        namespace='TESTING',
-        propagate_map_exceptions=False,
-        on_load_failure_callback=None,
-        verify_requirements=None,
-    ):
+        extensions: list[Extension[T]],
+        namespace: str = 'TESTING',
+        propagate_map_exceptions: bool = False,
+        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+        verify_requirements: bool | None = None,
+    ) -> 'Self':
         """Construct a test ExtensionManager
 
         Test instances are passed a list of extensions to work from rather
@@ -184,20 +210,21 @@ class ExtensionManager:
 
     def _init_attributes(
         self,
-        namespace,
-        propagate_map_exceptions=False,
-        on_load_failure_callback=None,
-    ):
+        namespace: str,
+        *,
+        propagate_map_exceptions: bool = False,
+        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+    ) -> None:
         self.namespace = namespace
         self.propagate_map_exceptions = propagate_map_exceptions
         self._on_load_failure_callback = on_load_failure_callback
 
-    def _init_plugins(self, extensions):
-        self.extensions = extensions
-        self._extensions_by_name_cache = None
+    def _init_plugins(self, extensions: list[Extension[T]]) -> None:
+        self.extensions: list[Extension[T]] = extensions
+        self._extensions_by_name_cache: dict[str, Extension[T]] | None = None
 
     @property
-    def _extensions_by_name(self):
+    def _extensions_by_name(self) -> dict[str, Extension[T]]:
         if self._extensions_by_name_cache is None:
             d = {}
             for e in self.extensions:
@@ -205,9 +232,9 @@ class ExtensionManager:
             self._extensions_by_name_cache = d
         return self._extensions_by_name_cache
 
-    ENTRY_POINT_CACHE = {}
+    ENTRY_POINT_CACHE: dict[str, list[importlib.metadata.EntryPoint]] = {}
 
-    def list_entry_points(self):
+    def list_entry_points(self) -> list[importlib.metadata.EntryPoint]:
         """Return the list of entry points for this namespace.
 
         The entry points are not actually loaded, their list is just read and
@@ -219,11 +246,16 @@ class ExtensionManager:
             self.ENTRY_POINT_CACHE[self.namespace] = eps
         return self.ENTRY_POINT_CACHE[self.namespace]
 
-    def entry_points_names(self):
+    def entry_points_names(self) -> list[str]:
         """Return the list of entry points names for this namespace."""
         return list(map(operator.attrgetter("name"), self.list_entry_points()))
 
-    def _load_plugins(self, invoke_on_load, invoke_args, invoke_kwds):
+    def _load_plugins(
+        self,
+        invoke_on_load: bool,
+        invoke_args: tuple[Any, ...],
+        invoke_kwds: dict[str, Any],
+    ) -> list[Extension[T]]:
         extensions = []
         for ep in self.list_entry_points():
             LOG.debug('found extension %r', ep)
@@ -254,7 +286,16 @@ class ExtensionManager:
                     )
         return extensions
 
-    def _load_one_plugin(self, ep, invoke_on_load, invoke_args, invoke_kwds):
+    # NOTE(stephenfin): While this can't return None, all the subclasses can,
+    # and this allows us to satisfy Liskov's Principle. `_load_plugins` handles
+    # things just fine in either case.
+    def _load_one_plugin(
+        self,
+        ep: importlib.metadata.EntryPoint,
+        invoke_on_load: bool,
+        invoke_args: tuple[Any, ...],
+        invoke_kwds: dict[str, Any],
+    ) -> Extension[T] | None:
         plugin = ep.load()
         if invoke_on_load:
             obj = plugin(*invoke_args, **invoke_kwds)
@@ -262,14 +303,19 @@ class ExtensionManager:
             obj = None
         return Extension(ep.name, ep, plugin, obj)
 
-    def names(self):
+    def names(self) -> list[str]:
         "Returns the names of the discovered extensions"
         # We want to return the names of the extensions in the order
         # they would be used by map(), since some subclasses change
         # that order.
         return [e.name for e in self.extensions]
 
-    def map(self, func, *args, **kwds):
+    def map(
+        self,
+        func: Callable[Concatenate[Extension[T], P], U],
+        *args: Any,
+        **kwds: Any,
+    ) -> list[U]:
         """Iterate over the extensions invoking func() for each.
 
         The signature for func() should be::
@@ -292,16 +338,18 @@ class ExtensionManager:
         if not self.extensions:
             # FIXME: Use a more specific exception class here.
             raise NoMatches(f'No {self.namespace} extensions found')
-        response = []
+        response: list[U] = []
         for e in self.extensions:
             self._invoke_one_plugin(response.append, func, e, args, kwds)
         return response
 
     @staticmethod
-    def _call_extension_method(extension, method_name, *args, **kwds):
+    def _call_extension_method(
+        extension: Extension[T], /, method_name: str, *args: Any, **kwds: Any
+    ) -> Any:
         return getattr(extension.obj, method_name)(*args, **kwds)
 
-    def map_method(self, method_name, *args, **kwds):
+    def map_method(self, method_name: str, *args: Any, **kwds: Any) -> Any:
         """Iterate over the extensions invoking a method by name.
 
         This is equivalent of using :meth:`map` with func set to
@@ -324,7 +372,14 @@ class ExtensionManager:
             self._call_extension_method, method_name, *args, **kwds
         )
 
-    def _invoke_one_plugin(self, response_callback, func, e, args, kwds):
+    def _invoke_one_plugin(
+        self,
+        response_callback: Callable[..., Any],
+        func: Callable[Concatenate[Extension[T], P], U],
+        e: Extension[T],
+        args: tuple[Any],
+        kwds: dict[str, Any],
+    ) -> None:
         try:
             response_callback(func(e, *args, **kwds))
         except Exception as err:
@@ -334,14 +389,14 @@ class ExtensionManager:
                 LOG.error('error calling %r: %s', e.name, err)
                 LOG.exception(err)
 
-    def items(self):
+    def items(self) -> ItemsView[str, Extension[T]]:
         """Return an iterator of tuples of the form (name, extension).
 
         This is analogous to the Mapping.items() method.
         """
         return self._extensions_by_name.items()
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Extension[T]]:
         """Produce iterator for the manager.
 
         Iterating over an ExtensionManager produces the :class:`Extension`
@@ -349,15 +404,14 @@ class ExtensionManager:
         """
         return iter(self.extensions)
 
-    def __getitem__(self, name):
+    def __getitem__(self, name: str) -> Extension[T]:
         """Return the named extension.
 
         Accessing an ExtensionManager as a dictionary (``em['name']``)
-        produces the :class:`Extension` instance with the
-        specified name.
+        produces the :class:`Extension` instance with the specified name.
         """
         return self._extensions_by_name[name]
 
-    def __contains__(self, name):
+    def __contains__(self, name: str) -> bool:
         """Return true if name is in list of enabled extensions."""
         return any(extension.name == name for extension in self.extensions)
