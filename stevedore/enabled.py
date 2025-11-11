@@ -66,6 +66,7 @@ class EnabledExtensionManager(ExtensionManager[T]):
     ):
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
+
         self.check_func = check_func
         super().__init__(
             namespace,

@@ -86,13 +86,14 @@ class NamedExtensionManager(ExtensionManager[T]):
     ) -> None:
         invoke_args = () if invoke_args is None else invoke_args
         invoke_kwds = {} if invoke_kwds is None else invoke_kwds
-        self._init_attributes(
-            namespace,
-            names,
-            name_order=name_order,
-            propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback,
-        )
+
+        self.namespace = namespace
+        self.propagate_map_exceptions = propagate_map_exceptions
+        self._on_load_failure_callback = on_load_failure_callback
+        self._names = names
+        self._missing_names = set()
+        self._name_order = name_order
+
         extensions = self._load_plugins(
             invoke_on_load, invoke_args, invoke_kwds
         )
@@ -151,25 +152,6 @@ class NamedExtensionManager(ExtensionManager[T]):
         o._name_order = False
         o._init_plugins(extensions)
         return o
-
-    def _init_attributes(  # type: ignore[override]
-        self,
-        namespace: str,
-        names: Sequence[str],
-        name_order: bool = False,
-        *,
-        propagate_map_exceptions: bool = False,
-        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
-    ) -> None:
-        super()._init_attributes(
-            namespace,
-            propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback,
-        )
-
-        self._names = names
-        self._missing_names = set()
-        self._name_order = name_order
 
     def _init_plugins(self, extensions: list[Extension[T]]) -> None:
         super()._init_plugins(extensions)

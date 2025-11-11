@@ -138,11 +138,9 @@ class ExtensionManager(Generic[T]):
                 DeprecationWarning,
             )
 
-        self._init_attributes(
-            namespace,
-            propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback,
-        )
+        self.namespace = namespace
+        self.propagate_map_exceptions = propagate_map_exceptions
+        self._on_load_failure_callback = on_load_failure_callback
         extensions = self._load_plugins(
             invoke_on_load, invoke_args, invoke_kwds
         )
@@ -190,17 +188,6 @@ class ExtensionManager(Generic[T]):
         o._on_load_failure_callback = on_load_failure_callback
         o._init_plugins(extensions)
         return o
-
-    def _init_attributes(
-        self,
-        namespace: str,
-        *,
-        propagate_map_exceptions: bool = False,
-        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
-    ) -> None:
-        self.namespace = namespace
-        self.propagate_map_exceptions = propagate_map_exceptions
-        self._on_load_failure_callback = on_load_failure_callback
 
     def _init_plugins(self, extensions: list[Extension[T]]) -> None:
         self.extensions: list[Extension[T]] = extensions
