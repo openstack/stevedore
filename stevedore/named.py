@@ -18,6 +18,7 @@ import logging
 from typing import Any
 from typing import TYPE_CHECKING
 from typing import TypeVar
+import warnings
 
 from .extension import Extension
 from .extension import ExtensionManager
@@ -134,14 +135,20 @@ class NamedExtensionManager(ExtensionManager[T]):
             removed in a future version.
         :return: The manager instance, initialized for testing
         """
+        if verify_requirements is not None:
+            warnings.warn(
+                'The verify_requirements argument is now a no-op and is '
+                'deprecated for removal. Remove the argument from calls.',
+                DeprecationWarning,
+            )
+
         o = cls.__new__(cls)
-        names = [e.name for e in extensions]
-        o._init_attributes(
-            namespace,
-            names,
-            propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback,
-        )
+        o.namespace = namespace
+        o.propagate_map_exceptions = propagate_map_exceptions
+        o._on_load_failure_callback = on_load_failure_callback
+        o._names = [e.name for e in extensions]
+        o._missing_names = set()
+        o._name_order = False
         o._init_plugins(extensions)
         return o
 

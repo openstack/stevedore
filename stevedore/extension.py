@@ -185,11 +185,9 @@ class ExtensionManager(Generic[T]):
             )
 
         o = cls.__new__(cls)
-        o._init_attributes(
-            namespace,
-            propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback,
-        )
+        o.namespace = namespace
+        o.propagate_map_exceptions = propagate_map_exceptions
+        o._on_load_failure_callback = on_load_failure_callback
         o._init_plugins(extensions)
         return o
 

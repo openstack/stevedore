@@ -118,7 +118,6 @@ class DriverManager(NamedExtensionManager[T]):
             removed in a future version.
         :return: The manager instance, initialized for testing
         """
-
         o = super().make_test_instance(
             [extension],
             namespace=namespace,
