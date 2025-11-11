@@ -45,9 +45,11 @@ class HookManager(NamedExtensionManager[T]):
         will be a subset of the 'names' parameter.
     :param verify_requirements: **DEPRECATED** This is a no-op and will be
         removed in a future version.
-    :param warn_on_missing_entrypoint: Flag to control whether failing
-        to load a plugin is reported via a log mess. Only applies if
-        on_missing_entrypoints_callback is None.
+    :param warn_on_missing_entrypoint: **DEPRECATED** Flag to control whether
+        failing to load a plugin is reported via a log mess. Only applies if
+        on_missing_entrypoints_callback is None. Users should instead set
+        ``on_missing_entrypoints_callback`` to ``None`` if they wish to disable
+        logging.
     :param conflict_resolver: A callable that determines what to do in the
         event that there are multiple entrypoints in the same group with the
         same name. This is only used if retrieving entrypoint by name.
@@ -61,14 +63,14 @@ class HookManager(NamedExtensionManager[T]):
         invoke_args: tuple[Any, ...] | None = None,
         invoke_kwds: dict[str, Any] | None = None,
         on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
+        # NOTE(dhellmann): This default is different from the
+        # base class because for hooks it is less likely to
+        # be an error to have no entry points present.
         on_missing_entrypoints_callback: (
             OnMissingEntrypointsCallbackT | None
         ) = None,
         verify_requirements: bool | None = None,
-        # NOTE(dhellmann): This default is different from the
-        # base class because for hooks it is less likely to
-        # be an error to have no entry points present.
-        warn_on_missing_entrypoint: bool = False,
+        warn_on_missing_entrypoint: bool | None = None,
         *,
         conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
     ):

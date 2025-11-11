@@ -35,6 +35,10 @@ T = TypeVar('T')
 OnMissingEntrypointsCallbackT = Callable[[Iterable[str]], None]
 
 
+def warning_on_missing_entrypoint(missing_names: Iterable[str]) -> None:
+    LOG.warning('Could not load {}'.format(', '.join(missing_names)))
+
+
 class NamedExtensionManager(ExtensionManager[T]):
     """Loads only the named extensions.
 
@@ -65,9 +69,11 @@ class NamedExtensionManager(ExtensionManager[T]):
         will be a subset of the 'names' parameter.
     :param verify_requirements: **DEPRECATED** This is a no-op and will be
         removed in a future version.
-    :param warn_on_missing_entrypoint: Flag to control whether failing
-        to load a plugin is reported via a log mess. Only applies if
-        on_missing_entrypoints_callback is None.
+    :param warn_on_missing_entrypoint: **DEPRECATED** Flag to control whether
+        failing to load a plugin is reported via a log mess. Only applies if
+        on_missing_entrypoints_callback is None. Users should instead set
+        ``on_missing_entrypoints_callback`` to ``None`` if they wish to disable
+        logging.
     :param conflict_resolver: A callable that determines what to do in the
         event that there are multiple entrypoints in the same group with the
         same name. This is only used if retrieving entrypoint by name.
@@ -85,17 +91,27 @@ class NamedExtensionManager(ExtensionManager[T]):
         on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
         on_missing_entrypoints_callback: (
             OnMissingEntrypointsCallbackT | None
-        ) = None,
+        ) = warning_on_missing_entrypoint,
         verify_requirements: bool | None = None,
-        warn_on_missing_entrypoint: bool = True,
+        warn_on_missing_entrypoint: bool | None = None,
         *,
         conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
     ) -> None:
         self._names = names
         self._missing_names: set[str] = set()
         self._name_order = name_order
+
+        if warn_on_missing_entrypoint is not None:
+            warnings.warn(
+                "The warn_on_missing_entrypoint option is deprecated for "
+                "removal. If you wish to disable warnings, you should instead "
+                "override 'on_missing_entrypoints_callback'",
+                DeprecationWarning,
+            )
+            if not warn_on_missing_entrypoint:
+                on_missing_entrypoints_callback = None
+
         self._on_missing_entrypoints_callback = on_missing_entrypoints_callback
-        self._warn_on_missing_entrypoint = warn_on_missing_entrypoint
 
         super().__init__(
             namespace,
@@ -179,13 +195,8 @@ class NamedExtensionManager(ExtensionManager[T]):
         )
 
         self._missing_names = set(self._names) - {e.name for e in extensions}
-        if self._missing_names:
-            if self._on_missing_entrypoints_callback:
-                self._on_missing_entrypoints_callback(self._missing_names)
-            elif self._warn_on_missing_entrypoint:
-                LOG.warning(
-                    'Could not load {}'.format(', '.join(self._missing_names))
-                )
+        if self._missing_names and self._on_missing_entrypoints_callback:
+            self._on_missing_entrypoints_callback(self._missing_names)
 
         return extensions
 

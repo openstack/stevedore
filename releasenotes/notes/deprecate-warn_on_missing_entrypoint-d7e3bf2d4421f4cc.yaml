@@ -1,0 +1,8 @@
+---
+deprecations:
+  - |
+    The ``warn_on_missing_entrypoint`` parameter to ``NamedExtensionManager``,
+    ``DriverManager``, and ``HookManager``, has been deprecated. Warnings were
+    already enabled by default. To disable them, instead set
+    ``on_load_failure_callback`` to ``None`` or provide a custom callback that
+    does not log warnings.
