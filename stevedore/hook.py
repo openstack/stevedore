@@ -10,7 +10,6 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
-from collections.abc import Sequence
 from typing import Any
 from typing import TypeVar
 
@@ -80,22 +79,9 @@ class HookManager(NamedExtensionManager[T]):
             warn_on_missing_entrypoint=warn_on_missing_entrypoint,
         )
 
-    def _init_attributes(  # type: ignore[override]
-        self,
-        namespace: str,
-        names: Sequence[str],
-        name_order: bool = False,
-        *,
-        propagate_map_exceptions: bool = False,
-        on_load_failure_callback: 'OnLoadFailureCallbackT[T] | None' = None,
-    ) -> None:
-        super()._init_attributes(
-            namespace,
-            names,
-            propagate_map_exceptions=propagate_map_exceptions,
-            on_load_failure_callback=on_load_failure_callback,
-        )
-        self._name = names[0]
+    @property
+    def _name(self) -> str:
+        return self._names[0]
 
     def __getitem__(  # type: ignore[override]
         self, name: str
