@@ -114,9 +114,8 @@ class TestTestManager(utils.TestCase):
         em = extension.ExtensionManager.make_test_instance(
             [test_extension], propagate_map_exceptions=True
         )
-        self.skipTest('Skipping temporarily')
         func = Mock(side_effect=RuntimeError('hard coded error'))
-        em.map(func, 1, 2, a='A', b='B')
+        self.assertRaises(RuntimeError, em.map, func, 1, 2, a='A', b='B')
 
     # NamedExtensionManager
     def test_named_manager_should_use_supplied_extensions(self):
