@@ -32,23 +32,17 @@ class TestExtensionManager(extension.ExtensionManager[T]):
        being replaced by the test instance instead of using this class
        directly.
 
-    :param extensions: Pre-configured Extension instances to use
-                       instead of loading them from entry points.
-    :type extensions: list of :class:`~stevedore.extension.Extension`
+    :param extensions: Pre-configured Extension instances to use instead of
+        loading them from entry points.
     :param namespace: The namespace for the entry points.
-    :type namespace: str
     :param invoke_on_load: Boolean controlling whether to invoke the
         object returned by the entry point after the driver is loaded.
-    :type invoke_on_load: bool
     :param invoke_args: Positional arguments to pass when invoking
         the object returned by the entry point. Only used if invoke_on_load
         is True.
-    :type invoke_args: tuple
     :param invoke_kwds: Named arguments to pass when invoking
         the object returned by the entry point. Only used if invoke_on_load
         is True.
-    :type invoke_kwds: dict
-
     """
 
     def __init__(

@@ -35,9 +35,8 @@ class FieldList(base.FormatterBase):
     def format(self, data: dict[str, Any]) -> Iterable[str]:
         """Format the data and return unicode text.
 
-        :param data: A dictionary with string keys and simple types as
-                     values.
-        :type data: dict(str:?)
+        :param data: A dictionary with string keys and simple types as values.
+        :returns: Iterable producing the formatted text.
         """
         for name, value in sorted(data.items()):
             full_text = f': {name} : {value}'

@@ -28,8 +28,6 @@ class FormatterBase(metaclass=abc.ABCMeta):
     def format(self, data: dict[str, Any]) -> Iterable[str]:
         """Format the data and return unicode text.
 
-        :param data: A dictionary with string keys and simple types as
-                     values.
-        :type data: dict(str:?)
+        :param data: A dictionary with string keys and simple types as values.
         :returns: Iterable producing the formatted text.
         """

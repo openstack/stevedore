@@ -26,34 +26,27 @@ class HookManager(NamedExtensionManager[T]):
     """Coordinate execution of multiple extensions using a common name.
 
     :param namespace: The namespace for the entry points.
-    :type namespace: str
     :param name: The name of the hooks to load.
-    :type name: str
     :param invoke_on_load: Boolean controlling whether to invoke the
         object returned by the entry point after the driver is loaded.
-    :type invoke_on_load: bool
     :param invoke_args: Positional arguments to pass when invoking
         the object returned by the entry point. Only used if invoke_on_load
         is True.
-    :type invoke_args: tuple
     :param invoke_kwds: Named arguments to pass when invoking
         the object returned by the entry point. Only used if invoke_on_load
         is True.
-    :type invoke_kwds: dict
     :param on_load_failure_callback: Callback function that will be called when
         an entrypoint can not be loaded. The arguments that will be provided
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
-    :type on_load_failure_callback: function
+    :param on_missing_entrypoints_callback: Callback function that will be
+        called when one or more names cannot be found. The provided argument
+        will be a subset of the 'names' parameter.
     :param verify_requirements: **DEPRECATED** This is a no-op and will be
         removed in a future version.
-    :type verify_requirements: bool
-    :type on_missing_entrypoints_callback: function
     :param warn_on_missing_entrypoint: Flag to control whether failing
         to load a plugin is reported via a log mess. Only applies if
         on_missing_entrypoints_callback is None.
-    :type warn_on_missing_entrypoint: bool
-
     """
 
     def __init__(

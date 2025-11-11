@@ -38,24 +38,18 @@ class DispatchExtensionManager(EnabledExtensionManager[T]):
     different inputs to different extensions.
 
     :param namespace: The namespace for the entry points.
-    :type namespace: str
     :param check_func: Function to determine which extensions to load.
-    :type check_func: callable
     :param invoke_on_load: Boolean controlling whether to invoke the
         object returned by the entry point after the driver is loaded.
-    :type invoke_on_load: bool
     :param invoke_args: Positional arguments to pass when invoking
         the object returned by the entry point. Only used if invoke_on_load
         is True.
-    :type invoke_args: tuple
     :param invoke_kwds: Named arguments to pass when invoking
         the object returned by the entry point. Only used if invoke_on_load
         is True.
-    :type invoke_kwds: dict
     :param propagate_map_exceptions: Boolean controlling whether exceptions
         are propagated up through the map call or whether they are logged and
         then ignored
-    :type invoke_on_load: bool
     """
 
     def map(  # type: ignore[override]
@@ -155,32 +149,24 @@ class NameDispatchExtensionManager(DispatchExtensionManager[T]):
     and ``False`` indicating that the extension should be ignored.
 
     :param namespace: The namespace for the entry points.
-    :type namespace: str
     :param check_func: Function to determine which extensions to load.
-    :type check_func: callable
     :param invoke_on_load: Boolean controlling whether to invoke the
         object returned by the entry point after the driver is loaded.
-    :type invoke_on_load: bool
     :param invoke_args: Positional arguments to pass when invoking
         the object returned by the entry point. Only used if invoke_on_load
         is True.
-    :type invoke_args: tuple
     :param invoke_kwds: Named arguments to pass when invoking
         the object returned by the entry point. Only used if invoke_on_load
         is True.
-    :type invoke_kwds: dict
     :param propagate_map_exceptions: Boolean controlling whether exceptions
         are propagated up through the map call or whether they are logged and
         then ignored
-    :type invoke_on_load: bool
     :param on_load_failure_callback: Callback function that will be called when
         an entrypoint can not be loaded. The arguments that will be provided
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
-    :type on_load_failure_callback: function
     :param verify_requirements: **DEPRECATED** This is a no-op and will be
         removed in a future version.
-    :type verify_requirements: bool
     """
 
     def __init__(

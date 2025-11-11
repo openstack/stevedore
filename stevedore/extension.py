@@ -48,10 +48,7 @@ class Extension(Generic[T]):
     :class:`ExtensionManager` directly.
 
     :param name: The entry point name.
-    :type name: str
-    :param entry_point: The EntryPoint instance returned by
-        :mod:`entrypoints`.
-    :type entry_point: EntryPoint
+    :param entry_point: The EntryPoint instance returned by :mod:`entrypoints`.
     :param plugin: The value returned by entry_point.load()
     :param obj: The object returned by ``plugin(*args, **kwds)`` if the
                 manager invoked the extension on load.
@@ -102,30 +99,23 @@ class ExtensionManager(Generic[T]):
     """Base class for all of the other managers.
 
     :param namespace: The namespace for the entry points.
-    :type namespace: str
     :param invoke_on_load: Boolean controlling whether to invoke the
         object returned by the entry point after the driver is loaded.
-    :type invoke_on_load: bool
     :param invoke_args: Positional arguments to pass when invoking
         the object returned by the entry point. Only used if invoke_on_load
         is True.
-    :type invoke_args: tuple
     :param invoke_kwds: Named arguments to pass when invoking
         the object returned by the entry point. Only used if invoke_on_load
         is True.
-    :type invoke_kwds: dict
     :param propagate_map_exceptions: Boolean controlling whether exceptions
         are propagated up through the map call or whether they are logged and
         then ignored
-    :type propagate_map_exceptions: bool
     :param on_load_failure_callback: Callback function that will be called when
         an entrypoint can not be loaded. The arguments that will be provided
         when this is called (when an entrypoint fails to load) are
         (manager, entrypoint, exception)
-    :type on_load_failure_callback: function
     :param verify_requirements: **DEPRECATED** This is a no-op and will be
         removed in a future version.
-    :type verify_requirements: bool
     """
 
     def __init__(
@@ -173,23 +163,18 @@ class ExtensionManager(Generic[T]):
         than loading them from entry points.
 
         :param extensions: Pre-configured Extension instances to use
-        :type extensions: list of :class:`~stevedore.extension.Extension`
         :param namespace: The namespace for the manager; used only for
             identification since the extensions are passed in.
-        :type namespace: str
         :param propagate_map_exceptions: When calling map, controls whether
             exceptions are propagated up through the map call or whether they
             are logged and then ignored
-        :type propagate_map_exceptions: bool
         :param on_load_failure_callback: Callback function that will
             be called when an entrypoint can not be loaded. The
             arguments that will be provided when this is called (when
             an entrypoint fails to load) are (manager, entrypoint,
             exception)
-        :type on_load_failure_callback: function
         :param verify_requirements: **DEPRECATED** This is a no-op and will be
             removed in a future version.
-        :type verify_requirements: bool
         :return: The manager instance, initialized for testing
         """
         if verify_requirements is not None:
