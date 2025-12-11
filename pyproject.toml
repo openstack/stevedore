@@ -65,7 +65,7 @@ disallow_any_generics = false
 line-length = 79
 
 [tool.ruff.lint]
-select = ["C4", "E4", "E5", "E7", "E9", "F", "S", "U"]
+select = ["C4", "E4", "E5", "E7", "E9", "F", "G", "LOG", "S", "U"]
 ignore = [
     # we only use asserts for type narrowing
     "S101",
