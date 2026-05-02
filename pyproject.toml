@@ -9,14 +9,13 @@ authors = [
     {name = "OpenStack", email = "openstack-discuss@lists.openstack.org"},
 ]
 readme = {file = "README.rst", content-type = "text/x-rst"}
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
 dynamic = ["version", "dependencies"]
 requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
@@ -42,10 +41,8 @@ t2 = "stevedore.tests.test_extension:FauxExtension"
 e1 = "stevedore.tests.test_extension:BrokenExtension"
 e2 = "stevedore.tests.notfound:UnimportableExtension"
 
-[tool.setuptools]
-packages = [
-    "stevedore"
-]
+[tool.setuptools.packages.find]
+include = ["stevedore"]
 
 [tool.mypy]
 python_version = "3.10"
