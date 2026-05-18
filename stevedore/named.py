@@ -10,14 +10,10 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
-from collections.abc import Callable
-from collections.abc import Iterable
-from collections.abc import Sequence
+from collections.abc import Callable, Iterable, Sequence
 import importlib.metadata
 import logging
-from typing import Any
-from typing import TYPE_CHECKING
-from typing import TypeVar
+from typing import Any, Self, TypeVar
 import warnings
 
 from .extension import ConflictResolverT
@@ -25,9 +21,6 @@ from .extension import Extension
 from .extension import ExtensionManager
 from .extension import ignore_conflicts
 from .extension import OnLoadFailureCallbackT
-
-if TYPE_CHECKING:
-    from typing_extensions import Self
 
 LOG = logging.getLogger(__name__)
 
@@ -134,7 +127,7 @@ class NamedExtensionManager(ExtensionManager[T]):
         verify_requirements: bool | None = None,
         *,
         conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
-    ) -> 'Self':
+    ) -> Self:
         """Construct a test NamedExtensionManager
 
         Test instances are passed a list of extensions to use rather than

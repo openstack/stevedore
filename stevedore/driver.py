@@ -12,11 +12,7 @@
 
 from collections.abc import Callable
 import importlib.metadata
-from typing import Any
-from typing import Concatenate
-from typing import ParamSpec
-from typing import TYPE_CHECKING
-from typing import TypeVar
+from typing import Any, Concatenate, ParamSpec, Self, TypeVar
 
 from .exception import MultipleMatches
 from .exception import NoMatches
@@ -29,8 +25,6 @@ from .named import NamedExtensionManager
 from .named import OnMissingEntrypointsCallbackT
 from .named import warning_on_missing_entrypoint
 
-if TYPE_CHECKING:
-    from typing_extensions import Self
 
 T = TypeVar('T')
 U = TypeVar('U')
@@ -121,7 +115,7 @@ class DriverManager(NamedExtensionManager[T]):
         verify_requirements: bool | None = None,
         *,
         conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
-    ) -> 'Self':
+    ) -> Self:
         """Construct a test DriverManager
 
         Test instances are passed a list of extensions to work from rather

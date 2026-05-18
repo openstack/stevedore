@@ -12,28 +12,26 @@
 
 """ExtensionManager"""
 
-from collections.abc import Callable
-from collections.abc import ItemsView
-from collections.abc import Iterator
+from collections.abc import Callable, ItemsView, Iterator
 import importlib.metadata
 import itertools
 import logging
 import operator
-from typing import Any
-from typing import Concatenate
-from typing import Generic
-from typing import ParamSpec
-from typing import TYPE_CHECKING
-from typing import TypeAlias
-from typing import TypeVar
+from typing import (
+    Any,
+    Concatenate,
+    Generic,
+    ParamSpec,
+    Self,
+    TypeAlias,
+    TypeVar,
+)
 import warnings
 
 from . import _cache
 from .exception import MultipleMatches
 from .exception import NoMatches
 
-if TYPE_CHECKING:
-    from typing_extensions import Self
 
 LOG = logging.getLogger(__name__)
 
@@ -211,7 +209,7 @@ class ExtensionManager(Generic[T]):
         verify_requirements: bool | None = None,
         *,
         conflict_resolver: 'ConflictResolverT[T]' = ignore_conflicts,
-    ) -> 'Self':
+    ) -> Self:
         """Construct a test ExtensionManager
 
         Test instances are passed a list of extensions to work from rather
