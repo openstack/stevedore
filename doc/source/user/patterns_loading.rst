@@ -122,3 +122,38 @@ Examples of the *extensions* pattern include:
 .. seealso::
 
    :class:`stevedore.extension.ExtensionManager`
+
+Dispatch -- Filtering at Invocation Time
+========================================
+
+Some applications want to load all of the available plugins once, but
+then choose which of them to invoke separately for each unit of work,
+rather than calling all of them every time. This is common in
+long-running processes such as servers, where different inputs need to
+be routed to different extensions. Rather than reloading or rebuilding
+a manager for each request, the plugins are loaded a single time and a
+filter is applied on each invocation to select the subset that should
+run.
+
+.. graphviz::
+
+   digraph dispatch {
+      app [label="input",shape="record"];
+      e1 [style=filled,color=".7 .3 1.0",label="extension 1"];
+      e2 [style=dotted,label="extension 2"];
+      e3 [style=filled,color=".7 .3 1.0",label="extension 3"];
+      app -> e1;
+      app -> e2 [style=dotted];
+      app -> e3;
+   }
+
+Examples of the *dispatch* pattern include:
+
+* routing an incoming message to the handlers that understand its type
+* applying only the notification drivers a user has enabled for a
+  given event
+
+.. seealso::
+
+   * :class:`stevedore.dispatch.DispatchExtensionManager`
+   * :class:`stevedore.dispatch.NameDispatchExtensionManager`
