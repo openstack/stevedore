@@ -1,4 +1,4 @@
-$ python -m stevedore.example.load_as_extension --width 30
+$ python -m stevedore.example.load_as_dispatch --width 30 simple field
 Formatter: field
 : a : A
 : b : B
@@ -19,11 +19,6 @@ Formatter: field
     word word word word word
     word word word word word
     word
-
-Formatter: plain
-a = A
-b = B
-long = word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
 
 Formatter: simple
 a = A

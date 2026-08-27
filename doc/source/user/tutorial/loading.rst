@@ -109,6 +109,52 @@ the :class:`~stevedore.named.NamedExtensionManager`.
 
 .. literalinclude:: extension_output.txt
 
+Dispatching to Plugins
+======================
+
+The :class:`~stevedore.extension.ExtensionManager` invokes *every*
+plugin each time :meth:`map` is called. Long-running applications such
+as servers often want to load the plugins once and then, for each unit
+of work, invoke only the subset that applies to the current input. The
+:class:`~stevedore.dispatch.DispatchExtensionManager` supports this
+pattern by accepting a filter function alongside the callable passed to
+:meth:`map`.
+
+.. literalinclude:: ../../../../stevedore/example/load_as_dispatch.py
+   :language: python
+   :prepend: # stevedore/example/load_as_dispatch.py
+
+The manager is created much like an
+:class:`~stevedore.extension.ExtensionManager`. The ``check_func``
+argument is called once per extension as the plugins are loaded and
+controls which of them are made available at all; returning ``True``
+for every extension here loads them all.
+
+.. literalinclude:: ../../../../stevedore/example/load_as_dispatch.py
+   :language: python
+   :lines: 41-47
+
+Unlike the plain :class:`ExtensionManager`, :meth:`map` takes *two*
+callables. The first, ``filter_func``, is invoked for each extension
+with the same arguments given to :meth:`map`; the second callable is
+only run for the extensions where the filter returns ``True``. Here the
+filter selects the formatters named on the command line, so a single
+loaded manager can route each request to a different set of plugins.
+
+.. literalinclude:: ../../../../stevedore/example/load_as_dispatch.py
+   :language: python
+   :lines: 49-60
+
+Running the example program dispatches the data to just the ``simple``
+and ``field`` formatters, leaving the loaded ``plain`` formatter idle:
+
+.. literalinclude:: dispatch_output.txt
+
+When the names of the extensions to invoke are known in advance, the
+:class:`~stevedore.dispatch.NameDispatchExtensionManager` offers a
+convenient variant whose :meth:`map` accepts a list of names instead of
+a filter function.
+
 Why Not Call Plugins Directly?
 ==============================
 

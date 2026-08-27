@@ -1,4 +1,5 @@
-$ python -m stevedore.example.load_as_driver a = A
+$ python -m stevedore.example.load_as_driver
+a = A
 b = B
 long = word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
 
