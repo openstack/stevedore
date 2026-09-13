@@ -21,7 +21,7 @@ Examples of enabling through installation include:
 * `python-openstackclient`_
 * virtualenvwrapper_
 
-.. _python-openstackclient: https://github.com/openstack/python-openstackclient
+.. _python-openstackclient: https://opendev.org/openstack/python-openstackclient
 .. _virtualenvwrapper: http://pypi.python.org/pypi/virtualenvwrapper
 
 Enabled Explicitly
