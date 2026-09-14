@@ -42,7 +42,7 @@ e1 = "stevedore.tests.test_extension:BrokenExtension"
 e2 = "stevedore.tests.notfound:UnimportableExtension"
 
 [tool.setuptools.packages.find]
-include = ["stevedore"]
+include = ["stevedore*"]
 
 [tool.mypy]
 python_version = "3.11"
