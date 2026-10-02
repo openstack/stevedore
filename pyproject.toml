@@ -44,6 +44,19 @@ e2 = "stevedore.tests.notfound:UnimportableExtension"
 [tool.setuptools.packages.find]
 include = ["stevedore*"]
 
+[tool.coverage.run]
+source = [
+    "stevedore"
+]
+branch = true
+omit = [
+    "stevedore/tests/*"
+]
+
+[tool.coverage.report]
+ignore_errors = true
+show_missing = true
+
 [tool.mypy]
 python_version = "3.11"
 show_column_numbers = true
