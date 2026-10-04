@@ -49,6 +49,7 @@ source = [
     "stevedore"
 ]
 branch = true
+parallel = true
 omit = [
     "stevedore/tests/*"
 ]
