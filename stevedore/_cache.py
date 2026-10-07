@@ -23,6 +23,7 @@ import os
 import os.path
 import struct
 import sys
+import tempfile
 from typing import TypeAlias
 from typing import TypedDict
 
@@ -136,6 +137,30 @@ def _build_cacheable_data() -> _CacheEntry:
     }
 
 
+def _write_cache_file(filename: str, data: _CacheEntry) -> None:
+    """Atomically write the cache data to filename.
+
+    Several processes may populate the same cache file at the same time.
+    Writing it in place lets their writes interleave, which can leave a
+    file that is still valid JSON but contains wrong entries. Write to a
+    unique temporary file in the same directory and rename it into place
+    instead, so readers only ever see a complete file.
+    """
+    f = tempfile.NamedTemporaryFile(
+        'w', dir=os.path.dirname(filename), suffix='.tmp', delete=False
+    )
+    try:
+        with f:
+            json.dump(data, f)
+        os.replace(f.name, filename)
+    except BaseException:
+        try:
+            os.unlink(f.name)
+        except OSError:
+            pass
+        raise
+
+
 class Cache:
     def __init__(self, cache_dir: str | None = None) -> None:
         if cache_dir is None:
@@ -174,8 +199,7 @@ class Cache:
                 try:
                     log.debug('writing to %s', filename)
                     os.makedirs(self._dir, exist_ok=True)
-                    with open(filename, 'w') as f:
-                        json.dump(data, f)
+                    _write_cache_file(filename, data)
                 except OSError:
                     # Could not create cache dir or write file.
                     pass
