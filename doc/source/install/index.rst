@@ -2,11 +2,6 @@
 Installation
 ============
 
-Python Versions
-===============
-
-stevedore is tested under Python 3.6 and 3.7.
-
 .. _install-basic:
 
 Basic Installation
