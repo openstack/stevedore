@@ -1,0 +1,10 @@
+---
+fixes:
+  - |
+    `Bug #2169851 <https://bugs.launchpad.net/oslo.utils/+bug/2169851>`_:
+    The entry point cache file is now written atomically. Previously,
+    several processes populating the same cache at the same time could
+    interleave their writes and leave a cache file that was still valid
+    JSON but contained wrong entries, which then broke every later
+    process using that cache, for example with
+    ``EntryPoint.__init__() takes 4 positional arguments but 6 were given``.
